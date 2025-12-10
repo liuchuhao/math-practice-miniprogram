@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="result-card">
+    <view class="header">
+      <text class="title">练习完成</text>
+      <text class="grade">{{grade}}年级</text>
+    </view>
+    
+    <view class="score-circle">
+      <text class="score">{{score}}/{{total}}</text>
+      <text class="rate">正确率：{{correctRate}}</text>
+    </view>
+    
+    <view class="message">
+      <text>{{message}}</text>
+    </view>
+    
+    <view class="btn-group">
+      <button class="btn restart-btn" bindtap="restart">重新练习</button>
+      <button class="btn home-btn" bindtap="goHome">返回首页</button>
+      <button class="btn history-btn" bindtap="viewHistory">查看历史</button>
+    </view>
+  </view>
+</view>
