@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/gradeSelect/gradeSelect",
     "pages/practice/practice",
-    "pages/result/result"
+    "pages/result/result",
+    "pages/history/history"
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

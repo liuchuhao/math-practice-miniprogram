@@ -59,17 +59,29 @@ Page({
   viewHistory: function() {
     console.log('查看历史记录')
     
-    wx.showModal({
-      title: '提示',
-      content: '历史记录功能正在开发中，敬请期待！',
-      showCancel: false,
-      confirmText: '知道了',
-      success: (res) => {
-        if (res.confirm) {
-          console.log('用户点击确定')
-        }
-      }
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
     })
+    
+    setTimeout(() => {
+      wx.hideLoading()
+      
+      // 跳转到历史记录页面
+      wx.navigateTo({
+        url: '/pages/history/history',
+        success: () => {
+          console.log('跳转到历史记录页成功')
+        },
+        fail: (err) => {
+          console.error('跳转失败:', err)
+          wx.showToast({
+            title: '跳转失败，请重试',
+            icon: 'error'
+          })
+        }
+      })
+    }, 300)
   },
 
   /**

@@ -4,8 +4,12 @@
     <text class="subtitle">1-6年级</text>
   </view>
   
-  <image class="logo" src="/images/math-logo.png"></image>
   
+    <!-- 修改这里：将 image 改为 view，添加数学符号 -->
+    <view class="logo">
+    <text class="logo-text">π</text>
+  </view>
+
   <view class="btn-group">
     <button class="btn" bindtap="startPractice">开始练习</button>
     <button class="btn" bindtap="viewHistory">练习记录</button>

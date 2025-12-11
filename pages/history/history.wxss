@@ -1,0 +1,626 @@
+/* pages/history/history.wxss */
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  /* 安全区域适配 */
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom, 0));
+  padding-top: calc(20rpx + env(safe-area-inset-top, 0));
+  box-sizing: border-box;
+}
+
+/* ========== 修改：顶部统计卡片横排 ========== */
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+  gap: 15rpx; /* 减小间距 */
+}
+
+.stats-card {
+  flex: 1;
+  background: white;
+  border-radius: 15rpx;
+  padding: 20rpx 15rpx; /* 调整内边距 */
+  text-align: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  min-height: 120rpx; /* 固定最小高度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stats-label {
+  display: block;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 8rpx;
+  white-space: nowrap; /* 防止换行 */
+}
+
+.stats-value {
+  display: block;
+  font-size: 32rpx; /* 调小一点适配横排 */
+  font-weight: bold;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+/* ========== 筛选工具栏 ========== */
+.filter-toolbar {
+  background: white;
+  border-radius: 15rpx;
+  padding: 20rpx;  /* 减少内边距 */
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;  /* 防止内容溢出 */
+}
+
+.filter-group {
+  margin-bottom: 20rpx;
+}
+
+.filter-label {
+  display: block;
+  font-size: 26rpx;
+  color: #2c3e50;
+  font-weight: 500;
+  margin-bottom: 15rpx;
+}
+
+/* ========== 年级筛选横向滚动 ========== */
+.grade-filters {
+  white-space: nowrap;
+  width: 100%;
+  height: 70rpx;  /* 固定高度 */
+  overflow-x: auto;  /* 重要：必须设置为auto或scroll */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 5rpx 0;
+  display: flex;  /* 改为flex布局 */
+  align-items: center;
+}
+
+.grade-filter-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 20rpx;  /* 减小内边距 */
+  margin-right: 10rpx;  /* 减小间距 */
+  background: #f8f9fa;
+  border: 1rpx solid #ddd;
+  border-radius: 20rpx;
+  font-size: 22rpx;  /* 减小字体 */
+  color: #5a6c7d;
+  white-space: nowrap;
+  flex-shrink: 0;  /* 防止被压缩 */
+  box-sizing: border-box;
+  height: 50rpx;  /* 固定高度 */
+  line-height: 34rpx;
+}
+
+.grade-filter-item:last-child {
+  margin-right: 0;
+}
+
+.grade-filter-item.active {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+/* ========== 排序按钮 ========== */
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  flex-wrap: wrap;
+}
+
+.sort-item {
+  min-width: 150rpx;
+  flex: 1;
+  padding: 12rpx 20rpx;
+  background: #f8f9fa;
+  border: 1rpx solid #ddd;
+  border-radius: 25rpx;
+  font-size: 24rpx;
+  color: #5a6c7d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  box-sizing: border-box;
+}
+
+.sort-item.active {
+  background: #2ecc71;
+  color: white;
+  border-color: #2ecc71;
+}
+
+/* 清空记录按钮 */
+.clear-section {
+  margin-bottom: 20rpx;
+}
+
+.clear-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #fef2f2;
+  border: 1rpx solid #e74c3c;
+  border-radius: 15rpx;
+  color: #e74c3c;
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  box-sizing: border-box;
+}
+
+.clear-btn:active {
+  background: #fee;
+}
+
+/* 历史记录列表 */
+.history-list {
+  margin-bottom: 30rpx;
+}
+
+.history-item {
+  background: white;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.history-item:active {
+  opacity: 0.9;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  overflow: hidden;
+}
+
+.grade-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  color: white;
+  flex-shrink: 0;
+}
+
+.grade-1 {
+  background: #ff7675;
+}
+
+.grade-2 {
+  background: #74b9ff;
+}
+
+.grade-3 {
+  background: #55efc4;
+}
+
+.grade-4 {
+  background: #a29bfe;
+}
+
+.grade-5 {
+  background: #fd79a8;
+}
+
+.grade-6 {
+  background: #fdcb6e;
+}
+
+/* 防止日期文字过长 */
+.date {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  max-width: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.item-content {
+  margin-bottom: 20rpx;
+}
+
+.score-section {
+  margin-bottom: 20rpx;
+}
+
+.score {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.total {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.details-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  flex-wrap: wrap;
+  gap: 15rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 防止详情文字过长 */
+.detail-text {
+  font-size: 24rpx;
+  color: #5a6c7d;
+  max-width: 150rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rate-section {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.rate-progress {
+  flex: 1;
+}
+
+.rate-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  min-width: 80rpx;
+  text-align: right;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.time-text {
+  font-size: 22rpx;
+  color: #95a5a6;
+}
+
+.actions {
+  display: flex;
+  gap: 10rpx;
+}
+
+.action-btn {
+  padding: 8rpx 20rpx;
+  background: #f8f9fa;
+  border: 1rpx solid #ddd;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  color: #5a6c7d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  box-sizing: border-box;
+}
+
+.action-btn.review:active {
+  background: #e8f4ff;
+  border-color: #3498db;
+  color: #3498db;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 30rpx;
+}
+
+.empty-state icon {
+  display: block;
+  margin: 0 auto 30rpx;
+}
+
+.empty-title {
+  display: block;
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.empty-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #7f8c8d;
+  margin-bottom: 40rpx;
+}
+
+.empty-btn {
+  width: 60%;
+  height: 90rpx;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  border-radius: 45rpx;
+  color: white;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  box-shadow: 0 5rpx 15rpx rgba(46, 204, 113, 0.3);
+  margin: 0 auto;
+}
+
+/* 加载更多 */
+.load-more,
+.no-more {
+  text-align: center;
+  padding: 30rpx;
+}
+
+.load-text {
+  font-size: 26rpx;
+  color: #3498db;
+  text-decoration: underline;
+}
+
+.no-more-text {
+  font-size: 24rpx;
+  color: #95a5a6;
+}
+
+/* ============ 响应式适配 ============ */
+
+/* 针对小屏幕的适配 */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 15rpx;
+  }
+
+  /* 小屏幕上统计卡片保持横排但调整样式 */
+  .stats-header {
+    gap: 10rpx;
+    margin-bottom: 25rpx;
+  }
+  
+  .stats-card {
+    padding: 15rpx 10rpx;
+    min-height: 100rpx;
+  }
+  
+  .stats-label {
+    font-size: 20rpx;
+    margin-bottom: 6rpx;
+  }
+  
+  .stats-value {
+    font-size: 26rpx;
+  }
+
+  /* 关键修复：在小屏幕上扩大筛选区域可用空间 */
+  .filter-toolbar {
+    padding: 15rpx;
+    margin: 0 -5rpx 20rpx -5rpx;
+    border-radius: 10rpx;
+    width: calc(100% + 10rpx);
+  }
+  
+  .grade-filters {
+    margin: 0 -5rpx;
+    padding: 5rpx;
+    height: 65rpx;
+  }
+  
+  .grade-filter-item {
+    padding: 6rpx 16rpx;
+    font-size: 20rpx;
+    margin-right: 8rpx;
+    height: 45rpx;
+  }
+  
+  .sort-group {
+    gap: 8rpx;
+  }
+  
+  .sort-item {
+    min-width: 120rpx;
+    padding: 8rpx 12rpx;
+    font-size: 22rpx;
+  }
+  
+  .filter-label {
+    font-size: 22rpx;
+    margin-bottom: 10rpx;
+  }
+
+  .history-item {
+    padding: 20rpx;
+  }
+
+  .details-section {
+    flex-wrap: wrap;
+    gap: 15rpx;
+  }
+
+  .detail-item {
+    flex: 1 0 40%;
+    min-width: 0;
+  }
+
+  .rate-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15rpx;
+  }
+
+  .rate-text {
+    text-align: center;
+  }
+
+  .score {
+    font-size: 40rpx;
+  }
+}
+
+/* 针对非常小的屏幕（如 iPhone SE） */
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 10rpx;
+  }
+
+  /* 非常小的屏幕上统计卡片继续横排但进一步调整 */
+  .stats-header {
+    gap: 8rpx;
+    margin-bottom: 20rpx;
+  }
+  
+  .stats-card {
+    padding: 12rpx 8rpx;
+    min-height: 90rpx;
+    border-radius: 12rpx;
+  }
+  
+  .stats-label {
+    font-size: 18rpx;
+    margin-bottom: 4rpx;
+  }
+  
+  .stats-value {
+    font-size: 22rpx;
+  }
+
+  /* 关键修复：在非常小的屏幕上进一步调整 */
+  .filter-toolbar {
+    padding: 12rpx;
+    margin: 0 -8rpx 15rpx -8rpx;
+    width: calc(100% + 16rpx);
+    border-radius: 8rpx;
+  }
+  
+  .grade-filters {
+    height: 60rpx;
+    margin: 0 -8rpx;
+    padding: 5rpx 8rpx;
+  }
+  
+  .grade-filter-item {
+    padding: 5rpx 12rpx;
+    font-size: 18rpx;
+    margin-right: 6rpx;
+    height: 40rpx;
+    border-radius: 18rpx;
+  }
+  
+  .sort-group {
+    gap: 5rpx;
+  }
+  
+  .sort-item {
+    min-width: 100rpx;
+    padding: 6rpx 10rpx;
+    font-size: 18rpx;
+  }
+
+  .clear-btn {
+    height: 70rpx;
+    font-size: 24rpx;
+  }
+
+  .history-item {
+    padding: 15rpx;
+  }
+
+  .score {
+    font-size: 36rpx;
+  }
+
+  .total {
+    font-size: 24rpx;
+  }
+
+  .detail-text {
+    font-size: 22rpx;
+    max-width: 120rpx;
+  }
+
+  .rate-text {
+    font-size: 24rpx;
+  }
+
+  .empty-btn {
+    width: 80%;
+    height: 80rpx;
+    font-size: 26rpx;
+  }
+}
+
+/* 横屏适配 */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .stats-header {
+    gap: 20rpx; /* 横屏时增加间距 */
+  }
+  
+  .stats-card {
+    min-height: 110rpx;
+    padding: 15rpx;
+  }
+  
+  .stats-value {
+    font-size: 28rpx;
+  }
+
+  .filter-group {
+    margin-bottom: 15rpx;
+  }
+
+  .grade-filters {
+    height: 65rpx;
+  }
+  
+  /* 横屏时减少按钮间距 */
+  .grade-filter-item {
+    margin-right: 8rpx;
+  }
+}
+
+/* 平板和大屏幕优化 */
+@media screen and (min-width: 768px) {
+  .stats-card {
+    transition: all 0.3s ease;
+  }
+  
+  .stats-card:active {
+    transform: translateY(-2rpx);
+    box-shadow: 0 6rpx 15rpx rgba(0, 0, 0, 0.1);
+  }
+}

@@ -119,35 +119,81 @@ Page({
   /**
    * 保存历史记录
    */
-  saveHistory: function(score, total, grade, gradeName, correctRate, time, correctCount, wrongCount) {
+  saveHistory: function(score, total, grade, gradeName, correctRate, time, correctCount, wrongCount, averageTime) {
     try {
-      let history = wx.getStorageSync('practiceHistory') || []
+      // 1. 从本地存储获取现有记录，如果没有则初始化为空数组
+      let history = wx.getStorageSync('practiceHistory') || [];
       
-      const record = {
-        date: new Date().toLocaleString(),
-        grade: grade,
-        gradeName: gradeName,
-        score: score,
-        total: total,
-        correctRate: correctRate + '%',
-        time: time,
-        correctCount: correctCount,
-        wrongCount: wrongCount,
-        timestamp: Date.now()
-      }
+      // 2. 调用辅助函数，生成一条格式统一的新记录
+      const record = this.generateHistoryRecord(
+        score, total, grade, gradeName, correctRate, 
+        time, correctCount, wrongCount, averageTime
+      );
       
-      history.unshift(record)
+      // 3. 将新记录添加到历史数组的开头（最新的在最前面）
+      history.unshift(record);
       
-      // 只保留最近50条记录
+      // 4. 限制历史记录总条数，避免本地存储过大（只保留最近50条）
       if (history.length > 50) {
-        history = history.slice(0, 50)
+        history = history.slice(0, 50);
       }
       
-      wx.setStorageSync('practiceHistory', history)
-      console.log('练习记录保存成功', record)
+      // 5. 将更新后的数组保存回本地存储
+      wx.setStorageSync('practiceHistory', history);
+      console.log('✅ 练习记录保存成功', record);
     } catch (error) {
-      console.error('保存练习记录失败', error)
+      console.error('❌ 保存练习记录失败', error);
+      // 可以给用户一个轻量提示，但不必阻断流程
+      wx.showToast({
+        title: '记录保存失败',
+        icon: 'none',
+        duration: 1500
+      });
     }
+  },
+
+  /**
+   * 【新增辅助函数】生成标准化历史记录对象
+   * 此函数确保所有记录的字段名和格式完全一致，避免后续读取时出错。
+   */
+  generateHistoryRecord: function(score, total, grade, gradeName, correctRate, time, correctCount, wrongCount, averageTime) {
+    // 统一 correctRate 的格式为数字，便于后续计算和排序
+    let correctRateValue;
+    if (typeof correctRate === 'string') {
+      // 如果是字符串（如"85%"），去掉百分号转成数字
+      correctRateValue = parseFloat(correctRate.replace('%', '')) || 0;
+    } else {
+      // 如果是数字，直接使用
+      correctRateValue = correctRate || 0;
+    }
+    
+    // 统一 date 字段的格式为可读的本地字符串
+    const now = new Date();
+    const formattedDate = now.toLocaleString('zh-CN');
+    
+    // 返回结构完全一致的记录对象
+    return {
+      // 标识与基本信息
+      id: `record_${now.getTime()}_${Math.random().toString(36).substr(2, 9)}`, // 生成唯一ID
+      timestamp: now.getTime(), // 时间戳，用于精确排序
+      date: formattedDate,      // 可读的日期时间
+      
+      // 练习元数据
+      grade: grade,             // 年级数字 (1-6)
+      gradeName: gradeName,     // 年级名称 (如“一年级”)
+      
+      // 成绩数据
+      score: score || 0,
+      total: total || 100,
+      correctCount: correctCount || 0,
+      wrongCount: wrongCount || 0,
+      correctRate: correctRateValue, // 统一为数字
+      time: time || '00:00',
+      averageTime: averageTime || 0,
+      
+      // 可以在此预留其他字段，如知识点分类等
+      // tags: []
+    };
   },
   
   /**
