@@ -1,2 +1,179 @@
-<!--pages/practice/practice.wxml-->
-<text>pages/practice/practice.wxml</text>
+<!-- pages/practice/practice.wxml -->
+<view class="container">
+  <!-- 顶部信息栏 -->
+  <view class="header">
+    <view class="grade-info">
+      <text class="grade-name">{{gradeName}} 计算练习</text>
+      <text class="time">用时：{{formattedTime}}</text>
+    </view>
+    <view class="progress-info">
+      <text class="progress">第 {{currentQuestion}} 题 / 共 {{totalQuestions}} 题</text>
+      <progress 
+        class="progress-bar" 
+        percent="{{progressPercent}}" 
+        stroke-width="12" 
+        activeColor="#3498db" 
+        backgroundColor="#eee" 
+        active
+      />
+    </view>
+    
+    <!-- 快捷操作按钮 -->
+    <view class="quick-actions">
+      <button class="action-btn keypad-btn" bindtap="toggleKeypad">
+        <icon type="{{showKeypad ? 'unfold' : 'folderopen'}}" size="16"></icon>
+        {{showKeypad ? '隐藏键盘' : '显示键盘'}}
+      </button>
+      <button class="action-btn restart-btn" bindtap="restartPractice">
+        <icon type="refresh" size="16"></icon>
+        重新开始
+      </button>
+    </view>
+  </view>
+
+  <!-- 题目卡片 -->
+  <view class="question-card">
+    <view class="question-header">
+      <text class="question-label">题目 {{currentQuestion}}</text>
+      <text class="difficulty">难度：{{difficulty}}</text>
+    </view>
+    
+    <view class="question-content">
+      <text class="question-text">{{question}}</text>
+      <text class="equals">=</text>
+      
+      <!-- 输入框包装器 -->
+      <view class="answer-input-wrapper">
+        <input 
+          class="answer-input" 
+          type="text" 
+          placeholder="输入答案" 
+          value="{{userAnswer}}"
+          bindinput="onInput"
+          bindconfirm="submitAnswer"
+          focus="{{autoFocus && !showKeypad}}"
+          maxlength="10"
+          disabled="{{showKeypad}}"
+        />
+        
+        <!-- 自定义清除按钮 -->
+        <view 
+          class="custom-clear-btn" 
+          wx:if="{{userAnswer}}" 
+          bindtap="clearInput"
+        >
+          <text class="clear-text-icon">×</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 计算器键盘 -->
+    <view class="calculator-keypad" wx:if="{{showKeypad}}">
+      <view class="key-row">
+        <button class="key" data-key="7" bindtap="onKeyTap">7</button>
+        <button class="key" data-key="8" bindtap="onKeyTap">8</button>
+        <button class="key" data-key="9" bindtap="onKeyTap">9</button>
+        <button class="key del" bindtap="onDelete">
+          <icon type="delete" size="18"></icon>
+        </button>
+      </view>
+      <view class="key-row">
+        <button class="key" data-key="4" bindtap="onKeyTap">4</button>
+        <button class="key" data-key="5" bindtap="onKeyTap">5</button>
+        <button class="key" data-key="6" bindtap="onKeyTap">6</button>
+        <button class="key" data-key="-" bindtap="onKeyTap">-</button>
+      </view>
+      <view class="key-row">
+        <button class="key" data-key="1" bindtap="onKeyTap">1</button>
+        <button class="key" data-key="2" bindtap="onKeyTap">2</button>
+        <button class="key" data-key="3" bindtap="onKeyTap">3</button>
+        <button class="key" data-key="+" bindtap="onKeyTap">+</button>
+      </view>
+      <view class="key-row">
+        <button class="key zero" data-key="0" bindtap="onKeyTap">0</button>
+        <button class="key" data-key="." bindtap="onKeyTap">.</button>
+        <button class="key clear" bindtap="clearInput">清空</button>
+        <button class="key submit" bindtap="submitAnswer">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn skip" bindtap="skipQuestion" hover-class="btn-hover">
+      <icon type="cancel" size="18" color="#e74c3c"></icon>
+      跳过本题
+    </button>
+    <button class="btn submit" bindtap="submitAnswer" hover-class="btn-hover">
+      <icon type="success" size="18" color="white"></icon>
+      提交答案
+    </button>
+  </view>
+
+  <!-- 得分板 -->
+  <view class="score-board">
+    <view class="score-item">
+      <text class="score-label">正确</text>
+      <text class="score-value correct">{{correctCount}}</text>
+    </view>
+    <view class="score-item">
+      <text class="score-label">错误</text>
+      <text class="score-value wrong">{{wrongCount}}</text>
+    </view>
+    <view class="score-item">
+      <text class="score-label">得分</text>
+      <text class="score-value">{{score}}</text>
+    </view>
+    <view class="score-item">
+      <text class="score-label">正确率</text>
+      <text class="score-value rate">{{correctRate}}%</text>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="history-header">
+      <text class="history-title">最近答题记录</text>
+      <button class="clear-history-btn" bindtap="clearHistory" wx:if="{{history.length > 0}}">
+        <icon type="clear" size="14"></icon>
+        清空
+      </button>
+    </view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="index">
+        <view class="history-question-section">
+          <text class="history-index">{{index + 1}}.</text>
+          <text class="history-question">{{item.question}} = </text>
+          <text class="history-user-answer {{item.isCorrect ? 'correct' : 'wrong'}}">
+            {{item.userAnswer}}
+          </text>
+        </view>
+        <view class="history-result" wx:if="{{!item.isCorrect && item.userAnswer !== '跳过'}}">
+          <text class="correct-answer">正确答案：{{item.correctAnswer}}</text>
+        </view>
+        <view class="history-time">
+          <icon type="waiting" size="12" color="#7f8c8d"></icon>
+          <text class="time-text">{{item.time}}</text>
+          <text class="skip-tag" wx:if="{{item.skipped}}">[跳过]</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="hint-section" wx:if="{{currentQuestion === 1 && history.length === 0}}">
+    <text class="hint-title">💡 使用提示</text>
+    <view class="hint-item">
+      <icon type="info" size="14" color="#3498db"></icon>
+      <text>直接输入答案或使用下方键盘</text>
+    </view>
+    <view class="hint-item">
+      <icon type="info" size="14" color="#3498db"></icon>
+      <text>每题10分，共{{totalQuestions}}题</text>
+    </view>
+    <view class="hint-item">
+      <icon type="info" size="14" color="#3498db"></icon>
+      <text>点击"跳过"不计分但记录错误</text>
+    </view>
+  </view>
+</view>

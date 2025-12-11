@@ -1,1 +1,78 @@
-/* pages/gradeSelect/gradeSelect.wxss */
+.container {
+  padding: 40rpx;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #7f8c8d;
+  display: block;
+}
+
+.grade-list {
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.1);
+}
+
+.grade-item {
+  padding: 40rpx 30rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.grade-item:active {
+  background-color: #f8f9fa;
+}
+
+.grade-item:last-child {
+  border-bottom: none;
+}
+
+.grade-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: #3498db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-right: 30rpx;
+}
+
+.grade-name {
+  flex: 1;
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.grade-desc {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  margin-right: 20rpx;
+}
+
+.arrow {
+  opacity: 0.5;
+}

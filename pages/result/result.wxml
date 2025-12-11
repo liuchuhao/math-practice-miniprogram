@@ -1,23 +1,92 @@
+<!-- pages/result/result.wxml -->
 <view class="container">
   <view class="result-card">
+    <!-- 标题 -->
     <view class="header">
       <text class="title">练习完成</text>
-      <text class="grade">{{grade}}年级</text>
+      <text class="subtitle">{{gradeName}} - {{formattedDate}}</text>
     </view>
     
-    <view class="score-circle">
-      <text class="score">{{score}}/{{total}}</text>
-      <text class="rate">正确率：{{correctRate}}</text>
+    <!-- 成绩展示 -->
+    <view class="score-display">
+      <view class="score-circle">
+        <text class="score-main">{{score}}/{{total}}</text>
+        <text class="score-rate">正确率：{{correctRate}}</text>
+      </view>
+      
+      <!-- 成绩评价 -->
+      <view class="score-evaluation">
+        <text class="evaluation-text">{{message}}</text>
+        <view class="score-details">
+          <view class="detail-item">
+            <text class="detail-label">正确题目</text>
+            <text class="detail-value correct">{{correctCount}} 题</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">错误题目</text>
+            <text class="detail-value wrong">{{wrongCount}} 题</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">用时</text>
+            <text class="detail-value time">{{time}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">平均用时</text>
+            <text class="detail-value avg-time">{{averageTime}} 秒/题</text>
+          </view>
+        </view>
+      </view>
     </view>
     
-    <view class="message">
-      <text>{{message}}</text>
+    <!-- 等级徽章 -->
+    <view class="badge-section" wx:if="{{showBadge}}">
+      <text class="badge-title">🏆 获得徽章</text>
+      <view class="badge-container">
+        <view class="badge {{badgeClass}}">
+          <text class="badge-text">{{badgeText}}</text>
+        </view>
+      </view>
     </view>
     
-    <view class="btn-group">
-      <button class="btn restart-btn" bindtap="restart">重新练习</button>
-      <button class="btn home-btn" bindtap="goHome">返回首页</button>
-      <button class="btn history-btn" bindtap="viewHistory">查看历史</button>
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn restart-btn" bindtap="restart">
+        <icon type="refresh" size="18"></icon>
+        重新练习
+      </button>
+      <button class="btn home-btn" bindtap="goHome">
+        <icon type="home" size="18"></icon>
+        返回首页
+      </button>
+      <button class="btn history-btn" bindtap="viewHistory">
+        <icon type="history" size="18"></icon>
+        查看历史
+      </button>
+      <button class="btn share-btn" open-type="share">
+        <icon type="share" size="18"></icon>
+        分享成绩
+      </button>
+    </view>
+    
+    <!-- 历史记录预览 -->
+    <view class="history-preview" wx:if="{{recentHistory.length > 0}}">
+      <view class="preview-header">
+        <text class="preview-title">📊 最近练习记录</text>
+        <button class="view-all-btn" bindtap="viewHistory">查看全部</button>
+      </view>
+      <view class="preview-list">
+        <view class="preview-item" wx:for="{{recentHistory}}" wx:key="date" wx:for-item="record">
+          <view class="preview-grade">{{record.gradeName || record.grade + '年级'}}</view>
+          <view class="preview-score">{{record.score}}/{{record.total}}</view>
+          <view class="preview-rate">{{record.correctRate}}</view>
+          <view class="preview-date">{{formatPreviewDate(record.date)}}</view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 鼓励语句 -->
+    <view class="encouragement">
+      <text class="encouragement-text">💪 坚持练习，数学会越来越棒！</text>
     </view>
   </view>
 </view>

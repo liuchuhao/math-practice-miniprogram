@@ -1,16 +1,19 @@
 <view class="container">
   <view class="header">
-    <text>选择年级</text>
+    <text class="title">选择年级</text>
+    <text class="subtitle">请选择对应的年级开始练习</text>
   </view>
   
   <view class="grade-list">
     <view class="grade-item" 
           wx:for="{{grades}}" 
-          wx:key="grade"
+          wx:key="id"
           bindtap="selectGrade" 
           data-grade="{{item.grade}}">
-      <text class="grade-text">{{item.name}}</text>
+      <view class="grade-icon">{{item.icon}}</view>
+      <text class="grade-name">{{item.name}}</text>
       <text class="grade-desc">{{item.desc}}</text>
+      <icon class="arrow" type="arrowright" size="20" color="#ccc"></icon>
     </view>
   </view>
 </view>

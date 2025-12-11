@@ -1,1 +1,495 @@
 /* pages/practice/practice.wxss */
+
+.container {
+  padding: 30rpx;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 头部样式 */
+.header {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
+}
+
+.grade-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.grade-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.time {
+  font-size: 28rpx;
+  color: #3498db;
+  font-weight: 500;
+}
+
+.progress-info {
+  margin-top: 10rpx;
+}
+
+.progress {
+  font-size: 28rpx;
+  color: #7f8c8d;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.progress-bar {
+  width: 100%;
+}
+
+/* 快捷操作按钮 */
+.quick-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  gap: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 60rpx;
+  font-size: 24rpx;
+  background: #f8f9fa;
+  border: 1rpx solid #ddd;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.action-btn:active {
+  background: #e9ecef;
+}
+
+.keypad-btn {
+  color: #3498db;
+}
+
+.restart-btn {
+  color: #e74c3c;
+}
+
+/* 题目卡片 */
+.question-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.question-label {
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.difficulty {
+  font-size: 26rpx;
+  color: #e67e22;
+  padding: 8rpx 16rpx;
+  background: #fef9f3;
+  border-radius: 20rpx;
+}
+
+.question-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 40rpx 0;
+}
+
+.question-text {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-right: 30rpx;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.equals {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #3498db;
+  margin-right: 30rpx;
+}
+
+/* 输入框包装器 */
+.answer-input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.answer-input {
+  width: 300rpx;
+  height: 100rpx;
+  font-size: 60rpx;
+  text-align: center;
+  border: 4rpx solid #3498db;
+  border-radius: 15rpx;
+  background: #f8fafc;
+  font-family: 'Courier New', Courier, monospace;
+  /* 为自定义清除按钮留出空间 */
+  padding-right: 70rpx !important;
+  /* 隐藏系统清除按钮 */
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* 隐藏系统自带的清除按钮 */
+.answer-input::-webkit-clear-button,
+.answer-input::-webkit-inner-spin-button,
+.answer-input::-webkit-outer-spin-button {
+  display: none !important;
+}
+
+/* 自定义清除按钮 */
+.custom-clear-btn {
+  position: absolute;
+  right: 15rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f7ff;
+  border: 1rpx solid #3498db;
+  border-radius: 50%;
+  z-index: 10;
+  opacity: 0.8;
+  transition: all 0.2s;
+}
+
+.custom-clear-btn:active {
+  background: #e1f0ff;
+  opacity: 1;
+  transform: translateY(-50%) scale(0.95);
+}
+
+.clear-text-icon {
+  font-size: 32rpx;
+  color: #3498db;
+  font-weight: normal;
+  line-height: 1;
+}
+
+/* 计算器键盘 */
+.calculator-keypad {
+  margin-top: 40rpx;
+  background: #f8f9fa;
+  border-radius: 15rpx;
+  padding: 20rpx;
+}
+
+.key-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+
+.key {
+  width: 22%;
+  height: 90rpx;
+  background: white;
+  border: 2rpx solid #ddd;
+  border-radius: 10rpx;
+  font-size: 36rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.key:active {
+  background: #3498db;
+  color: white;
+  transform: scale(0.95);
+}
+
+.key.zero {
+  width: 48%;
+}
+
+.key.del, .key.clear, .key.submit {
+  font-size: 28rpx;
+}
+
+.key.del {
+  background: #fef2f2;
+  color: #e74c3c;
+  border-color: #f8d7da;
+}
+
+.key.clear {
+  background: #fef9f2;
+  color: #e67e22;
+  border-color: #fae5d3;
+}
+
+.key.submit {
+  background: #2ecc71;
+  color: white;
+  border-color: #2ecc71;
+  width: 48%;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 40rpx 0;
+}
+
+.btn {
+  width: 48%;
+  height: 100rpx;
+  border-radius: 15rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  gap: 10rpx;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-hover {
+  opacity: 0.8;
+}
+
+.btn.skip {
+  background: #fef2f2;
+  color: #e74c3c;
+  border: 2rpx solid #e74c3c;
+}
+
+.btn.submit {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  box-shadow: 0 5rpx 15rpx rgba(46, 204, 113, 0.3);
+}
+
+/* 得分板 */
+.score-board {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
+}
+
+.score-item {
+  text-align: center;
+  flex: 1;
+}
+
+.score-label {
+  display: block;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 10rpx;
+}
+
+.score-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.score-value.correct {
+  color: #2ecc71;
+}
+
+.score-value.wrong {
+  color: #e74c3c;
+}
+
+.score-value.rate {
+  color: #3498db;
+}
+
+/* 历史记录 */
+.history-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.history-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.clear-history-btn {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 15rpx;
+  background: #f8f9fa;
+}
+
+.clear-history-btn:active {
+  color: #e74c3c;
+  background: #fef2f2;
+}
+
+.history-list {
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-question-section {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10rpx;
+}
+
+.history-index {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-right: 10rpx;
+  min-width: 40rpx;
+}
+
+.history-question {
+  font-size: 28rpx;
+  color: #2c3e50;
+  font-family: 'Courier New', Courier, monospace;
+  margin-right: 10rpx;
+}
+
+.history-user-answer {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.history-user-answer.correct {
+  color: #2ecc71;
+}
+
+.history-user-answer.wrong {
+  color: #e74c3c;
+  text-decoration: line-through;
+}
+
+.history-result {
+  margin-left: 50rpx;
+  margin-top: 5rpx;
+}
+
+.correct-answer {
+  font-size: 24rpx;
+  color: #2ecc71;
+  background: #f0f9f0;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.history-time {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #7f8c8d;
+  margin-left: 50rpx;
+}
+
+.time-text {
+  font-size: 22rpx;
+}
+
+.skip-tag {
+  font-size: 20rpx;
+  color: #e67e22;
+  margin-left: 10rpx;
+}
+
+/* 提示信息 */
+.hint-section {
+  background: #f0f7ff;
+  border-radius: 15rpx;
+  padding: 25rpx;
+  margin-top: 30rpx;
+  border-left: 6rpx solid #3498db;
+}
+
+.hint-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #3498db;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.hint-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+  color: #5a6c7d;
+}
+
+.hint-item:last-child {
+  margin-bottom: 0;
+}

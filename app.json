@@ -3,16 +3,15 @@
     "pages/index/index",
     "pages/gradeSelect/gradeSelect",
     "pages/practice/practice",
-    "pages/result/result",
-    "pages/logs/logs"
+    "pages/result/result"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "跟着刘叔学数学",
-    "navigationBarBackgroundColor": "#ffffff"
+    "navigationBarTitleText": "小学数学计算练习",
+    "navigationBarBackgroundColor": "#3498db",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "dark"
   },
   "style": "v2",
-  "componentFramework": "glass-easel",
-  "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents"
+  "sitemapLocation": "sitemap.json"
 }
