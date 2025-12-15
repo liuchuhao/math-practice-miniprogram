@@ -110,6 +110,11 @@
 }
 
 .btn:nth-child(3) {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  box-shadow: 0 6rpx 20rpx rgba(243, 156, 18, 0.3);
+}
+
+.btn:nth-child(4) {
   background: linear-gradient(135deg, #9b59b6, #8e44ad);
   box-shadow: 0 6rpx 20rpx rgba(155, 89, 182, 0.3);
 }

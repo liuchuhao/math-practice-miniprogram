@@ -1,0 +1,24 @@
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="title">选择年级</view>
+    <view class="subtitle">请选择要生成试卷的年级</view>
+  </view>
+
+  <!-- 年级列表 -->
+  <view class="grade-list">
+    <view class="grade-item" wx:for="{{gradeList}}" wx:key="index" data-grade="{{item}}" bindtap="selectGrade">
+      <view class="grade-icon">{{item}}</view>
+      <view class="grade-info">
+        <text class="grade-name">{{item}}数学</text>
+        <text class="grade-desc">{{itemDescriptions[index]}}</text>
+      </view>
+      <view class="grade-arrow">→</view>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer">
+    <text class="footer-text">选择年级后，可自定义生成试卷</text>
+  </view>
+</view>

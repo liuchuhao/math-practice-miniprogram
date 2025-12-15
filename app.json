@@ -4,7 +4,14 @@
     "pages/gradeSelect/gradeSelect",
     "pages/practice/practice",
     "pages/result/result",
-    "pages/history/history"
+    "pages/history/history",
+    "pages/generatePaperGrade1/generatePaperGrade1",
+    "pages/generatePaperGrade2/generatePaperGrade2",
+    "pages/generatePaperGrade3/generatePaperGrade3", 
+    "pages/generatePaperGrade4/generatePaperGrade4",
+    "pages/generatePaperGrade5/generatePaperGrade5",
+    "pages/generatePaperGrade6/generatePaperGrade6",
+    "pages/testChoose/testChoose"
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

@@ -1,0 +1,316 @@
+<!-- pages/generatePaper/generatePaper.wxml -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="title">试卷生成器</view>
+    <view class="subtitle">六年级数学计算专项练习</view>
+  </view>
+
+  <!-- 选项卡 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{activeTab === 'config' ? 'active' : ''}}" 
+      data-tab="config"
+      bindtap="switchTab"
+    >
+      配置
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'preview' ? 'active' : ''}}" 
+      data-tab="preview"
+      bindtap="switchTab"
+    >
+      预览
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'answer' ? 'active' : ''}}" 
+      data-tab="answer"
+      bindtap="switchTab"
+    >
+      答案
+    </view>
+  </view>
+
+  <!-- 配置选项卡 -->
+  <view class="tab-content" wx:if="{{activeTab === 'config'}}">
+    <view class="config-card">
+      <view class="config-title">试卷设置</view>
+      
+      <!-- 试卷标题 -->
+      <view class="config-group">
+        <view class="config-label">试卷标题</view>
+        <input 
+          class="config-input" 
+          value="{{paperTitle}}" 
+          placeholder="请输入试卷标题"
+          maxlength="50"
+          bindinput="onTitleInput"
+        />
+      </view>
+
+   <!-- 题目类型配置 -->
+<view class="config-section">
+  <view class="section-title">题目类型配置</view>
+  
+  <!-- 分数计算 -->
+  <view class="question-type">
+    <view class="type-header">
+      <text class="type-name">分数计算</text>
+      <text class="type-score">每题{{questionConfig.fraction.score}}分</text>
+    </view>
+    <view class="type-control">
+      <text class="type-label">题目数量：</text>
+      <input 
+        type="number" 
+        class="count-input" 
+        value="{{questionConfig.fraction.count}}" 
+        data-type="fraction"
+        min="0"
+        max="50"
+        bindinput="updateQuestionCount"
+      />
+    </view>
+  </view>
+
+  <!-- 小数计算 -->
+  <view class="question-type">
+    <view class="type-header">
+      <text class="type-name">小数计算</text>
+      <text class="type-score">每题{{questionConfig.decimal.score}}分</text>
+    </view>
+    <view class="type-control">
+      <text class="type-label">题目数量：</text>
+      <input 
+        type="number" 
+        class="count-input" 
+        value="{{questionConfig.decimal.count}}" 
+        data-type="decimal"
+        min="0"
+        max="50"
+        bindinput="updateQuestionCount"
+      />
+    </view>
+  </view>
+
+  <!-- 百分数计算 -->
+  <view class="question-type">
+    <view class="type-header">
+      <text class="type-name">百分数计算</text>
+      <text class="type-score">每题{{questionConfig.percentage.score}}分</text>
+    </view>
+    <view class="type-control">
+      <text class="type-label">题目数量：</text>
+      <input 
+        type="number" 
+        class="count-input" 
+        value="{{questionConfig.percentage.count}}" 
+        data-type="percentage"
+        min="0"
+        max="50"
+        bindinput="updateQuestionCount"
+      />
+    </view>
+  </view>
+
+  <!-- 混合运算 -->
+  <view class="question-type">
+    <view class="type-header">
+      <text class="type-name">混合运算</text>
+      <text class="type-score">每题{{questionConfig.mixed.score}}分</text>
+    </view>
+    <view class="type-control">
+      <text class="type-label">题目数量：</text>
+      <input 
+        type="number" 
+        class="count-input" 
+        value="{{questionConfig.mixed.count}}" 
+        data-type="mixed"
+        min="0"
+        max="50"
+        bindinput="updateQuestionCount"
+      />
+    </view>
+  </view>
+
+  <!-- 综合运算 -->
+  <view class="question-type">
+    <view class="type-header">
+      <text class="type-name">综合运算</text>
+      <text class="type-score">每题{{questionConfig.comprehensive.score}}分</text>
+    </view>
+    <view class="type-control">
+      <text class="type-label">题目数量：</text>
+      <input 
+        type="number" 
+        class="count-input" 
+        value="{{questionConfig.comprehensive.count}}" 
+        data-type="comprehensive"
+        min="0"
+        max="50"
+        bindinput="updateQuestionCount"
+      />
+    </view>
+  </view>
+</view>
+
+      <!-- 统计信息 -->
+      <view class="stats">
+        <view class="stat-item">
+          <text>总题数：</text>
+          <text class="stat-value">{{totalCount}}</text>
+        </view>
+        <view class="stat-item">
+          <text>总分：</text>
+          <text class="stat-value">{{totalScore}}分</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 生成按钮 -->
+    <button 
+      class="generate-btn {{isGenerating ? 'disabled' : ''}}" 
+      type="primary" 
+      bindtap="generatePaper"
+      disabled="{{isGenerating}}"
+    >
+      {{isGenerating ? '生成中...' : '生成试卷'}}
+    </button>
+  </view>
+
+  <!-- 预览选项卡 -->
+  <view class="tab-content" wx:if="{{activeTab === 'preview'}}">
+    <view class="preview-card" wx:if="{{questions.length > 0}}">
+      <view class="preview-header">
+        <view class="paper-title">{{paperTitle}}</view>
+        <view class="paper-info">
+          共{{questions.length}}题 • 总分{{totalScore}}分
+        </view>
+      </view>
+
+      <!-- 题目列表 -->
+      <view class="questions-list">
+        <view class="question-item" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+          <view class="question-content">
+            <text class="question-index">{{idx + 1}}.</text>
+            
+            <!-- 分数题目特殊显示 -->
+            <view wx:if="{{item.type === 'fraction'}}" class="fraction-question">
+              <view class="fraction-display">
+                <view class="fraction-num">{{item.num1.numerator}}</view>
+                <view class="fraction-line"></view>
+                <view class="fraction-den">{{item.num1.denominator}}</view>
+              </view>
+              <text class="fraction-operator">{{item.operator}}</text>
+              <view class="fraction-display">
+                <view class="fraction-num">{{item.num2.numerator}}</view>
+                <view class="fraction-line"></view>
+                <view class="fraction-den">{{item.num2.denominator}}</view>
+              </view>
+            </view>
+            
+            <!-- 非分数题目 -->
+            <text wx:else class="question-text">{{item.question}}</text>
+            
+            <text class="question-score">({{item.score}}分)</text>
+          </view>
+          <view class="question-category">{{item.category}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">📝</view>
+      <view class="empty-title">还没有生成试卷</view>
+      <view class="empty-desc">请先切换到配置页面生成试卷</view>
+      <button class="empty-btn" bindtap="switchToConfig">前往配置</button>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons" wx:if="{{questions.length > 0}}">
+      <button class="action-btn" bindtap="toggleAnswerInputs">
+        {{showAnswerInputs ? '隐藏答案输入' : '显示答案输入'}}
+      </button>
+      <button class="action-btn primary" bindtap="checkAnswers">
+        检查答案
+      </button>
+    </view>
+
+    <!-- 答案输入区域 -->
+    <view class="answer-inputs" wx:if="{{showAnswerInputs && questions.length > 0}}">
+      <view class="answer-title">请输入答案：</view>
+      <view class="answers-list">
+        <view class="answer-item" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+          <text class="answer-index">{{idx + 1}}.</text>
+          <input 
+            class="answer-input" 
+            placeholder="请输入答案"
+            data-id="{{item.id}}"
+            value="{{userAnswers[item.id]}}"
+            bindinput="onAnswerInput"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答案选项卡 -->
+  <view class="tab-content" wx:if="{{activeTab === 'answer'}}">
+    <view class="answer-card" wx:if="{{questions.length > 0}}">
+      <!-- 得分显示 -->
+      <view class="score-display" wx:if="{{showScore}}">
+        <view class="score-value">{{score}}分</view>
+        <view class="score-detail">正确: {{correctCount}}/{{questions.length}}题</view>
+      </view>
+
+      <!-- 答案详情 -->
+      <view class="answers-list">
+        <view class="answer-detail" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+          <view class="answer-question">
+            <text class="answer-index">{{idx + 1}}.</text>
+            
+            <!-- 分数题目 -->
+            <view wx:if="{{item.type === 'fraction'}}" class="fraction-question">
+              <view class="fraction-display">
+                <view class="fraction-num">{{item.num1.numerator}}</view>
+                <view class="fraction-line"></view>
+                <view class="fraction-den">{{item.num1.denominator}}</view>
+              </view>
+              <text class="fraction-operator">{{item.operator}}</text>
+              <view class="fraction-display">
+                <view class="fraction-num">{{item.num2.numerator}}</view>
+                <view class="fraction-line"></view>
+                <view class="fraction-den">{{item.num2.denominator}}</view>
+              </view>
+            </view>
+            
+            <!-- 非分数题目 -->
+            <text wx:else class="answer-text">{{item.question}}</text>
+          </view>
+          <view class="answer-info">
+            <view class="user-answer {{item.isCorrect ? 'correct' : 'wrong'}}">
+              你的答案: {{item.userAnswer || '未回答'}}
+            </view>
+            <view class="correct-answer">
+              正确答案: {{item.answer}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">📊</view>
+      <view class="empty-title">还没有答案记录</view>
+      <view class="empty-desc">请先生成试卷并填写答案</view>
+      <button class="empty-btn" bindtap="switchToConfig">生成试卷</button>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons" wx:if="{{questions.length > 0}}">
+      <button class="action-btn" bindtap="generatePaper">重新生成</button>
+      <button class="action-btn primary" bindtap="checkAnswers">检查答案</button>
+    </view>
+  </view>
+</view>

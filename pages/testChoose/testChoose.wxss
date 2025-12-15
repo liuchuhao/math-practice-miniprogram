@@ -1,0 +1,172 @@
+/* 页面容器 */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 头部样式 */
+.header {
+  text-align: center;
+  margin-bottom: 30rpx;
+  padding: 30rpx 20rpx;
+  background: white;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 年级列表 */
+.grade-list {
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.grade-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  position: relative;
+}
+
+.grade-item:last-child {
+  border-bottom: none;
+}
+
+.grade-item:active {
+  background-color: #f9f9f9;
+}
+
+.grade-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 25rpx;
+  flex-shrink: 0;
+}
+
+/* 不同年级的不同颜色 */
+.grade-item:nth-child(1) .grade-icon {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.grade-item:nth-child(2) .grade-icon {
+  background: linear-gradient(135deg, #ff9f43, #ff9f1a);
+}
+
+.grade-item:nth-child(3) .grade-icon {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.grade-item:nth-child(4) .grade-icon {
+  background: linear-gradient(135deg, #54a0ff, #2e86de);
+}
+
+.grade-item:nth-child(5) .grade-icon {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.grade-item:nth-child(6) .grade-icon {
+  background: linear-gradient(135deg, #00d2d3, #1dd1a1);
+}
+
+.grade-info {
+  flex: 1;
+}
+
+.grade-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.grade-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+.grade-arrow {
+  color: #999;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-left: 15rpx;
+}
+
+/* 底部提示 */
+.footer {
+  margin-top: 40rpx;
+  text-align: center;
+  padding: 30rpx;
+  background: white;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.footer-text {
+  font-size: 26rpx;
+  color: #999;
+  font-style: italic;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 15rpx;
+  }
+  
+  .header {
+    padding: 25rpx 15rpx;
+  }
+  
+  .title {
+    font-size: 32rpx;
+  }
+  
+  .subtitle {
+    font-size: 24rpx;
+  }
+  
+  .grade-item {
+    padding: 25rpx 20rpx;
+  }
+  
+  .grade-icon {
+    width: 70rpx;
+    height: 70rpx;
+    font-size: 28rpx;
+  }
+  
+  .grade-name {
+    font-size: 30rpx;
+  }
+  
+  .grade-desc {
+    font-size: 24rpx;
+  }
+}

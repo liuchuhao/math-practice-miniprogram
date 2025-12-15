@@ -13,8 +13,11 @@
   <view class="btn-group">
     <button class="btn" bindtap="startPractice">开始练习</button>
     <button class="btn" bindtap="viewHistory">练习记录</button>
+    <button class="btn" bindtap="goToGradeTestPaper">计算试卷</button>
     <button class="btn" bindtap="about">关于我们</button>
+   
   </view>
+ 
 <!-- 底部信息 -->
 <view class="footer">
     <text class="footer-text">每天练习10分钟，数学进步快！</text>

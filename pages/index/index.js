@@ -98,7 +98,12 @@ Page({
       confirmColor: '#3498db'
     })
   },
-
+// 跳转到试卷生成页面
+goToGradeTestPaper: function() {
+  wx.navigateTo({
+    url: '/pages/testChoose/testChoose'
+  });
+},
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -158,4 +163,5 @@ Page({
       imageUrl: '/images/share.png'
     }
   }
+  
 })
