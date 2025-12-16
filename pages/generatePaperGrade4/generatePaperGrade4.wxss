@@ -440,10 +440,16 @@
   flex: 1;
   border: 1rpx solid #e0e0e0;
   border-radius: 8rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
+  padding: 25rpx 30rpx;  /* 进一步增加内边距 */
+  font-size: 36rpx;      /* 进一步增大字体 */
   min-width: 0;
   box-sizing: border-box;
+  height: 90rpx;         /* 增加高度 */
+  line-height: 40rpx;
+  color: #333;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
 }
 
 /* ===== 答案页面样式 ===== */

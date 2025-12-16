@@ -109,7 +109,7 @@
 
       <!-- 题目列表 -->
       <view class="questions-list">
-        <view class="question-item" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+        <view class="question-item" wx:for="{{questions}}" wx:key="id" wx:for-index="idx">
           <view class="question-content">
             <text class="question-index">{{idx + 1}}.</text>
             
@@ -126,6 +126,7 @@
                 <view class="fraction-line"></view>
                 <view class="fraction-den">{{item.num2.denominator}}</view>
               </view>
+              <text class="question-equals">=</text>
             </view>
             
             <!-- 非分数题目 -->
@@ -160,7 +161,7 @@
     <view class="answer-inputs" wx:if="{{showAnswerInputs && questions.length > 0}}">
       <view class="answer-title">请输入答案：</view>
       <view class="answers-list">
-        <view class="answer-item" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+        <view class="answer-item" wx:for="{{questions}}" wx:key="id" wx:for-index="idx">
           <text class="answer-index">{{idx + 1}}.</text>
           <input 
             class="answer-input" 
@@ -185,7 +186,7 @@
 
       <!-- 答案详情 -->
       <view class="answers-list">
-        <view class="answer-detail" wx:for="{{questions}}" wx:key="index" wx:for-index="idx">
+        <view class="answer-detail" wx:for="{{questions}}" wx:key="id" wx:for-index="idx">
           <view class="answer-question">
             <text class="answer-index">{{idx + 1}}.</text>
             
@@ -202,6 +203,7 @@
                 <view class="fraction-line"></view>
                 <view class="fraction-den">{{item.num2.denominator}}</view>
               </view>
+              <text class="question-equals">=</text>
             </view>
             
             <!-- 非分数题目 -->
