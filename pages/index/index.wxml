@@ -1,26 +1,73 @@
+<!-- pages/index/index.wxml -->
 <view class="container">
+  <!-- 1. 顶部标语 -->
   <view class="header">
     <text class="title">小学数学计算练习</text>
-    <text class="subtitle">1-6年级</text>
+    <text class="subtitle">公众号：刘叔数学训练</text>
   </view>
   
-  
-    <!-- 修改这里：将 image 改为 view，添加数学符号 -->
+  <!-- 2. Logo区 (保留原有的可爱π) -->
+  <view class="logo-area">
     <view class="logo">
-    <text class="logo-text">π</text>
+      <text class="logo-text">π</text>
+    </view>
   </view>
 
-  <view class="btn-group">
-    <button class="btn" bindtap="startPractice">开始练习</button>
-    <button class="btn" bindtap="viewHistory">练习记录</button>
-    <button class="btn" bindtap="goToGradeTestPaper">计算试卷</button>
-    <button class="btn" bindtap="about">关于我们</button>
-   
+  <!-- 3. 用户名片卡 (新增核心功能) -->
+  <view class="user-card">
+    <view class="user-card-inner">
+      <!-- 头像选择 -->
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-img" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
+        <view class="edit-badge">📷</view>
+      </button>
+      
+      <!-- 昵称输入 -->
+      <view class="nickname-box">
+        <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput"/>
+        <text class="nickname-tip">👈 点我完善资料，上榜更好看！</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 4. 核心功能区 (大按钮) -->
+  <view class="main-actions">
+    <view class="action-card blue" bindtap="startPractice">
+      <view class="icon-box">✏️</view>
+      <view class="text-box">
+        <text class="card-title">开始练习</text>
+        <text class="card-desc">专项突破 巩固基础</text>
+      </view>
+    </view>
+    
+    <view class="action-card orange" bindtap="goToRank">
+      <view class="icon-box">🏆</view>
+      <view class="text-box">
+        <text class="card-title">计算英雄榜</text>
+        <text class="card-desc">挑战全网高手</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 5. 更多功能区 (网格布局) -->
+  <view class="sub-actions">
+    <view class="sub-btn" bindtap="goToGradeTestPaper">
+      <text class="sub-icon">📝</text>
+      <text>计算试卷</text>
+    </view>
+    <view class="sub-btn" bindtap="viewHistory">
+      <text class="sub-icon">📊</text>
+      <text>练习记录</text>
+    </view>
+    <view class="sub-btn" bindtap="about">
+      <text class="sub-icon">ℹ️</text>
+      <text>关于我们</text>
+    </view>
   </view>
  
-<!-- 底部信息 -->
-<view class="footer">
-    <text class="footer-text">每天练习10分钟，数学进步快！</text>
+  <!-- 底部信息 -->
+  <view class="footer">
+    <text class="footer-text">本程序由Adam.Liu（刘叔）独立开发</text>
   </view>
 
 </view>

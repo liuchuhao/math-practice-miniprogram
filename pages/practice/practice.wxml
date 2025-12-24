@@ -3,6 +3,8 @@
   <!-- 顶部信息栏 -->
   <view class="header">
     <view class="grade-info">
+      <!-- 增加了一个小徽章，提示这是排位赛模式 -->
+      <view class="rank-badge">🏆 排位赛</view>
       <text class="grade-name">{{gradeName}} 计算练习</text>
       <text class="time">用时：{{formattedTime}}</text>
     </view>
@@ -66,9 +68,10 @@
         </view>
       </view>
     </view>
-    
-    <!-- 计算器键盘 -->
-    <view class="calculator-keypad" wx:if="{{showKeypad}}">
+  </view>
+
+ <!-- 计算器键盘 -->
+ <view class="calculator-keypad" wx:if="{{showKeypad}}">
       <view class="key-row">
         <button class="key" data-key="7" bindtap="onKeyTap">7</button>
         <button class="key" data-key="8" bindtap="onKeyTap">8</button>
@@ -93,10 +96,12 @@
         <button class="key zero" data-key="0" bindtap="onKeyTap">0</button>
         <button class="key" data-key="." bindtap="onKeyTap">.</button>
         <button class="key clear" bindtap="clearInput">清空</button>
-        <button class="key submit" bindtap="submitAnswer">确定</button>
+        <!-- 这里动态修改按钮文字，如果是最后一题，提示“上传” -->
+        <button class="key submit" bindtap="submitAnswer">
+          {{currentQuestion === totalQuestions ? '完成' : '确定'}}
+        </button>
       </view>
     </view>
-  </view>
 
   <!-- 操作按钮 -->
   <view class="action-buttons">
@@ -104,9 +109,11 @@
       <icon type="cancel" size="18" color="#e74c3c"></icon>
       跳过本题
     </button>
+    
+    <!-- 这里的按钮文字也做了动态处理 -->
     <button class="btn submit" bindtap="submitAnswer" hover-class="btn-hover">
       <icon type="success" size="18" color="white"></icon>
-      提交答案
+      {{currentQuestion === totalQuestions ? '完成并上传' : '提交答案'}}
     </button>
   </view>
 
@@ -162,18 +169,18 @@
 
   <!-- 提示信息 -->
   <view class="hint-section" wx:if="{{currentQuestion === 1 && history.length === 0}}">
-    <text class="hint-title">💡 使用提示</text>
+    <text class="hint-title">💡 竞赛规则</text>
     <view class="hint-item">
       <icon type="info" size="14" color="#3498db"></icon>
-      <text>直接输入答案或使用下方键盘</text>
+      <text>共{{totalQuestions}}题，每题10分</text>
     </view>
     <view class="hint-item">
       <icon type="info" size="14" color="#3498db"></icon>
-      <text>每题10分，共{{totalQuestions}}题</text>
+      <text>答题越快，排名越高</text>
     </view>
     <view class="hint-item">
       <icon type="info" size="14" color="#3498db"></icon>
-      <text>点击"跳过"不计分但记录错误</text>
+      <text>成绩将自动上传至排行榜</text>
     </view>
   </view>
 </view>

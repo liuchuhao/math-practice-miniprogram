@@ -11,7 +11,8 @@
     "pages/generatePaperGrade4/generatePaperGrade4",
     "pages/generatePaperGrade5/generatePaperGrade5",
     "pages/generatePaperGrade6/generatePaperGrade6",
-    "pages/testChoose/testChoose"
+    "pages/testChoose/testChoose",
+    "pages/math_rank/math_rank"
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

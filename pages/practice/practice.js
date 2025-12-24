@@ -1,4 +1,3 @@
-// pages/practice/practice.js
 const QuestionGenerator = require('../../utils/questionGenerator.js')
 
 Page({
@@ -9,7 +8,7 @@ Page({
     // 年级信息
     grade: 1,
     gradeName: '一年级',
-    
+
     // 题目相关
     currentQuestion: 1,
     totalQuestions: 10,
@@ -17,27 +16,27 @@ Page({
     correctAnswer: 0,
     userAnswer: '',
     difficulty: '简单',
-    
+
     // 得分相关
     score: 0,
     correctCount: 0,
     wrongCount: 0,
     correctRate: 0,
-    
+
     // 计时相关
     startTime: 0,
     elapsedTime: 0,
     timer: null,
     formattedTime: '00:00',
-    
+
     // 历史记录
     history: [],
-    
+
     // UI控制
     autoFocus: true,
     showKeypad: false,
     progressPercent: 0,
-    
+
     // 题目生成器
     questionGenerator: null
   },
@@ -47,7 +46,7 @@ Page({
    */
   onLoad: function (options) {
     console.log('练习页面加载，参数:', options)
-    
+
     const grade = parseInt(options.grade) || 1
     const gradeName = options.gradeName || '一年级'
 
@@ -61,10 +60,10 @@ Page({
       startTime: Date.now(),
       progressPercent: 0
     })
-    
+
     // 开始计时
     this.startTimer()
-    
+
     // 生成第一道题目
     this.generateNewQuestion()
   },
@@ -86,38 +85,40 @@ Page({
   /**
    * 开始计时器
    */
-  startTimer: function() {
+  startTimer: function () {
     const timer = setInterval(() => {
       const elapsed = Math.floor((Date.now() - this.data.startTime) / 1000)
       const minutes = Math.floor(elapsed / 60)
       const seconds = elapsed % 60
-      
+
       this.setData({
         elapsedTime: elapsed,
         formattedTime: `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
       })
     }, 1000)
-    
-    this.setData({ timer })
+
+    this.setData({
+      timer
+    })
   },
 
   /**
    * 使用题目生成器生成题目
    */
-  generateNewQuestion: function() {
+  generateNewQuestion: function () {
     const generator = this.data.questionGenerator
     if (!generator) {
       console.error('题目生成器未初始化')
       return
     }
-    
+
     // 使用 QuestionGenerator 生成题目
     const questionData = generator.generate()
-    
+
     // 根据题目类型设置难度显示
     let difficulty = '简单'
     const grade = this.data.grade
-    
+
     if (grade >= 4) {
       if (questionData.type === 'mixed' || questionData.type === 'decimal') {
         difficulty = '困难'
@@ -129,7 +130,7 @@ Page({
         difficulty = '中等'
       }
     }
-    
+
     this.setData({
       question: questionData.question,
       correctAnswer: questionData.answer,
@@ -143,7 +144,7 @@ Page({
   /**
    * 输入答案（文本框输入）
    */
-  onInput: function(e) {
+  onInput: function (e) {
     this.setData({
       userAnswer: e.detail.value
     })
@@ -152,10 +153,10 @@ Page({
   /**
    * 键盘按键点击（虚拟键盘）
    */
-  onKeyTap: function(e) {
+  onKeyTap: function (e) {
     const key = e.currentTarget.dataset.key
     const currentAnswer = this.data.userAnswer
-    
+
     this.setData({
       userAnswer: currentAnswer + key
     })
@@ -164,7 +165,7 @@ Page({
   /**
    * 删除最后一个字符
    */
-  onDelete: function() {
+  onDelete: function () {
     const currentAnswer = this.data.userAnswer
     if (currentAnswer.length > 0) {
       this.setData({
@@ -176,7 +177,7 @@ Page({
   /**
    * 切换键盘显示
    */
-  toggleKeypad: function() {
+  toggleKeypad: function () {
     this.setData({
       showKeypad: !this.data.showKeypad
     })
@@ -185,7 +186,7 @@ Page({
   /**
    * 清空输入
    */
-  clearInput: function() {
+  clearInput: function () {
     this.setData({
       userAnswer: ''
     })
@@ -194,10 +195,10 @@ Page({
   /**
    * 提交答案
    */
-  submitAnswer: function() {
+  submitAnswer: function () {
     const userAnswerStr = this.data.userAnswer.trim()
     const correctAnswer = this.data.correctAnswer
-    
+
     if (userAnswerStr === '') {
       wx.showToast({
         title: '请输入答案',
@@ -206,7 +207,7 @@ Page({
       })
       return
     }
-    
+
     // 更好的数字解析（支持小数和整数）
     const userAnswer = parseFloat(userAnswerStr)
     if (isNaN(userAnswer)) {
@@ -217,18 +218,18 @@ Page({
       })
       return
     }
-    
+
     // 更精确的比较（考虑小数精度）
     const tolerance = 0.001 // 增加容差
     let isCorrect = Math.abs(userAnswer - correctAnswer) < tolerance
-    
+
     // 如果没有匹配，再尝试字符串比较（去除多余的0）
     if (!isCorrect) {
       const userStr = userAnswer.toString().replace(/\.0+$/, '').replace(/(\..*?)0+$/, '$1')
       const correctStr = correctAnswer.toString().replace(/\.0+$/, '').replace(/(\..*?)0+$/, '$1')
       isCorrect = userStr === correctStr
     }
-    
+
     // 调试信息
     console.log('答案比较:', {
       userAnswer: userAnswer,
@@ -237,7 +238,7 @@ Page({
       tolerance: tolerance,
       isCorrect: isCorrect
     })
-    
+
     // 添加到历史记录
     const historyItem = {
       question: this.data.question,
@@ -246,21 +247,21 @@ Page({
       isCorrect: isCorrect,
       time: this.data.formattedTime
     }
-    
+
     let newHistory = [historyItem, ...this.data.history]
     if (newHistory.length > 5) {
       newHistory = newHistory.slice(0, 5)
     }
-    
+
     // 更新得分
     let newScore = this.data.score
     let newCorrectCount = this.data.correctCount
     let newWrongCount = this.data.wrongCount
-    
+
     if (isCorrect) {
       newScore += 10
       newCorrectCount += 1
-      
+
       wx.showToast({
         title: '✅ 正确！',
         icon: 'success',
@@ -269,7 +270,7 @@ Page({
       })
     } else {
       newWrongCount += 1
-      
+
       wx.showModal({
         title: '答案不正确',
         content: `你的答案：${userAnswerStr}\n正确答案：${correctAnswer}`,
@@ -278,11 +279,11 @@ Page({
         confirmColor: '#e74c3c'
       })
     }
-    
+
     // 计算正确率
     const totalAnswered = newCorrectCount + newWrongCount
     const newCorrectRate = totalAnswered > 0 ? Math.round((newCorrectCount / totalAnswered) * 100) : 0
-    
+
     // 更新数据
     this.setData({
       history: newHistory,
@@ -291,7 +292,7 @@ Page({
       wrongCount: newWrongCount,
       correctRate: newCorrectRate
     })
-    
+
     // 延迟后进入下一题
     setTimeout(() => {
       this.nextQuestion()
@@ -301,9 +302,9 @@ Page({
   /**
    * 下一题
    */
-  nextQuestion: function() {
+  nextQuestion: function () {
     const nextQuestion = this.data.currentQuestion + 1
-    
+
     if (nextQuestion > this.data.totalQuestions) {
       this.completePractice()
     } else {
@@ -320,7 +321,7 @@ Page({
   /**
    * 跳过本题
    */
-  skipQuestion: function() {
+  skipQuestion: function () {
     wx.showModal({
       title: '跳过题目',
       content: '确定要跳过这道题吗？',
@@ -335,17 +336,17 @@ Page({
             time: this.data.formattedTime,
             skipped: true
           }
-          
+
           let newHistory = [historyItem, ...this.data.history]
           if (newHistory.length > 5) {
             newHistory = newHistory.slice(0, 5)
           }
-          
+
           this.setData({
             history: newHistory,
             wrongCount: this.data.wrongCount + 1
           })
-          
+
           // 进入下一题
           setTimeout(() => {
             this.nextQuestion()
@@ -356,17 +357,17 @@ Page({
   },
 
   /**
-   * 完成练习
+   * 完成练习（这里修改了代码，增加了上传成绩的逻辑）
    */
-  completePractice: function() {
+  completePractice: function () {
     // 停止计时器
     if (this.data.timer) {
       clearInterval(this.data.timer)
     }
-    
+
     // 计算平均用时
     const averageTime = this.data.elapsedTime / this.data.totalQuestions
-    
+
     // 保存练习记录
     const practiceRecord = {
       grade: this.data.grade,
@@ -380,10 +381,21 @@ Page({
       date: new Date().toLocaleString(),
       correctRate: this.data.correctRate
     }
-    
+
     // 保存到本地存储
     this.savePracticeRecord(practiceRecord)
-    
+
+    // >>>>>>> 修改开始：调用云端上传接口 <<<<<<<
+    // 只有得分为正数才上传，避免0分刷榜
+    if (this.data.score > 0) {
+      this.uploadScoreToCloud(
+        this.data.score, // 分数
+        this.data.elapsedTime, // 总耗时（秒）
+        this.data.grade // 年级
+      )
+    }
+    // >>>>>>> 修改结束 <<<<<<<
+
     // 跳转到结果页面
     setTimeout(() => {
       wx.redirectTo({
@@ -395,15 +407,15 @@ Page({
   /**
    * 保存练习记录
    */
-  savePracticeRecord: function(record) {
+  savePracticeRecord: function (record) {
     try {
       let history = wx.getStorageSync('practiceHistory') || []
       history.unshift(record)
-      
+
       if (history.length > 50) {
         history = history.slice(0, 50)
       }
-      
+
       wx.setStorageSync('practiceHistory', history)
       console.log('练习记录保存成功', record)
     } catch (error) {
@@ -414,7 +426,7 @@ Page({
   /**
    * 重新开始练习
    */
-  restartPractice: function() {
+  restartPractice: function () {
     wx.showModal({
       title: '重新开始',
       content: '确定要重新开始练习吗？当前进度将丢失。',
@@ -424,12 +436,12 @@ Page({
           if (this.data.timer) {
             clearInterval(this.data.timer)
           }
-          
+
           // 重置题目生成器的历史记录
           if (this.data.questionGenerator) {
             this.data.questionGenerator.clearHistory()
           }
-          
+
           // 重置数据
           this.setData({
             currentQuestion: 1,
@@ -443,13 +455,13 @@ Page({
             formattedTime: '00:00',
             progressPercent: 0
           })
-          
+
           // 重新开始计时
           this.startTimer()
-          
+
           // 生成新题目
           this.generateNewQuestion()
-          
+
           wx.showToast({
             title: '重新开始',
             icon: 'success'
@@ -462,7 +474,7 @@ Page({
   /**
    * 清空历史记录
    */
-  clearHistory: function() {
+  clearHistory: function () {
     wx.showModal({
       title: '清空记录',
       content: '确定要清空答题记录吗？',
@@ -510,5 +522,58 @@ Page({
       path: '/pages/index/index',
       imageUrl: '/images/share.png'
     }
+  },
+
+  // ==========================================
+  // >>> 新增：上传成绩到你的服务器 <<<
+  // ==========================================
+  uploadScoreToCloud: function (finalScore, usedTime, gradeLevel) {
+    // 1. 获取本地存储的用户信息（如果你没有做登录，这里是空的或者默认值）
+    const userInfo = wx.getStorageSync('userInfo') || {
+      nickName: '未名大侠',
+      avatarUrl: ''
+    };
+
+    // 2. 获取或生成 OpenID (作为用户唯一标识)
+    let openid = wx.getStorageSync('openid');
+    if (!openid) {
+      // 这里的逻辑是：如果没登录，生成一个随机ID存起来，保证同一台手机下次还是这个人
+      openid = 'user_' + Date.now() + Math.random().toString(36).substr(2);
+      wx.setStorageSync('openid', openid);
+    }
+
+    console.log('开始上传成绩到服务器...', {
+      score: finalScore,
+      time: usedTime,
+      grade: gradeLevel,
+      openid: openid
+    });
+
+    // 3. 发送 POST 请求
+    wx.request({
+      url: 'https://lch97.cn/math_api/submit_score.php', // 你的服务器接口
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: {
+        openid: openid,
+        nickname: userInfo.nickName,
+        avatar: userInfo.avatarUrl,
+        grade: gradeLevel,
+        score: finalScore,
+        time_used: usedTime
+      },
+      success: (res) => {
+        console.log('上传结果:', res.data);
+        if (res.data.code === 200) {
+          // 提示用户上传成功（因为马上要跳转，可能显示时间很短，可以去掉这行或者改到result页显示）
+          // wx.showToast({ title: '战绩已上传榜单!', icon: 'success' });
+        }
+      },
+      fail: (err) => {
+        console.error('上传失败', err);
+      }
+    });
   }
 })

@@ -1,0 +1,77 @@
+<!-- pages/math_rank/math_rank.wxml -->
+<view class="container">
+  
+  <!-- 1. 顶部背景与年级切换 -->
+  <view class="header-section">
+    <view class="rank-title">🏆 算力英雄榜</view>
+    
+    <view class="grade-tabs">
+      <block wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">
+        <view 
+          class="grade-item {{curGrade === item ? 'active' : ''}}" 
+          bindtap="changeGrade" 
+          data-grade="{{item}}">
+          {{item}}年级
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 2. 表头说明 -->
+  <view class="list-header">
+    <text class="lh-rank">排名</text>
+    <text class="lh-user">选手</text>
+    <text class="lh-score">得分</text>
+    <text class="lh-time">耗时</text>
+  </view>
+
+  <!-- 3. 排行榜列表 -->
+  <scroll-view scroll-y class="rank-list" enable-flex>
+    
+    <!-- 空状态提示 -->
+    <view wx:if="{{rankList.length === 0}}" class="empty-state">
+      <view class="empty-icon">🍃</view>
+      <text>该年级暂时无人上榜</text>
+      <text class="empty-tip">快去练习，抢占第一名！</text>
+    </view>
+
+    <!-- 列表项 -->
+    <block wx:for="{{rankList}}" wx:key="id">
+      <view class="rank-card {{index < 3 ? 'top-card' : ''}}">
+        
+        <!-- 排名列：前三名显示奖牌 -->
+        <view class="col-rank">
+          <view wx:if="{{index === 0}}" class="medal">🥇</view>
+          <view wx:elif="{{index === 1}}" class="medal">🥈</view>
+          <view wx:elif="{{index === 2}}" class="medal">🥉</view>
+          <view wx:else class="rank-num">{{index + 1}}</view>
+        </view>
+
+        <!-- 用户列：头像+昵称 -->
+        <view class="col-user">
+          <image 
+            class="user-avatar {{index === 0 ? 'avatar-gold' : ''}}" 
+            src="{{item.avatar || '/images/default_avatar.png'}}" 
+            mode="aspectFill">
+          </image>
+          <text class="user-name {{index < 3 ? 'name-bold' : ''}}">{{item.nickname || '神秘高手'}}</text>
+        </view>
+
+        <!-- 成绩列 -->
+        <view class="col-score">
+          <text class="score-val">{{item.score}}</text>
+          <text class="score-unit">分</text>
+        </view>
+
+        <!-- 时间列 -->
+        <view class="col-time">
+          {{item.time_used}}s
+        </view>
+      </view>
+    </block>
+
+    <!-- 底部占位，防止最后一名贴底 -->
+    <view style="height: 50rpx;"></view>
+  </scroll-view>
+
+</view>

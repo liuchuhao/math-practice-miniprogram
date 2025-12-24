@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "计算英雄榜",
+  "navigationBarBackgroundColor": "#3498db",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f5f7fa"
+}
