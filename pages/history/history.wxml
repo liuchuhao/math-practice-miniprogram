@@ -1,26 +1,40 @@
 <!-- pages/history/history.wxml -->
 <view class="container">
-  <!-- 顶部统计 -->
-  <view class="stats-header">
-    <view class="stats-card">
-      <text class="stats-label">总练习次数</text>
-      <text class="stats-value">{{totalCount}}</text>
+  
+  <!-- 1. 顶部 Tabs 切换 -->
+  <view class="tabs-header">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">
+      📝 练习记录
     </view>
-    <view class="stats-card">
-      <text class="stats-label">平均正确率</text>
-      <text class="stats-value">{{averageRate}}%</text>
-    </view>
-    <view class="stats-card">
-      <text class="stats-label">总用时</text>
-      <text class="stats-value">{{totalTime}}</text>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">
+      📕 我的错题本
     </view>
   </view>
 
-  <!-- 筛选工具栏 -->
-  <view class="filter-toolbar">
-    <view class="filter-group">
-      <text class="filter-label">年级筛选:</text>
-      <scroll-view class="grade-filters" scroll-x>
+  <!-- ======================== -->
+  <!-- 模块一：练习记录 -->
+  <!-- ======================== -->
+  <view wx:if="{{currentTab === 0}}" class="tab-content">
+    <!-- 顶部统计 -->
+    <view class="stats-header">
+      <view class="stats-card">
+        <text class="stats-label">总练习次数</text>
+        <text class="stats-value">{{totalCount}}</text>
+      </view>
+      <view class="stats-card">
+        <text class="stats-label">平均正确率</text>
+        <text class="stats-value">{{averageRate}}%</text>
+      </view>
+      <view class="stats-card">
+        <text class="stats-label">总用时</text>
+        <text class="stats-value">{{totalTime}}</text>
+      </view>
+    </view>
+
+    <!-- 筛选工具栏 -->
+    <view class="filter-toolbar">
+      <!-- 【修复点1】增加了 enable-flex 属性 -->
+      <scroll-view class="grade-filters" scroll-x enable-flex>
         <view class="grade-filter-item {{activeGrade === 0 ? 'active' : ''}}" bindtap="filterByGrade" data-grade="0">全部</view>
         <view class="grade-filter-item {{activeGrade === 1 ? 'active' : ''}}" bindtap="filterByGrade" data-grade="1">一年级</view>
         <view class="grade-filter-item {{activeGrade === 2 ? 'active' : ''}}" bindtap="filterByGrade" data-grade="2">二年级</view>
@@ -30,94 +44,95 @@
         <view class="grade-filter-item {{activeGrade === 6 ? 'active' : ''}}" bindtap="filterByGrade" data-grade="6">六年级</view>
       </scroll-view>
     </view>
+
+    <!-- 记录列表 -->
+    <view wx:if="{{filteredHistory.length > 0}}">
+      <view class="history-list">
+        <!-- 【修复点2】wx:key 改为 id，如果没有 id 则用 unique 或 timestamp -->
+        <view class="history-item" wx:for="{{filteredHistory}}" wx:key="id">
+          <view class="item-header">
+            <view class="grade-badge grade-{{item.grade}}">{{item.gradeName}}</view>
+            <text class="date">{{formatDate(item.date)}}</text>
+          </view>
+          
+          <view class="item-content">
+            <view class="score-section">
+              <text class="score">{{item.score}}分</text>
+            </view>
+            <view class="details-section">
+              <view class="detail-item"><text class="detail-text">✅ {{item.correctCount}}</text></view>
+              <view class="detail-item"><text class="detail-text">❌ {{item.wrongCount}}</text></view>
+              <view class="detail-item"><text class="detail-text">⏱️ {{item.time}}</text></view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 清空记录 -->
+      <view class="clear-section">
+        <button class="clear-btn" bindtap="showClearConfirm">清空记录</button>
+      </view>
+    </view>
     
-    <view class="sort-group">
-      <text class="filter-label">排序:</text>
-      <view class="sort-item {{sortType === 'date' ? 'active' : ''}}" bindtap="changeSort" data-type="date">
-        <icon type="time" size="14"></icon>时间
-      </view>
-      <view class="sort-item {{sortType === 'score' ? 'active' : ''}}" bindtap="changeSort" data-type="score">
-        <icon type="sort" size="14"></icon>分数
-      </view>
-      <view class="sort-item {{sortType === 'rate' ? 'active' : ''}}" bindtap="changeSort" data-type="rate">
-        <icon type="barrage" size="14"></icon>正确率
-      </view>
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <icon type="info" size="60" color="#ddd" />
+      <text class="empty-desc">还没有练习记录哦</text>
     </view>
   </view>
 
-  <!-- 清空记录按钮 -->
-  <view class="clear-section">
-    <button class="clear-btn" bindtap="showClearConfirm">
-      <icon type="clear" size="16"></icon>清空所有记录
-    </button>
-  </view>
+  <!-- ======================== -->
+  <!-- 模块二：错题本 -->
+  <!-- ======================== -->
+  <view wx:if="{{currentTab === 1}}" class="tab-content">
+    
+    <view wx:if="{{mistakeList.length > 0}}">
+      <view class="mistake-header">
+        <text class="mistake-count">共收集 {{mistakeCount}} 道错题</text>
+        <view class="clear-mistake-btn" bindtap="clearMistakes">🗑️ 清空</view>
+      </view>
 
-  <!-- 记录列表 -->
-  <view wx:if="{{filteredHistory.length > 0}}">
-    <view class="history-list">
-      <view class="history-item" wx:for="{{filteredHistory}}" wx:key="id" bindtap="viewDetail" data-index="{{index}}">
-        <view class="item-header">
-          <view class="grade-badge grade-{{item.grade}}">{{item.gradeName}}</view>
-          <text class="date">{{formatDate(item.date)}}</text>
-        </view>
-        
-        <view class="item-content">
-          <view class="score-section">
-            <text class="score">{{item.score}}分</text>
-            <text class="total">/ {{item.total}}分</text>
-          </view>
-          
-          <view class="details-section">
-            <view class="detail-item">
-              <icon type="success" size="14" color="#2ecc71"></icon>
-              <text class="detail-text">正确: {{item.correctCount}}</text>
+      <view class="mistake-list">
+        <!-- 【修复点3】wx:key 改为 timestamp，保证唯一性，防止渲染层错误 -->
+        <block wx:for="{{mistakeList}}" wx:key="timestamp">
+          <view class="mistake-card">
+            <!-- 题目区域 -->
+            <view class="q-area">
+              <text class="q-text">{{item.question}} = ?</text>
+              <view class="q-badge">{{item.gradeName || '题目'}}</view>
             </view>
-            <view class="detail-item">
-              <icon type="cancel" size="14" color="#e74c3c"></icon>
-              <text class="detail-text">错误: {{item.wrongCount}}</text>
+            
+            <!-- 答案对比 -->
+            <view class="ans-area">
+              <view class="ans-box wrong">
+                <text class="ans-label">你的答案</text>
+                <text class="ans-val">{{item.userAnswer}}</text>
+              </view>
+              <view class="ans-box right">
+                <text class="ans-label">正确答案</text>
+                <text class="ans-val">{{item.correctAnswer}}</text>
+              </view>
             </view>
-            <view class="detail-item">
-              <icon type="waiting" size="14" color="#3498db"></icon>
-              <text class="detail-text">用时: {{item.time}}</text>
+
+            <!-- 操作 -->
+            <view class="card-footer">
+              <text class="wrong-date">{{item.date}}</text>
+              <!-- 修复：index需要传递 -->
+              <button class="solve-btn" bindtap="removeMistake" data-index="{{index}}">
+                ✨ 我学会了
+              </button>
             </view>
           </view>
-          
-          <view class="rate-section">
-            <view class="rate-progress">
-              <progress percent="{{item.correctRate || 0}}" stroke-width="6" activeColor="{{getRateColor(item.correctRate)}}" backgroundColor="#eee" />
-            </view>
-            <text class="rate-text">{{item.correctRate || 0}}%</text>
-          </view>
-        </view>
-        
-        <view class="item-footer">
-          <text class="time-text">{{formatTime(item.date)}}</text>
-          <view class="actions">
-            <button class="action-btn review" bindtap="reviewPractice" data-index="{{index}}" catchtap="stopPropagation">
-              <icon type="refresh" size="12"></icon>回顾
-            </button>
-          </view>
-        </view>
+        </block>
       </view>
     </view>
-    
-    <!-- 加载更多 -->
-    <view class="load-more" wx:if="{{hasMore}}">
-      <text class="load-text" bindtap="loadMore">加载更多记录</text>
-    </view>
-    
-    <view class="no-more" wx:if="{{!hasMore}}">
-      <text class="no-more-text">没有更多记录了</text>
+
+    <!-- 错题本空状态 -->
+    <view class="empty-state" wx:else>
+      <icon type="success" size="80" color="#2ecc71" />
+      <text class="empty-title">太棒了！</text>
+      <text class="empty-desc">错题本空空如也，继续保持！</text>
     </view>
   </view>
-  
-  <!-- 空状态 -->
-  <view class="empty-state" wx:else>
-    <icon type="time" size="80" color="#ddd" />
-    <text class="empty-title">暂无练习记录</text>
-    <text class="empty-desc">快去开始练习吧！</text>
-    <button class="empty-btn" bindtap="goPractice">
-      <icon type="success" size="16"></icon>开始练习
-    </button>
-  </view>
+
 </view>

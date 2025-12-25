@@ -24,7 +24,7 @@
       
       <!-- 昵称输入 -->
       <view class="nickname-box">
-        <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput"/>
+        <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput" focus="{{nicknameFocus}}"/>
         <text class="nickname-tip">👈 点我完善资料，上榜更好看！</text>
       </view>
     </view>

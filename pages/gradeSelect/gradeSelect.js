@@ -1,39 +1,142 @@
 Page({
   data: {
     grades: [
-      { id: 1, grade: 1, name: '一年级', desc: '20以内加减法', icon: '1' },
-      { id: 2, grade: 2, name: '二年级', desc: '100以内加减法', icon: '2' },
-      { id: 3, grade: 3, name: '三年级', desc: '乘除法入门', icon: '3' },
-      { id: 4, grade: 4, name: '四年级', desc: '多位数运算', icon: '4' },
-      { id: 5, grade: 5, name: '五年级', desc: '小数分数', icon: '5' },
-      { id: 6, grade: 6, name: '六年级', desc: '综合运算', icon: '6' }
-    ]
-  },
-
-  selectGrade: function(e) {
-    const grade = e.currentTarget.dataset.grade
-    const gradeInfo = this.data.grades.find(g => g.grade === grade)
-    
-    wx.showLoading({
-      title: '加载中...',
-    })
-    
-    setTimeout(() => {
-      wx.hideLoading()
-      wx.navigateTo({
-        url: `/pages/practice/practice?grade=${grade}&gradeName=${gradeInfo.name}`,
-        fail: (err) => {
-          console.error('跳转失败:', err)
-          wx.showToast({
-            title: '功能开发中',
-            icon: 'none'
-          })
-        }
-      })
-    }, 500)
+      { 
+        id: 1, 
+        grade: 1, 
+        name: '一年级', 
+        desc: '10/20以内加减法，100以内整十数运算',
+        tags: ['10以内加减', '20以内加减', '整十数'],
+        difficulty: 1,
+        color: '#ff6b6b'
+      },
+      { 
+        id: 2, 
+        grade: 2, 
+        name: '二年级', 
+        desc: '100以内加减法，表内乘除法',
+        tags: ['百以内加减', '乘法口诀' ],
+        difficulty: 2,
+        color: '#ff9f43'
+      },
+      { 
+        id: 3, 
+        grade: 3, 
+        name: '三年级', 
+        desc: '三位数加减，两位数乘除法，小数入门',
+        tags: ['三位数运算', '两位数乘除', '小数认识'],
+        difficulty: 2,
+        color: '#2ecc71'
+      },
+      { 
+        id: 4, 
+        grade: 4, 
+        name: '四年级', 
+        desc: '多位数乘除，简便运算，小数加减法',
+        tags: ['多位数乘除', '简便计算', '小数加减'],
+        difficulty: 3,
+        color: '#54a0ff'
+      },
+      { 
+        id: 5, 
+        grade: 5, 
+        name: '五年级', 
+        desc: '小数乘除',
+        tags: ['小数乘除'],
+        difficulty: 3,
+        color: '#9b59b6'
+      },
+      { 
+        id: 6, 
+        grade: 6, 
+        name: '六年级', 
+        desc: '小数乘除，百分数，比例，综合运算',
+        tags: ['小数乘除', '百分数', '比例'],
+        difficulty: 4,
+        color: '#00d2d3'
+      }
+    ],
+    lastGrade: null,
+    animationReady: false
   },
 
   onLoad: function(options) {
-    console.log('年级选择页加载')
+    // 获取上次选择的年级
+    const lastGrade = wx.getStorageSync('lastSelectedGrade');
+    if (lastGrade) {
+      const gradeInfo = this.data.grades.find(g => g.grade === lastGrade);
+      if (gradeInfo) {
+        this.setData({ lastGrade: gradeInfo });
+      }
+    }
+  },
+
+  onReady: function() {
+    // 延迟触发动画
+    setTimeout(() => {
+      this.setData({ animationReady: true });
+    }, 100);
+  },
+
+  // 选择年级
+  selectGrade: function(e) {
+    const grade = e.currentTarget.dataset.grade;
+    const gradeInfo = this.data.grades.find(g => g.grade === grade);
+    
+    if (!gradeInfo) {
+      wx.showToast({ title: '年级信息错误', icon: 'error' });
+      return;
+    }
+
+    // 保存选择记录
+    wx.setStorageSync('lastSelectedGrade', grade);
+
+    // 触觉反馈
+    wx.vibrateShort({ type: 'light' });
+
+    // 直接跳转，无需loading
+    wx.navigateTo({
+      url: `/pages/practice/practice?grade=${grade}&gradeName=${gradeInfo.name}`,
+      fail: (err) => {
+        console.error('跳转失败:', err);
+        wx.showToast({
+          title: '功能开发中',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 长按显示详细题型
+  showDetail: function(e) {
+    const grade = e.currentTarget.dataset.grade;
+    const gradeInfo = this.data.grades.find(g => g.grade === grade);
+    
+    if (!gradeInfo) return;
+
+    wx.vibrateShort({ type: 'medium' });
+    
+    wx.showModal({
+      title: `${gradeInfo.name}题型详情`,
+      content: `包含题型：\n${gradeInfo.tags.map((t, i) => `${i + 1}. ${t}`).join('\n')}\n\n难度：${'⭐'.repeat(gradeInfo.difficulty)}`,
+      showCancel: false,
+      confirmText: '知道了'
+    });
+  },
+
+  // 快速进入上次年级
+  quickEnter: function() {
+    if (this.data.lastGrade) {
+      this.selectGrade({
+        currentTarget: {
+          dataset: { grade: this.data.lastGrade.grade }
+        }
+      });
+    }
+  },
+
+  // 生成难度星星
+  getDifficultyStars: function(level) {
+    return '⭐'.repeat(level);
   }
-})
+});

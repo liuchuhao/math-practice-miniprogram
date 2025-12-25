@@ -1,19 +1,90 @@
 <view class="container">
+  <!-- 头部 -->
   <view class="header">
-    <text class="title">选择年级</text>
-    <text class="subtitle">请选择对应的年级开始练习</text>
-  </view>
-  
-  <view class="grade-list">
-    <view class="grade-item" 
-          wx:for="{{grades}}" 
-          wx:key="id"
-          bindtap="selectGrade" 
-          data-grade="{{item.grade}}">
-      <view class="grade-icon">{{item.icon}}</view>
-      <text class="grade-name">{{item.name}}</text>
-      <text class="grade-desc">{{item.desc}}</text>
-      <icon class="arrow" type="arrowright" size="20" color="#ccc"></icon>
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <text class="header-icon">📚</text>
+      <text class="title">选择年级</text>
+      <text class="subtitle">西师版小学数学计算练习</text>
     </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-entry" wx:if="{{lastGrade}}" bindtap="quickEnter">
+    <view class="quick-left">
+      <text class="quick-label">继续上次练习</text>
+      <text class="quick-grade">{{lastGrade.name}}</text>
+    </view>
+    <view class="quick-btn">
+      <text>开始 →</text>
+    </view>
+  </view>
+
+  <!-- 年级列表 -->
+  <view class="grade-list">
+    <view 
+      class="grade-item {{animationReady ? 'show' : ''}}" 
+      style="--delay: {{index * 0.08}}s; --theme-color: {{item.color}}"
+      wx:for="{{grades}}" 
+      wx:key="id"
+      bindtap="selectGrade" 
+      bindlongpress="showDetail"
+      data-grade="{{item.grade}}"
+    >
+      <!-- 左侧图标 -->
+      <view class="grade-icon" style="background: {{item.color}}">
+        <text class="icon-text">{{item.grade}}</text>
+      </view>
+      
+      <!-- 中间内容 -->
+      <view class="grade-content">
+        <view class="grade-header">
+          <text class="grade-name">{{item.name}}</text>
+          <view class="difficulty">
+            <text class="star" wx:for="{{item.difficulty}}" wx:key="*this" wx:for-item="star">⭐</text>
+          </view>
+        </view>
+        <text class="grade-desc">{{item.desc}}</text>
+        
+        <!-- 题型标签 -->
+        <view class="tags">
+          <text 
+            class="tag" 
+            style="background: {{item.color}}20; color: {{item.color}}"
+            wx:for="{{item.tags}}" 
+            wx:key="*this"
+            wx:for-item="tag"
+          >{{tag}}</text>
+        </view>
+      </view>
+      
+      <!-- 右侧箭头 -->
+      <view class="grade-arrow">
+        <text class="arrow-text">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats">
+    <view class="stat-item">
+      <text class="stat-num">6</text>
+      <text class="stat-label">年级</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-num">18</text>
+      <text class="stat-label">题型</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-num">∞</text>
+      <text class="stat-label">练习</text>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer">
+    <text class="footer-text">💡 长按可查看详细题型</text>
   </view>
 </view>

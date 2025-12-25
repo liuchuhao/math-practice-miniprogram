@@ -73,5 +73,10 @@
     <!-- 底部占位，防止最后一名贴底 -->
     <view style="height: 50rpx;"></view>
   </scroll-view>
-
+ <!-- 新增：底部挑战按钮 -->
+ <view class="footer-action">
+    <button class="challenge-btn" bindtap="startChallenge">
+      ⚔️ 立即挑战 {{curGrade}} 年级
+    </button>
+  </view>
 </view>

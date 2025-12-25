@@ -62,5 +62,15 @@ Page({
       title: '谁是计算小能手？快来看看排行榜！',
       path: '/pages/math_rank/math_rank'
     }
-  }
+  },
+  startChallenge: function() {
+    // 带着当前的年级，直接跳去练习页
+    // 注意：这里用 reLaunch 或 redirectTo 可能更好，防止层级太深，
+    // 但为了有返回按钮，这里用 navigateTo
+    wx.navigateTo({
+      // 假设你的练习页路径是这个，参数名字要对应
+      url: `/pages/practice/practice?grade=${this.data.curGrade}&gradeName=${this.data.curGrade}年级`
+    });
+  },
+
 });
