@@ -277,12 +277,31 @@ Page({
   },
 
   /**
-   * 完成练习
+   * ===============================================
+   * >>> 完成练习 (此处修改增加了积分逻辑) <<<
+   * ===============================================
    */
   completePractice: function () {
     if (this.data.timer) clearInterval(this.data.timer)
 
     const averageTime = this.data.elapsedTime / this.data.totalQuestions
+    
+    // --- 1. 计算本局积分 ---
+    let earnedPoints = 0;
+    // 只有分数大于0才计算积分，防止完全挂机
+    if (this.data.score > 0) {
+      // 规则：1年级=10分 ... 6年级=60分
+      earnedPoints = this.data.grade * 10;
+      
+      // 读取旧总分 -> 累加 -> 保存
+      let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+      totalIntegral += earnedPoints;
+      wx.setStorageSync('totalIntegral', totalIntegral);
+      
+      console.log(`[积分系统] 本次获得: ${earnedPoints}, 总积分: ${totalIntegral}`);
+    }
+
+    // --- 2. 构造记录对象 ---
     const practiceRecord = {
       grade: this.data.grade,
       gradeName: this.data.gradeName,
@@ -293,30 +312,57 @@ Page({
       time: this.data.formattedTime,
       averageTime: Math.round(averageTime),
       date: new Date().toLocaleString(),
-      correctRate: this.data.correctRate
+      correctRate: this.data.correctRate,
+      earnedPoints: earnedPoints // 记录本次积分
     }
 
     this.savePracticeRecord(practiceRecord)
 
+    // 定义跳转动作
     const doRedirect = () => {
+      // 将 earnedPoints 传给结果页，方便结果页展示“本次获得xx积分”
       wx.redirectTo({
-        url: `/pages/result/result?grade=${this.data.grade}&gradeName=${this.data.gradeName}&score=${this.data.score}&total=${this.data.totalQuestions * 10}&correct=${this.data.correctCount}&wrong=${this.data.wrongCount}&time=${this.data.formattedTime}&correctRate=${this.data.correctRate}`
+        url: `/pages/result/result?grade=${this.data.grade}&gradeName=${this.data.gradeName}&score=${this.data.score}&total=${this.data.totalQuestions * 10}&correct=${this.data.correctCount}&wrong=${this.data.wrongCount}&time=${this.data.formattedTime}&correctRate=${this.data.correctRate}&earnedPoints=${earnedPoints}`
       })
     };
 
-    // 上传成绩
+    // ==============================================
+    // >>> 核心修改：上传时的匿名检测 <<<
+    // ==============================================
+    
+    // 1. 获取用户信息
+    const userInfo = wx.getStorageSync('userInfo');
+    // 2. 判断是否有效 (必须有昵称且有头像)
+    const isRealUser = userInfo && userInfo.nickName;
+
     if (this.data.score > 0) {
-      wx.showLoading({ title: '上传战绩...', mask: true });
-      this.uploadScoreToCloud(
-        this.data.score, 
-        this.data.elapsedTime, 
-        this.data.grade,
-        () => {
-          wx.hideLoading();
+      if (isRealUser) {
+        // --- 情况A: 实名用户 -> 上传云端 ---
+        wx.showLoading({ title: '上传战绩...', mask: true });
+        this.uploadScoreToCloud(
+          this.data.score, 
+          this.data.elapsedTime, 
+          this.data.grade,
+          () => {
+            wx.hideLoading();
+            doRedirect();
+          }
+        );
+      } else {
+        // --- 情况B: 匿名用户 -> 不上传，给提示 ---
+        wx.showToast({
+          title: '匿名成绩仅保存本地，未上榜',
+          icon: 'none',
+          duration: 2500 // 提示显示久一点
+        });
+        
+        // 延迟跳转，让用户看清提示
+        setTimeout(() => {
           doRedirect();
-        }
-      )
+        }, 2500);
+      }
     } else {
+      // --- 情况C: 0分 -> 直接跳转 ---
       doRedirect();
     }
   },
@@ -334,19 +380,16 @@ Page({
         userAnswer: userAns,
         gradeName: this.data.gradeName,
         date: new Date().toLocaleDateString(),
-        timestamp: Date.now() // 用于排序和唯一key
+        timestamp: Date.now() 
       };
 
-      // 简单去重：避免连续重复添加同一道题
+      // 简单去重
       const isDuplicate = mistakes.length > 0 && mistakes[0].question === wrongItem.question;
       
       if (!isDuplicate) {
         mistakes.unshift(wrongItem);
-        // 限制最大错题数100条
         if (mistakes.length > 100) mistakes = mistakes.slice(0, 100);
-        
         wx.setStorageSync('mistakeList', mistakes);
-        console.log('已加入错题本');
       }
     } catch (err) {
       console.error('错题存储失败', err);

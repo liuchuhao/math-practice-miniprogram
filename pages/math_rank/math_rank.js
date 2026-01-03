@@ -1,28 +1,44 @@
 // pages/math_rank/math_rank.js
 Page({
   data: {
-    curGrade: 1, // 默认一年级
+    curGrade: 1, 
+    curTab: 0,   // 0: 实时榜(默认左侧), 1: 高手榜(右侧)
     rankList: []
   },
 
   onLoad: function (options) {
-    this.getRankData(1);
+    this.getRankData();
   },
 
-  // 切换年级
+  switchTab: function(e) {
+    const index = parseInt(e.currentTarget.dataset.index);
+    if (index === this.data.curTab) return;
+
+    this.setData({
+      curTab: index,
+      rankList: [] 
+    });
+    this.getRankData();
+  },
+
   changeGrade: function(e) {
     let grade = e.currentTarget.dataset.grade;
     if (grade === this.data.curGrade) return;
 
     this.setData({
       curGrade: grade,
-      rankList: [] // 清空列表，避免显示错乱
+      rankList: [] 
     });
-    this.getRankData(grade);
+    this.getRankData();
   },
 
   // 获取数据
-  getRankData: function(grade) {
+  getRankData: function() {
+    const grade = this.data.curGrade;
+    
+    // [修改核心] 现在 Index 1 才是高手榜
+    const isBestRank = (this.data.curTab === 1); 
+
     wx.showLoading({ title: '加载榜单...' });
 
     wx.request({
@@ -30,15 +46,33 @@ Page({
       method: 'GET',
       data: { grade: grade },
       success: (res) => {
-        console.log('排行榜数据:', res.data);
         if (res.data.code === 200) {
-          // 处理一下头像，防止null报错
-          const list = res.data.data.map(item => {
-            if(!item.avatar) item.avatar = '/images/default_avatar.png';
-            return item;
+          let rawList = res.data.data;
+          let finalList = [];
+
+          rawList = rawList.map((item, index) => {
+             if(!item.avatar) item.avatar = '/images/default_avatar.png';
+             item.uniqueKey = 'rank_' + index; 
+             return item;
           });
 
-          this.setData({ rankList: list });
+          if (isBestRank) {
+            // === 模式 1：高手榜 (去重 + 去匿名) ===
+            const uniqueMap = new Map();
+            rawList.forEach(item => {
+              if (!item.nickname || item.nickname.trim() === '') return;
+              if (!uniqueMap.has(item.nickname)) {
+                uniqueMap.set(item.nickname, true);
+                finalList.push(item);
+              }
+            });
+
+          } else {
+            // === 模式 0：实时榜 (原样显示) ===
+            finalList = rawList;
+          }
+
+          this.setData({ rankList: finalList });
         }
       },
       fail: () => {
@@ -46,58 +80,49 @@ Page({
       },
       complete: () => {
         wx.hideLoading();
-        wx.stopPullDownRefresh(); // 停止下拉动画
+        wx.stopPullDownRefresh(); 
       }
     });
   },
 
-  // 下拉刷新功能
   onPullDownRefresh: function() {
-    this.getRankData(this.data.curGrade);
+    this.getRankData();
   },
 
-  // 分享功能
+  // 分享文案逻辑也需要对应调整
   onShareAppMessage: function() {
+    // 0是实时榜，1是高手榜
+    const title = this.data.curTab === 1
+      ? `谁是${this.data.curGrade}年级计算之王？快来看高手榜！` 
+      : '实时战况激烈，快来看看谁上榜了！';
+      
     return {
-      title: '谁是计算小能手？快来看看排行榜！',
+      title: title,
       path: '/pages/math_rank/math_rank'
     }
   },
 
-  // ============================================
-  // >>> 修改核心：开始挑战逻辑 <<<
-  // ============================================
+  // 开始挑战逻辑不变
   startChallenge: function() {
-    // 1. 获取本地存储的用户信息
     const userInfo = wx.getStorageSync('userInfo');
-
-    // 2. 判断是否有昵称和头像
     const hasUserInfo = userInfo && userInfo.nickName && userInfo.avatarUrl;
 
     if (hasUserInfo) {
-      // A. 信息齐全 -> 直接去练习
       this.navigateToPractice();
     } else {
-      // B. 信息不全 -> 弹窗提示
       wx.showModal({
         title: '温馨提示',
-        content: '您还没有设置昵称和头像，本次成绩将无法计入排行榜哦。',
+        content: '您还没有设置昵称和头像，成绩将无法计入【高手榜】哦。（实时榜仍可记录）',
         cancelText: '匿名挑战',
         confirmText: '去设置',
         confirmColor: '#007aff',
         success: (res) => {
           if (res.confirm) {
-            // --- 修改点：使用 reLaunch 强力跳转 ---
             wx.reLaunch({
               url: '/pages/index/index',
-              fail: (err) => {
-                // 如果还跳不过去，这里会打印错误原因
-                console.error('跳转失败详情：', err);
-                wx.showToast({ title: '跳转失败，请手动返回', icon: 'none' });
-              }
+              fail: (err) => { console.error('跳转失败', err); }
             });
           } else if (res.cancel) {
-            // 点击匿名挑战
             this.navigateToPractice();
           }
         }
@@ -110,5 +135,4 @@ Page({
       url: `/pages/practice/practice?grade=${this.data.curGrade}&gradeName=${this.data.curGrade}年级`
     });
   }
-
 });

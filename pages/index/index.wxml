@@ -6,31 +6,59 @@
     <text class="subtitle">公众号：刘叔数学训练</text>
   </view>
   
-  <!-- 2. Logo区 (保留原有的可爱π) -->
+  <!-- 2. Logo区 -->
   <view class="logo-area">
     <view class="logo">
       <text class="logo-text">π</text>
     </view>
   </view>
 
-  <!-- 3. 用户名片卡 (新增核心功能) -->
+  <!-- 3. 用户名片卡 (结构分离修复版) -->
   <view class="user-card">
     <view class="user-card-inner">
-      <!-- 头像选择 -->
-      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-        <image class="avatar-img" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
-        <view class="edit-badge">📷</view>
-      </button>
       
-      <!-- 昵称输入 -->
-      <view class="nickname-box">
-        <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput" focus="{{nicknameFocus}}"/>
-        <text class="nickname-tip">👈 点我完善资料，上榜更好看！</text>
+      <!-- [新增] 头像包裹层：将按钮和相框分开，互不干扰 -->
+      <view class="avatar-wrap">
+        <!-- 底层：头像按钮 -->
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-img" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
+        </button>
+
+        <!-- 顶层：相框 (独立于按钮之外，不会被裁剪) -->
+        <image wx:if="{{currentFrameImg}}" class="frame-overlay" src="{{currentFrameImg}}" mode="aspectFit"></image>
+        
+        <!-- 小图标 -->
+        <view class="edit-badge">📷</view>
       </view>
+      
+      <!-- 右侧信息栏 -->
+      <view class="info-box">
+        <!-- 昵称行 -->
+        <view class="nickname-row">
+          <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput" focus="{{nicknameFocus}}"/>
+          <text class="edit-icon">✎</text>
+        </view>
+
+        <!-- 积分军衔展示行 -->
+        <view class="rank-badge-area" bindtap="showRankRules">
+          <view class="rank-pill">
+            <text class="rank-icon">🎖️</text>
+            <text class="rank-text">{{userTitle}}</text>
+          </view>
+          
+          <view class="integral-row">
+            <text class="integral-label">积分:</text>
+            <text class="integral-val">{{userIntegral}}</text>
+            <text class="next-tips" wx:if="{{nextLevelNeed > 0}}">(差{{nextLevelNeed}}升级)</text>
+            <text class="next-tips" wx:else>(已满级)</text>
+          </view>
+        </view>
+      </view>
+
     </view>
   </view>
 
-  <!-- 4. 核心功能区 (大按钮) -->
+  <!-- 4. 核心功能区 -->
   <view class="main-actions">
     <view class="action-card blue" bindtap="startPractice">
       <view class="icon-box">✏️</view>
@@ -49,8 +77,13 @@
     </view>
   </view>
 
-  <!-- 5. 更多功能区 (网格布局) -->
+  <!-- 5. 更多功能区 -->
   <view class="sub-actions">
+    <view class="sub-btn" bindtap="goToStore">
+      <text class="sub-icon">🎁</text>
+      <text>积分商店</text>
+    </view>
+    
     <view class="sub-btn" bindtap="goToGradeTestPaper">
       <text class="sub-icon">📝</text>
       <text>计算试卷</text>

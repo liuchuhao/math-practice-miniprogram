@@ -1,10 +1,21 @@
 <!-- pages/math_rank/math_rank.wxml -->
 <view class="container">
   
-  <!-- 1. 顶部背景与年级切换 -->
+  <!-- 1. 顶部区域 -->
   <view class="header-section">
     <view class="rank-title">🏆 算力英雄榜</view>
+
+    <!-- [修改] 榜单模式切换：实时榜在左(0)，高手榜在右(1) -->
+    <view class="mode-tabs">
+      <view class="mode-item {{curTab == 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">
+        📜 实时榜
+      </view>
+      <view class="mode-item {{curTab == 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">
+        👑 高手榜
+      </view>
+    </view>
     
+    <!-- 年级切换 -->
     <view class="grade-tabs">
       <block wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">
         <view 
@@ -15,6 +26,11 @@
         </view>
       </block>
     </view>
+  </view>
+
+  <!-- [修改] 高手榜提示条 (现在 Index 1 是高手榜) -->
+  <view class="tips-box" wx:if="{{curTab == 1}}">
+    <text>💡 提示：高手榜仅收录已设置昵称头像的记录，每人只显示最高分。</text>
   </view>
 
   <!-- 2. 表头说明 -->
@@ -31,15 +47,14 @@
     <!-- 空状态提示 -->
     <view wx:if="{{rankList.length === 0}}" class="empty-state">
       <view class="empty-icon">🍃</view>
-      <text>该年级暂时无人上榜</text>
+      <text wx:if="{{curTab == 1}}">虚位以待，快来创造纪录！</text>
+      <text wx:else>该年级暂时无人上榜</text>
       <text class="empty-tip">快去练习，抢占第一名！</text>
     </view>
 
     <!-- 列表项 -->
-    <block wx:for="{{rankList}}" wx:key="id">
+    <block wx:for="{{rankList}}" wx:key="uniqueKey">
       <view class="rank-card {{index < 3 ? 'top-card' : ''}}">
-        
-        <!-- 排名列：前三名显示奖牌 -->
         <view class="col-rank">
           <view wx:if="{{index === 0}}" class="medal">🥇</view>
           <view wx:elif="{{index === 1}}" class="medal">🥈</view>
@@ -47,7 +62,6 @@
           <view wx:else class="rank-num">{{index + 1}}</view>
         </view>
 
-        <!-- 用户列：头像+昵称 -->
         <view class="col-user">
           <image 
             class="user-avatar {{index === 0 ? 'avatar-gold' : ''}}" 
@@ -57,24 +71,23 @@
           <text class="user-name {{index < 3 ? 'name-bold' : ''}}">{{item.nickname || '神秘高手'}}</text>
         </view>
 
-        <!-- 成绩列 -->
         <view class="col-score">
           <text class="score-val">{{item.score}}</text>
           <text class="score-unit">分</text>
         </view>
 
-        <!-- 时间列 -->
         <view class="col-time">
           {{item.time_used}}s
         </view>
       </view>
     </block>
 
-    <!-- 底部占位，防止最后一名贴底 -->
-    <view style="height: 50rpx;"></view>
+    <!-- 底部占位 -->
+    <view style="height: 120rpx;"></view>
   </scroll-view>
- <!-- 新增：底部挑战按钮 -->
- <view class="footer-action">
+
+  <!-- 底部挑战按钮 -->
+  <view class="footer-action">
     <button class="challenge-btn" bindtap="startChallenge">
       ⚔️ 立即挑战 {{curGrade}} 年级
     </button>

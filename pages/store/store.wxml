@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 顶部积分展示 -->
+  <view class="header-card">
+    <view class="points-label">当前可用积分</view>
+    <view class="points-val">{{myPoints}}</view>
+    <view class="tips">做练习赚积分，兑换炫酷装扮！</view>
+    <button class="unequip-btn" bindtap="unequip" size="mini">卸下当前装扮</button>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="goods-grid">
+    <block wx:for="{{goodsList}}" wx:key="id">
+      <view class="goods-item">
+        <!-- 预览图 -->
+        <view class="img-box">
+          <!-- 这里放一个默认头像垫底，方便看效果 -->
+          <image class="demo-avatar" src="/images/default_avatar.png"></image>
+          <!-- 头像框叠加在上面 -->
+          <image class="frame-img" src="{{item.img}}"></image>
+        </view>
+
+        <view class="info">
+          <text class="name">{{item.name}}</text>
+          <text class="price">💰 {{item.price}}</text>
+        </view>
+
+        <!-- 操作按钮逻辑 -->
+        <view class="action-btn">
+          <!-- 情况1：正在使用 -->
+          <button wx:if="{{currentFrameId === item.id}}" class="btn using" disabled>使用中</button>
+          
+          <!-- 情况2：已拥有，但没使用 -->
+          <button wx:elif="{{tools.includes(ownedList, item.id)}}" class="btn use" bindtap="useFrame" data-id="{{item.id}}">佩戴</button>
+          
+          <!-- 情况3：未拥有 -->
+          <button wx:else class="btn buy" bindtap="buyFrame" data-item="{{item}}">兑换</button>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+<!-- wxs工具：用于在wxml中判断数组包含 -->
+<wxs module="tools">
+  module.exports.includes = function(arr, id) {
+    return arr.indexOf(id) > -1;
+  }
+</wxs>

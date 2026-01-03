@@ -8,12 +8,18 @@
       <text class="date">{{formattedDate || '刚刚'}}</text>
     </view>
 
-    <!-- 分数展示 -->
+    <!-- 分数展示区域 -->
     <view class="score-section">
       <view class="score-circle">
         <text class="score-num">{{score}}</text>
         <text class="score-label">最终得分</text>
       </view>
+      
+      <!-- [新增] 积分标签放在圆圈下面，鼓励语上面 -->
+      <view class="points-badge" wx:if="{{earnedPoints > 0}}">
+        ✨ 积分 +{{earnedPoints}}
+      </view>
+
       <text class="cheer-text">{{cheerMsg}}</text>
     </view>
 
@@ -28,7 +34,7 @@
         <text class="stat-key">答错</text>
       </view>
       <view class="stat-item">
-        <text class="stat-val">{{correctRate}}</text>
+        <text class="stat-val">{{correctRate}}%</text>
         <text class="stat-key">正确率</text>
       </view>
       <view class="stat-item">
@@ -38,27 +44,37 @@
     </view>
   </view>
 
+  <!-- ============================================ -->
   <!-- 2. 上传状态提示 -->
+  <!-- ============================================ -->
   <view class="upload-status" wx:if="{{score > 0}}">
-    <icon type="success" size="14" color="#2ecc71"></icon>
-    <text>战绩已自动上传至排行榜</text>
+    <!-- 情况A: 正式用户 (已设置昵称) -->
+    <block wx:if="{{!isAnonymous}}">
+      <icon type="success" size="14" color="#2ecc71"></icon>
+      <text>战绩已自动上传至排行榜</text>
+    </block>
+    
+    <!-- 情况B: 匿名用户 (无昵称) -->
+    <block wx:else>
+      <icon type="info" size="14" color="#f39c12"></icon>
+      <text style="color: #e67e22;">未设置昵称，成绩未上榜</text>
+    </block>
   </view>
 
-  <!-- 3. 按钮功能区 (修复版) -->
+  <!-- 3. 按钮功能区 -->
   <view class="action-box">
     
-    <!-- 第一行：核心操作 (榜单 + 分享) -->
+    <!-- 第一行：核心操作 -->
     <view class="primary-btns">
       <button class="btn rank-btn" bindtap="goToRank">
         <text>🏆 查看榜单</text>
       </button>
-      <!-- open-type="share" 是唤起微信分享的关键 -->
       <button class="btn share-btn" open-type="share">
         <text>🎉 分享成绩</text>
       </button>
     </view>
     
-    <!-- 第二行：导航操作 (再练、历史、首页) -->
+    <!-- 第二行：导航操作 -->
     <view class="secondary-btns">
       <button class="btn nav-btn" bindtap="restartPractice">🔄 再练一次</button>
       <button class="btn nav-btn" bindtap="viewHistory">📅 历史记录</button>

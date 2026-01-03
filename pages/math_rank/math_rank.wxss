@@ -14,7 +14,7 @@ page {
 /* --- 1. 顶部区域 --- */
 .header-section {
   background: linear-gradient(135deg, #3498db, #2980b9);
-  padding: 20rpx 0 40rpx;
+  padding: 20rpx 0 30rpx; /* 稍微调整底部padding */
   border-radius: 0 0 40rpx 40rpx;
   box-shadow: 0 10rpx 20rpx rgba(52, 152, 219, 0.3);
   z-index: 10;
@@ -25,15 +25,60 @@ page {
   color: white;
   font-size: 36rpx;
   font-weight: bold;
-  margin-bottom: 30rpx;
+  margin-bottom: 20rpx; /* 稍微减小间距 */
   letter-spacing: 2rpx;
 }
 
-/* 年级Tabs */
+/* [新增] 榜单模式切换 (高手榜/实时榜) */
+.mode-tabs {
+  display: flex;
+  width: 60%;
+  margin: 0 auto 30rpx; /* 居中且下方留白 */
+  background: rgba(255, 255, 255, 0.2); /* 半透明白色背景 */
+  border-radius: 36rpx;
+  padding: 6rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.mode-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10rpx 0;
+  border-radius: 30rpx;
+  transition: all 0.3s;
+}
+
+/* 选中态：变成白色背景，文字变蓝 */
+.mode-item.active {
+  background: #fff;
+  color: #2980b9; /* 对应渐变色的深色部分 */
+  font-weight: bold;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+}
+
+/* [新增] 提示条样式 */
+.tips-box {
+  background-color: #fdf6ec;
+  padding: 15rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tips-box text {
+  font-size: 24rpx;
+  color: #e6a23c;
+  text-align: center;
+}
+
+/* 年级Tabs (保留原样，微调上间距) */
 .grade-tabs {
   display: flex;
   justify-content: space-around;
-  padding: 0 10rpx; /* 减小左右间距 */
+  padding: 0 10rpx; 
+  margin-top: 10rpx;
 }
 
 .grade-item {
@@ -43,7 +88,7 @@ page {
   border-radius: 30rpx;
   transition: all 0.2s;
   border: 2rpx solid transparent;
-  white-space: nowrap; /* 防止年级文字换行 */
+  white-space: nowrap; 
 }
 
 .grade-item.active {
@@ -56,17 +101,10 @@ page {
 
 /* --- 2. 对齐核心修正区域 --- */
 
-/* 
-   关键调整：
-   1. 总宽度分配：排名(18%) + 选手(37%) + 得分(25%) + 耗时(20%) = 100%
-   2. 增加了排名的宽度，防止换行
-*/
-
 /* 表头样式 */
 .list-header {
   display: flex;
   align-items: center;
-  /* 左右内边距设为30rpx，跟下面白色卡片的边距对齐 */
   padding: 30rpx 30rpx 15rpx; 
   font-size: 26rpx;
   color: #95a5a6;
@@ -74,7 +112,6 @@ page {
   box-sizing: border-box;
 }
 
-/* 强制不换行，解决截图中的“排\n名”问题 */
 .list-header text {
   white-space: nowrap;
 }
@@ -88,15 +125,17 @@ page {
 /* --- 3. 列表区域 --- */
 .rank-list {
   flex: 1; 
-  padding: 0 30rpx; /* 列表容器的左右内边距 */
+  padding: 0 30rpx; 
   box-sizing: border-box;
+  /* 既然底部有固定按钮，列表底部必须留出足够的空间，否则最后一条会被挡住 */
+  padding-bottom: 160rpx !important; 
 }
 
 /* 卡片样式 */
 .rank-card {
   background: white;
   margin-bottom: 20rpx;
-  padding: 20rpx 0; /* 上下padding保留，左右0 */
+  padding: 20rpx 0; 
   border-radius: 20rpx;
   display: flex;
   align-items: center;
@@ -109,14 +148,14 @@ page {
 
 /* 下面是列表内容的列样式，必须严格对应表头宽 */
 .col-rank {
-  width: 18%; /* 对应表头 18% */
+  width: 18%; 
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .col-user {
-  width: 37%; /* 对应表头 37% */
+  width: 37%; 
   display: flex;
   align-items: center;
   padding-left: 10rpx; 
@@ -124,7 +163,7 @@ page {
 }
 
 .col-score {
-  width: 25%; /* 对应表头 25% */
+  width: 25%; 
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -132,21 +171,21 @@ page {
 }
 
 .col-time {
-  width: 20%; /* 对应表头 20% */
+  width: 20%; 
   text-align: right;
   font-size: 26rpx;
   color: #95a5a6;
   font-family: 'Courier New', Courier, monospace;
-  padding-right: 30rpx; /* 右边距稍微大点，对应表头的对齐 */
+  padding-right: 30rpx; 
   box-sizing: border-box;
 }
 
 /* 元素细节 */
 .rank-num { font-size: 32rpx; color: #7f8c8d; font-weight: bold; font-style: italic; }
-.medal { font-size: 40rpx; } /* 稍微调小奖牌，避免撑大高度 */
+.medal { font-size: 40rpx; } 
 
 .user-avatar {
-  width: 66rpx; /* 头像缩小，给文字留空间 */
+  width: 66rpx; 
   height: 66rpx;
   border-radius: 50%;
   margin-right: 12rpx;
@@ -186,7 +225,8 @@ page {
 }
 .empty-icon { font-size: 80rpx; margin-bottom: 20rpx; }
 .empty-tip { font-size: 24rpx; color: #3498db; margin-top: 10rpx; }
-/* 新增：底部悬浮按钮栏 */
+
+/* 底部悬浮按钮栏 */
 .footer-action {
   position: fixed;
   bottom: 0;
@@ -194,7 +234,7 @@ page {
   width: 100%;
   background: white;
   padding: 20rpx 30rpx;
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); /* 适配全面屏 */
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); 
   box-shadow: 0 -5rpx 20rpx rgba(0,0,0,0.05);
   box-sizing: border-box;
   z-index: 100;
@@ -215,9 +255,4 @@ page {
 
 .challenge-btn:active {
   transform: scale(0.98);
-}
-
-/* 既然底部有按钮了，列表的底部留白要加大，防止被按钮挡住 */
-.rank-list {
-  padding-bottom: 150rpx !important; 
 }

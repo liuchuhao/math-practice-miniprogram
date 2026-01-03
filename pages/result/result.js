@@ -11,6 +11,8 @@ Page({
     wrongCount: 0,
     time: '00:00',
     averageTime: 0,
+    isAnonymous: false, 
+    earnedPoints: 0,    
     
     // 显示信息
     message: '',
@@ -19,14 +21,16 @@ Page({
     badgeClass: '',
     badgeText: '',
     cheerMsg: '',
-    
-    // 历史记录
-    recentHistory: []
   },
   
   onLoad: function(options) {
     console.log('结果页面参数:', options)
     
+    // 1. 获取用户信息，判断是否匿名
+    const userInfo = wx.getStorageSync('userInfo');
+    // 注意：这里判断是否有 nickName 即可，和 practice.js 逻辑保持一致
+    const hasNickName = userInfo && userInfo.nickName;
+
     // 解析参数
     const score = parseInt(options.score) || 0
     const total = parseInt(options.total) || 100
@@ -36,7 +40,8 @@ Page({
     const wrongCount = parseInt(options.wrong) || 0
     const time = options.time || '00:00'
     const correctRateParam = options.correctRate || 0
-    
+    const earnedPoints = parseInt(options.earnedPoints) || 0 // 转为数字
+
     // 计算正确率 (处理可能带%的情况)
     let correctRate = 0;
     if (typeof correctRateParam === 'string') {
@@ -45,7 +50,7 @@ Page({
         correctRate = parseInt(correctRateParam);
     }
     
-    // 计算平均用时
+    // 计算平均用时 (仅作展示用)
     const totalQuestions = correctCount + wrongCount
     const averageTime = totalQuestions > 0 
       ? Math.round((parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1])) / totalQuestions)
@@ -58,9 +63,9 @@ Page({
     // 生成评价
     const { message, showBadge, badgeClass, badgeText } = this.generateEvaluation(correctRate)
     
-    // 保存历史
-    this.saveHistory(score, total, grade, gradeName, correctRate, time, correctCount, wrongCount)
-    
+    // ⚠️【已删除】saveHistory 调用
+    // 原因：practice.js 结算时已经保存过一次了，这里再保存会导致重复记录。
+
     this.setData({
       score: score,
       total: total,
@@ -72,11 +77,14 @@ Page({
       time: time,
       averageTime: averageTime,
       message: message,
+      // 简单的截取逻辑，确保 message 中包含中文感叹号
       cheerMsg: message.split('！')[0] + '！', 
       formattedDate: formattedDate,
       showBadge: showBadge,
       badgeClass: badgeClass,
-      badgeText: badgeText
+      badgeText: badgeText,
+      earnedPoints: earnedPoints,
+      isAnonymous: !hasNickName,
     })
   },
   
@@ -112,14 +120,14 @@ Page({
 
   // --- 按钮跳转区 ---
 
-  // 1. 查看榜单
+  // 1. 查看榜单 (使用 redirectTo 防止层级过深)
   goToRank: function() {
     wx.redirectTo({
       url: '/pages/math_rank/math_rank'
     });
   },
 
-  // 2. 重新练习
+  // 2. 重新练习 (使用 redirectTo 关闭当前结果页)
   restartPractice: function() {
     const { grade, gradeName } = this.data;
     wx.redirectTo({
@@ -127,45 +135,27 @@ Page({
     });
   },
 
-  // 3. 查看历史记录 (找回这个功能了！)
+  // 3. 查看历史记录
   viewHistory: function() {
     wx.navigateTo({
       url: '/pages/history/history'
     });
   },
 
-  // 4. 返回首页
+  // 4. 返回首页 (reLaunch 清空所有页面栈)
   goHome: function() {
     wx.reLaunch({
       url: '/pages/index/index'
     });
   },
   
-  // 5. 保存历史
-  saveHistory: function(score, total, grade, gradeName, correctRate, time, correctCount, wrongCount) {
-    try {
-      let history = wx.getStorageSync('practiceHistory') || [];
-      const now = new Date();
-      const record = {
-        id: `record_${now.getTime()}_${Math.random()}`,
-        date: now.toLocaleString(),
-        grade, gradeName, score, total, correctCount, wrongCount, correctRate, time
-      };
-      history.unshift(record);
-      if (history.length > 50) history = history.slice(0, 50);
-      wx.setStorageSync('practiceHistory', history);
-    } catch (error) {
-      console.error('保存失败', error);
-    }
-  },
-
-  // 6. 分享功能
+  // 5. 分享功能
   onShareAppMessage: function() {
     const { score, correctRate, gradeName } = this.data
     return {
       title: `我在${gradeName}练习得了${score}分！快来挑战我！`,
       path: '/pages/index/index',
-      imageUrl: '/images/share.png' // 确保有图片，或者删除这行
+      imageUrl: '/images/share.png' 
     }
   }
 })
