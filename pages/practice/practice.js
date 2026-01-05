@@ -322,7 +322,7 @@ Page({
     const doRedirect = () => {
       // 将 earnedPoints 传给结果页，方便结果页展示“本次获得xx积分”
       wx.redirectTo({
-        url: `/pages/result/result?grade=${this.data.grade}&gradeName=${this.data.gradeName}&score=${this.data.score}&total=${this.data.totalQuestions * 10}&correct=${this.data.correctCount}&wrong=${this.data.wrongCount}&time=${this.data.formattedTime}&correctRate=${this.data.correctRate}&earnedPoints=${earnedPoints}`
+        url: `/pages/result/result?grade=${this.data.grade}&gradeName=${this.data.gradeName}&score=${this.data.score}&total=${this.data.totalQuestions * 10}&correct=${this.data.correctCount}&wrong=${this.data.wrongCount}&time=${this.data.formattedTime}&correctRate=${this.data.correctRate}&earnedPoints=${earnedPoints}&type=basic`
       })
     };
 
@@ -343,6 +343,7 @@ Page({
           this.data.score, 
           this.data.elapsedTime, 
           this.data.grade,
+          'basic',
           () => {
             wx.hideLoading();
             doRedirect();
@@ -452,7 +453,7 @@ Page({
     }
   },
 
-  uploadScoreToCloud: function (finalScore, usedTime, gradeLevel, callback) {
+  uploadScoreToCloud: function (finalScore, usedTime, gradeLevel, practiceType,callback) {
     const userInfo = wx.getStorageSync('userInfo') || { nickName: '未名大侠', avatarUrl: '' };
     let openid = wx.getStorageSync('openid');
     if (!openid) {
@@ -470,7 +471,8 @@ Page({
         avatar: userInfo.avatarUrl,
         grade: gradeLevel,
         score: finalScore,
-        time_used: usedTime
+        time_used: usedTime,
+        type: practiceType || 'basic'
       },
       success: (res) => { console.log('上传成功') },
       fail: (err) => { console.error('上传失败') },

@@ -67,7 +67,14 @@
         <text class="card-desc">专项突破 巩固基础</text>
       </view>
     </view>
-    
+      <!-- [新增] 拓展练习入口 -->
+    <view class="action-card purple" bindtap="startAdvancedPractice">
+      <view class="icon-box">🧠</view>
+      <view class="text-box">
+        <text class="card-title">拓展练习</text>
+        <text class="card-desc">逻辑思维 双倍积分</text>
+      </view>
+    </view>
     <view class="action-card orange" bindtap="goToRank">
       <view class="icon-box">🏆</view>
       <view class="text-box">
@@ -86,11 +93,11 @@
     
     <view class="sub-btn" bindtap="goToGradeTestPaper">
       <text class="sub-icon">📝</text>
-      <text>计算试卷</text>
+      <text>生成计算试卷</text>
     </view>
     <view class="sub-btn" bindtap="viewHistory">
       <text class="sub-icon">📊</text>
-      <text>练习记录</text>
+      <text>练习记录\n错题练习</text>
     </view>
     <view class="sub-btn" bindtap="about">
       <text class="sub-icon">ℹ️</text>

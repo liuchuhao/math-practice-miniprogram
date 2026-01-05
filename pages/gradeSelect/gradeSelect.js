@@ -1,5 +1,8 @@
 Page({
   data: {
+    // --- [新增] 模式标记 ---
+    mode: 'basic', // 默认为基础模式，如果是 'advanced' 则为拓展模式
+
     grades: [
       { 
         id: 1, 
@@ -61,6 +64,15 @@ Page({
   },
 
   onLoad: function(options) {
+    // --- [新增] 接收首页传来的模式参数 ---
+    if (options.mode === 'advanced') {
+      this.setData({ mode: 'advanced' });
+      // 可以在这里改变标题，提示用户当前是拓展模式
+      wx.setNavigationBarTitle({ title: '选择拓展挑战难度' });
+    } else {
+      this.setData({ mode: 'basic' });
+    }
+
     // 获取上次选择的年级
     const lastGrade = wx.getStorageSync('lastSelectedGrade');
     if (lastGrade) {
@@ -78,7 +90,7 @@ Page({
     }, 100);
   },
 
-  // 选择年级
+  // 选择年级 (核心修改处)
   selectGrade: function(e) {
     const grade = e.currentTarget.dataset.grade;
     const gradeInfo = this.data.grades.find(g => g.grade === grade);
@@ -94,20 +106,32 @@ Page({
     // 触觉反馈
     wx.vibrateShort({ type: 'light' });
 
-    // 直接跳转，无需loading
+    // --- [核心修改] 根据模式跳转到不同页面 ---
+    let targetUrl = '';
+    
+    if (this.data.mode === 'advanced') {
+      // 如果是拓展模式 -> 跳去新的 practice_advanced 页面
+      // 注意：这里没有传 gradeName，因为新页面可能自己生成标题，如果需要也可以传
+      targetUrl = `/pages/practice_advanced/practice_advanced?grade=${grade}`;
+    } else {
+      // 如果是基础模式 -> 跳去旧的 practice 页面 (保持原样)
+      targetUrl = `/pages/practice/practice?grade=${grade}&gradeName=${gradeInfo.name}`;
+    }
+
+    // 跳转
     wx.navigateTo({
-      url: `/pages/practice/practice?grade=${grade}&gradeName=${gradeInfo.name}`,
+      url: targetUrl,
       fail: (err) => {
         console.error('跳转失败:', err);
         wx.showToast({
-          title: '功能开发中',
+          title: '即将开放', // 提示语更友好一点
           icon: 'none'
         });
       }
     });
   },
 
-  // 长按显示详细题型
+  // 长按显示详细题型 (保持不变)
   showDetail: function(e) {
     const grade = e.currentTarget.dataset.grade;
     const gradeInfo = this.data.grades.find(g => g.grade === grade);
@@ -116,6 +140,7 @@ Page({
 
     wx.vibrateShort({ type: 'medium' });
     
+    // 如果是拓展模式，这里的提示文案其实可以换一下，不过暂时保持原样也没大问题
     wx.showModal({
       title: `${gradeInfo.name}题型详情`,
       content: `包含题型：\n${gradeInfo.tags.map((t, i) => `${i + 1}. ${t}`).join('\n')}\n\n难度：${'⭐'.repeat(gradeInfo.difficulty)}`,
@@ -127,6 +152,7 @@ Page({
   // 快速进入上次年级
   quickEnter: function() {
     if (this.data.lastGrade) {
+      // 复用 selectGrade 逻辑，这样快速进入也能享受到模式分流
       this.selectGrade({
         currentTarget: {
           dataset: { grade: this.data.lastGrade.grade }

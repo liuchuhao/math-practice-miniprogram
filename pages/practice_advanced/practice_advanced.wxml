@@ -1,0 +1,118 @@
+<view class="container">
+  
+  <!-- 1. 顶部状态栏 (仿照 practice 风格) -->
+  <view class="header">
+    <view class="grade-info">
+      <view class="rank-badge">🚀 拓展挑战</view>
+      <text class="grade-name">{{gradeName}}</text>
+      <view class="time-capsule">
+        <icon type="waiting" size="14" color="#3498db"/>
+        <text class="time-text">{{formattedTime}}</text>
+      </view>
+    </view>
+    
+    <!-- 进度条 -->
+    <view class="progress-info">
+      <text class="progress-label">进度 {{currentQuestion}} / {{totalQuestions}}</text>
+      <progress 
+        class="progress-bar" 
+        percent="{{progressPercent}}" 
+        stroke-width="10" 
+        activeColor="#3498db" 
+        backgroundColor="#f0f2f5" 
+        border-radius="10"
+        active
+        duration="10"
+      />
+    </view>
+
+    <!-- 实时得分板 (新增) -->
+    <view class="score-board">
+      <view class="score-item">
+        <text class="score-val correct">+{{score}}</text>
+        <text class="score-lbl">得分</text>
+      </view>
+      <view class="score-item border-left">
+        <text class="score-val">{{correctCount}}</text>
+        <text class="score-lbl">正确</text>
+      </view>
+      <view class="score-item border-left">
+        <text class="score-val wrong">{{wrongCount}}</text>
+        <text class="score-lbl">错误</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 2. 题目卡片区 -->
+  <view class="question-card">
+    <view class="card-header">
+      <text class="q-tag">题目 {{currentQuestion}}</text>
+      <text class="q-score-tag">✨ 双倍积分</text>
+    </view>
+
+    <view class="question-content">
+      <!-- 题目文本 -->
+      <text class="question-text">{{question}}</text>
+      
+      <!-- 答案显示区：模仿输入框样式 -->
+      <view class="answer-display-wrapper {{userAnswer ? 'has-value' : ''}}">
+        <text class="answer-text">{{userAnswer}}</text>
+        <!-- 只有在数字模式且未填满时显示光标 -->
+        <view class="cursor" wx:if="{{inputType === 'number' && userAnswer.length < 5}}"></view>
+        <text class="placeholder" wx:if="{{!userAnswer}}">?</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 3. 底部操作区 (根据 inputType 变化) -->
+  
+  <!-- A. 符号/比大小选择 (悬浮卡片风格) -->
+  <view class="options-panel" wx:if="{{inputType !== 'number'}}">
+    <view class="options-title">请选择符号</view>
+    <view class="options-grid">
+      <block wx:for="{{options}}" wx:key="*this">
+        <button 
+          class="opt-btn" 
+          hover-class="opt-btn-hover" 
+          bindtap="onOptionSelect" 
+          data-val="{{item}}">
+          {{item}}
+        </button>
+      </block>
+    </view>
+  </view>
+
+  <!-- B. 数字键盘 (固定底部计算器风格) -->
+  <view class="calculator-keypad" wx:else>
+    <view class="keypad-header">
+      <view class="keypad-hint">请输入答案</view>
+      <!-- 退格键放在这里或者键盘里均可，这里放键盘里 -->
+    </view>
+
+    <!-- 第一行: 7 8 9 -->
+    <view class="key-row">
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="7">7</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="8">8</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="9">9</button>
+    </view>
+    <!-- 第二行: 4 5 6 -->
+    <view class="key-row">
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="4">4</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="5">5</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="6">6</button>
+    </view>
+    <!-- 第三行: 1 2 3 -->
+    <view class="key-row">
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="1">1</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="2">2</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="3">3</button>
+    </view>
+    <!-- 第四行: 删除 0 确定 -->
+    <view class="key-row">
+      <button class="key del" hover-class="del-hover" bindtap="onDelete">⌫</button>
+      <button class="key" hover-class="key-hover" bindtap="onKeyTap" data-key="0">0</button>
+      <button class="key submit" hover-class="submit-hover" bindtap="submitAnswer">确定</button>
+    </view>
+  </view>
+
+</view>

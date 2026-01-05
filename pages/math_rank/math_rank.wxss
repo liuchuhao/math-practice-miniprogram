@@ -14,7 +14,7 @@ page {
 /* --- 1. 顶部区域 --- */
 .header-section {
   background: linear-gradient(135deg, #3498db, #2980b9);
-  padding: 20rpx 0 30rpx; /* 稍微调整底部padding */
+  padding: 10rpx 0 30rpx;
   border-radius: 0 0 40rpx 40rpx;
   box-shadow: 0 10rpx 20rpx rgba(52, 152, 219, 0.3);
   z-index: 10;
@@ -23,39 +23,74 @@ page {
 .rank-title {
   text-align: center;
   color: white;
-  font-size: 36rpx;
+  font-size: 34rpx;
   font-weight: bold;
-  margin-bottom: 20rpx; /* 稍微减小间距 */
+  margin-bottom: 20rpx;
   letter-spacing: 2rpx;
+  opacity: 0.9;
 }
 
-/* [新增] 榜单模式切换 (高手榜/实时榜) */
-.mode-tabs {
+/* [新增] 1. 大类切换 (基础训练/拓展挑战) */
+/* 样式设计：深色半透明背景，突显主分类 */
+.type-switch {
   display: flex;
   width: 60%;
-  margin: 0 auto 30rpx; /* 居中且下方留白 */
-  background: rgba(255, 255, 255, 0.2); /* 半透明白色背景 */
-  border-radius: 36rpx;
+  margin: 0 auto 20rpx;
+  background: rgba(0, 0, 0, 0.15); /* 深一点的背景，区分层级 */
+  border-radius: 40rpx;
   padding: 6rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.3);
 }
 
-.mode-item {
+.switch-item {
   flex: 1;
   text-align: center;
   font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 10rpx 0;
-  border-radius: 30rpx;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 12rpx 0;
+  border-radius: 34rpx;
+  transition: all 0.2s;
+}
+
+.switch-item.active {
+  background: #fff;
+  color: #3498db;
+  font-weight: bold;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+}
+
+/* [原有] 2. 榜单模式切换 (高手榜/实时榜) */
+/* 样式微调：变小一点，作为二级导航 */
+.mode-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.mode-item {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0 30rpx;
+  position: relative;
   transition: all 0.3s;
 }
 
-/* 选中态：变成白色背景，文字变蓝 */
 .mode-item.active {
-  background: #fff;
-  color: #2980b9; /* 对应渐变色的深色部分 */
+  color: #fff;
   font-weight: bold;
-  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+  font-size: 28rpx;
+}
+
+/* 底部指示点 */
+.mode-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8rpx;
+  height: 8rpx;
+  background: #fff;
+  border-radius: 50%;
 }
 
 /* [新增] 提示条样式 */
@@ -68,12 +103,12 @@ page {
 }
 
 .tips-box text {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #e6a23c;
   text-align: center;
 }
 
-/* 年级Tabs (保留原样，微调上间距) */
+/* [原有] 3. 年级Tabs */
 .grade-tabs {
   display: flex;
   justify-content: space-around;
@@ -83,11 +118,11 @@ page {
 
 .grade-item {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 28rpx;
-  padding: 10rpx 20rpx; 
-  border-radius: 30rpx;
+  font-size: 26rpx;
+  padding: 8rpx 18rpx; 
+  border-radius: 20rpx;
   transition: all 0.2s;
-  border: 2rpx solid transparent;
+  border: 1rpx solid transparent;
   white-space: nowrap; 
 }
 
@@ -96,7 +131,6 @@ page {
   background: white;
   font-weight: bold;
   transform: scale(1.05);
-  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.2);
 }
 
 /* --- 2. 对齐核心修正区域 --- */
@@ -127,7 +161,6 @@ page {
   flex: 1; 
   padding: 0 30rpx; 
   box-sizing: border-box;
-  /* 既然底部有固定按钮，列表底部必须留出足够的空间，否则最后一条会被挡住 */
   padding-bottom: 160rpx !important; 
 }
 

@@ -13,7 +13,8 @@
     "pages/generatePaperGrade6/generatePaperGrade6",
     "pages/testChoose/testChoose",
     "pages/math_rank/math_rank",
-    "pages/store/store"
+    "pages/store/store",
+    "pages/practice_advanced/practice_advanced"
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

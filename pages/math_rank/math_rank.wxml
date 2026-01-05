@@ -5,6 +5,12 @@
   <view class="header-section">
     <view class="rank-title">🏆 算力英雄榜</view>
 
+      <!-- [新增] 榜单类型切换 (基础 / 拓展) -->
+  <view class="type-switch">
+    <view class="switch-item {{rankType=='basic'?'active':''}}" bindtap="changeRankType" data-type="basic">基础训练</view>
+    <view class="switch-item {{rankType=='advanced'?'active':''}}" bindtap="changeRankType" data-type="advanced">拓展挑战</view>
+  </view>
+
     <!-- [修改] 榜单模式切换：实时榜在左(0)，高手榜在右(1) -->
     <view class="mode-tabs">
       <view class="mode-item {{curTab == 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">

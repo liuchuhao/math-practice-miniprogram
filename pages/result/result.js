@@ -13,6 +13,7 @@ Page({
     averageTime: 0,
     isAnonymous: false, 
     earnedPoints: 0,    
+    resultType: 'basic', // [新增] 默认为基础
     
     // 显示信息
     message: '',
@@ -85,6 +86,7 @@ Page({
       badgeText: badgeText,
       earnedPoints: earnedPoints,
       isAnonymous: !hasNickName,
+      resultType: options.type || 'basic'
     })
   },
   
@@ -123,7 +125,7 @@ Page({
   // 1. 查看榜单 (使用 redirectTo 防止层级过深)
   goToRank: function() {
     wx.redirectTo({
-      url: '/pages/math_rank/math_rank'
+      url: `/pages/math_rank/math_rank?grade=${this.data.grade}&type=${this.data.resultType}`
     });
   },
 

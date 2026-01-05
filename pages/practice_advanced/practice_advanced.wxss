@@ -1,0 +1,315 @@
+/* practice_advanced.wxss */
+
+/* 全局容器 */
+.container {
+  height: 100vh; /* 强制占满一屏 */
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 30rpx;
+  /* 关键修改：留出底部安全区，防止内容被底部固定的面板遮挡 */
+  padding-bottom: 350rpx; 
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 禁止页面整体滚动 */
+}
+
+/* --- 1. 顶部 Header --- */
+.header {
+  background: white;
+  border-radius: 24rpx;
+  padding: 24rpx; /*稍微减小padding */
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.05);
+  flex-shrink: 0; /* 防止头部被压缩 */
+}
+
+.grade-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.rank-badge {
+  background: linear-gradient(90deg, #8e24aa, #ab47bc);
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  font-weight: bold;
+}
+
+.grade-name {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+.time-capsule {
+  display: flex;
+  align-items: center;
+  background: #f0f7ff;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  gap: 6rpx;
+}
+.time-text {
+  color: #3498db;
+  font-size: 24rpx;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 进度条 */
+.progress-info {
+  margin-bottom: 20rpx;
+}
+.progress-label {
+  font-size: 22rpx;
+  color: #7f8c8d;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.progress-bar {
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+
+/* 得分板 */
+.score-board {
+  display: flex;
+  background: #f8fafc;
+  border-radius: 16rpx;
+  padding: 15rpx;
+}
+.score-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.border-left {
+  border-left: 2rpx solid #e0e6ed;
+}
+.score-val {
+  font-size: 32rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.score-val.correct { color: #3498db; }
+.score-val.wrong { color: #e74c3c; }
+.score-lbl {
+  font-size: 20rpx;
+  color: #95a5a6;
+  margin-top: 4rpx;
+}
+
+/* --- 2. 题目卡片 --- */
+.question-card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 25rpx rgba(0,0,0,0.06);
+  flex: 1; /* 核心：自动占据剩余高度 */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto; /* 如果题目实在太长，允许卡片内部滚动 */
+  margin-bottom: 20rpx; /* 底部稍微留点缝隙 */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  flex-shrink: 0;
+}
+.q-tag {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  font-weight: 600;
+}
+.q-score-tag {
+  font-size: 22rpx;
+  color: #e67e22;
+  background: #fff3e0;
+  padding: 4rpx 12rpx;
+  border-radius: 10rpx;
+}
+
+.question-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 题目文字自适应 */
+.question-text {
+  font-size: 56rpx; /* 稍微调小，防止换行溢出 */
+  color: #2c3e50;
+  font-weight: bold;
+  font-family: 'Verdana', sans-serif;
+  text-align: center;
+  margin-bottom: 40rpx;
+  line-height: 1.3;
+  word-break: break-all; /* 防止超长算式撑破屏幕 */
+}
+
+/* 答案显示框 */
+.answer-display-wrapper {
+  min-width: 200rpx;
+  height: 90rpx;
+  border: 4rpx solid #e0e6ed;
+  border-radius: 20rpx;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30rpx;
+  transition: all 0.3s;
+}
+.answer-display-wrapper.has-value {
+  background: #fff;
+  border-color: #3498db;
+}
+
+.answer-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  font-family: 'Courier New', monospace;
+}
+
+.placeholder {
+  color: #cbd5e1;
+  font-size: 40rpx;
+}
+
+.cursor {
+  width: 4rpx;
+  height: 40rpx;
+  background: #3498db;
+  margin-left: 6rpx;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* --- 3. 底部操作区 (核心修复) --- */
+
+/* 通用面板样式：固定底部 */
+.options-panel, .calculator-keypad {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f0f2f5;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx;
+  /* 适配全面屏底部 */
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -10rpx 40rpx rgba(0,0,0,0.08);
+  z-index: 100;
+  box-sizing: border-box;
+  /* 进场动画 */
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* A. 选项面板 (符号) */
+.options-title {
+  text-align: center;
+  color: #95a5a6;
+  font-size: 26rpx;
+  margin-bottom: 30rpx;
+}
+.options-grid {
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  gap: 40rpx; /* 按钮之间的间距 */
+  margin-bottom: 20rpx;
+}
+/* 修复：减小按钮尺寸，防止溢出 */
+.opt-btn {
+  width: 120rpx;
+  height: 120rpx;
+  line-height: 110rpx;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  font-size: 56rpx;
+  color: #2c3e50;
+  box-shadow: 0 6rpx 0 #e0e6ed, 0 10rpx 20rpx rgba(0,0,0,0.05);
+  margin: 0; /* 清除默认margin */
+}
+.opt-btn-hover {
+  transform: translateY(6rpx);
+  box-shadow: none;
+  background: #f1f5f9;
+}
+
+/* B. 数字键盘 */
+.keypad-header {
+  text-align: center;
+  margin-bottom: 15rpx;
+}
+.keypad-hint {
+  font-size: 22rpx;
+  color: #95a5a6;
+}
+
+.key-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+
+.key {
+  width: 31%; 
+  height: 90rpx; /* 高度适中 */
+  background: white;
+  border-radius: 16rpx;
+  border: none;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 0 #dcdcdc;
+  margin: 0;
+  padding: 0;
+}
+
+.key-hover {
+  background: #f8f9fa;
+  transform: translateY(4rpx);
+  box-shadow: none;
+}
+
+.key.del {
+  background: #ff7675;
+  color: white;
+  box-shadow: 0 4rpx 0 #d63031;
+}
+.del-hover {
+  background: #fab1a0;
+  box-shadow: none;
+  transform: translateY(4rpx);
+}
+
+.key.submit {
+  background: #0984e3;
+  color: white;
+  box-shadow: 0 4rpx 0 #0056b3;
+}
+.submit-hover {
+  background: #74b9ff;
+  box-shadow: none;
+  transform: translateY(4rpx);
+}

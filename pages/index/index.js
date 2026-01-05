@@ -243,6 +243,26 @@ Page({
     }
   },
 
+   // [新增] 开始拓展练习跳转函数
+   startAdvancedPractice: function() {
+    // 1. 检查是否设置了昵称 (复用已有的逻辑)
+    // 如果没有昵称，还是先走原来的流程去引导设置，或者直接弹窗
+    if (!this.data.userInfo.nickName) {
+      // 复用 startPractice 的逻辑，它会自动弹窗提示设置昵称
+      this.startPractice(); 
+      return;
+    }
+    
+    // 2. 跳转到年级选择，并带上 mode=advanced 参数
+    wx.navigateTo({
+      url: '/pages/gradeSelect/gradeSelect?mode=advanced',
+      fail: (err) => {
+        console.error('跳转失败', err);
+        wx.showToast({ title: '页面不存在', icon: 'none' });
+      }
+    });
+  },
+
   goGradeSelect: function() {
     wx.showLoading({ title: '准备中...', mask: true });
     setTimeout(() => {
@@ -253,6 +273,7 @@ Page({
       });
     }, 200);
   },
+ 
 
   goToStore: function() {
     wx.navigateTo({ url: '/pages/store/store' });
