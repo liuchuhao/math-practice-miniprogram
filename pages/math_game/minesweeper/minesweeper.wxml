@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 1. 顶部仪表盘 -->
+  <view class="header">
+    <view class="counter-box">
+      <text class="icon">💣</text>
+      <text class="val">{{mineCount}}</text>
+    </view>
+    <view class="face-btn" bindtap="restartGame">
+      {{isGameover ? '😵' : '🙂'}}
+    </view>
+    <view class="timer-box">
+      <text class="icon">⏱️</text>
+      <text class="val">{{timeStr}}</text>
+    </view>
+  </view>
+
+  <!-- 2. 扫雷棋盘 -->
+  <view class="board-wrap">
+    <view class="grid-board" style="grid-template-columns: repeat({{cols}}, 1fr);">
+      <block wx:for="{{grid}}" wx:for-item="row" wx:for-index="r" wx:key="r">
+        <block wx:for="{{row}}" wx:for-item="cell" wx:for-index="c" wx:key="c">
+          
+          <view 
+            class="cell status-{{cell.status}} val-{{cell.value}} {{cell.isBoom ? 'boom' : ''}}"
+            bindtap="onCellTap"
+            bindlongpress="onCellLongPress"
+            data-r="{{r}}"
+            data-c="{{c}}"
+          >
+            <!-- 状态1: 已翻开 -->
+            <block wx:if="{{cell.status === 1}}">
+              <text wx:if="{{cell.value === -1}}">💣</text>
+              <text wx:elif="{{cell.value > 0}}" class="num num-{{cell.value}}">{{cell.value}}</text>
+              <!-- 0 不显示内容 -->
+            </block>
+
+            <!-- 状态2: 插旗 -->
+            <block wx:if="{{cell.status === 2}}">
+              <text class="flag">🚩</text>
+            </block>
+
+          </view>
+
+        </block>
+      </block>
+    </view>
+  </view>
+
+  <!-- 3. 操作提示 -->
+  <view class="tips">
+    <view class="tip-item"><text>👆 短按</text>翻开格子</view>
+    <view class="tip-item"><text>👇 长按</text>标记地雷</view>
+  </view>
+</view>

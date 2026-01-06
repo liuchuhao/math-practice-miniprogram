@@ -222,56 +222,78 @@ Page({
     wx.setStorageSync('userInfo', this.data.userInfo);
   },
 
-  startPractice: function() {
-    if (!this.data.userInfo.nickName) {
-      wx.showModal({
-        title: '等等！你是神秘人吗？',
-        content: '设置一个响亮的昵称，上榜之后更帅气哦！',
-        cancelText: '匿名挑战',
-        confirmText: '去设置',
-        confirmColor: '#3498db',
-        success: (res) => {
-          if (res.confirm) {
-            this.setData({ nicknameFocus: true });
-          } else {
-            this.goGradeSelect();
+    // --- 1. 普通练习入口 ---
+    startPractice: function() {
+      // 调用通用检查函数，不传参代表默认模式
+      this.checkNicknameAndGo(); 
+    },
+  
+    // --- 2. 拓展练习入口 ---
+    startAdvancedPractice: function() {
+      // 调用通用检查函数，传入 'advanced' 标记
+      this.checkNicknameAndGo('advanced'); 
+    },
+  
+    // --- 3. [核心修复] 通用检查昵称与跳转逻辑 ---
+    // mode 参数用于区分要去哪个模式
+    checkNicknameAndGo: function(mode) {
+      if (!this.data.userInfo.nickName) {
+        wx.showModal({
+          title: '等等！你是神秘人吗？',
+          content: '设置一个响亮的昵称，上榜之后更帅气哦！',
+          cancelText: '匿名挑战',
+          confirmText: '去设置',
+          confirmColor: '#3498db',
+          success: (res) => {
+            if (res.confirm) {
+              // 用户想设置昵称
+              this.setData({ nicknameFocus: true });
+            } else {
+              // 用户选择匿名 -> 关键点：把 mode 传递下去
+              this.goGradeSelect(mode);
+            }
           }
+        });
+      } else {
+        // 已有昵称 -> 直接带 mode 跳转
+        this.goGradeSelect(mode);
+      }
+    },
+  
+    // --- 4. [修改后] 跳转函数 ---
+    // 接收 mode 参数，决定是否拼接到 URL 中
+    goGradeSelect: function(mode) {
+      wx.showLoading({ title: '准备中...', mask: true });
+      
+      setTimeout(() => {
+        wx.hideLoading();
+        
+        // 默认 URL
+        let targetUrl = '/pages/gradeSelect/gradeSelect';
+        
+        // 如果是拓展模式，加上参数
+        if (mode === 'advanced') {
+          targetUrl += '?mode=advanced';
         }
-      });
-    } else {
-      this.goGradeSelect();
-    }
-  },
-
-   // [新增] 开始拓展练习跳转函数
-   startAdvancedPractice: function() {
-    // 1. 检查是否设置了昵称 (复用已有的逻辑)
-    // 如果没有昵称，还是先走原来的流程去引导设置，或者直接弹窗
-    if (!this.data.userInfo.nickName) {
-      // 复用 startPractice 的逻辑，它会自动弹窗提示设置昵称
-      this.startPractice(); 
-      return;
-    }
-    
-    // 2. 跳转到年级选择，并带上 mode=advanced 参数
+  
+        wx.navigateTo({
+          url: targetUrl,
+          fail: (err) => {
+            console.error('跳转失败', err);
+            wx.showToast({ title: '页面不存在', icon: 'none' });
+          }
+        });
+      }, 200);
+    },
+      // [新增] 跳转到游戏大厅
+  goToGames: function() {
     wx.navigateTo({
-      url: '/pages/gradeSelect/gradeSelect?mode=advanced',
+      url: '/pages/math_game/menu/menu',
       fail: (err) => {
         console.error('跳转失败', err);
-        wx.showToast({ title: '页面不存在', icon: 'none' });
+        wx.showToast({ title: '功能开发中', icon: 'none' });
       }
     });
-  },
-
-  goGradeSelect: function() {
-    wx.showLoading({ title: '准备中...', mask: true });
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.navigateTo({
-        url: '/pages/gradeSelect/gradeSelect',
-        fail: (err) => { wx.showToast({ title: '跳转失败', icon: 'none' }); }
-      });
-    }, 200);
   },
  
 

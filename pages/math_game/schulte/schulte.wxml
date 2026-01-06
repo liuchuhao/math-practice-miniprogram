@@ -1,0 +1,38 @@
+<view class="container">
+  <!-- 1. 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="timer-box">
+      <text class="label">用时</text>
+      <text class="time">{{timeStr}}</text>
+    </view>
+    <view class="target-box">
+      <text class="label">寻找</text>
+      <text class="next-num">{{nextNum}}</text>
+    </view>
+    <view class="best-box">
+      <text class="label">最佳</text>
+      <text class="best">{{bestScore > 0 ? bestScore + 's' : '--'}}</text>
+    </view>
+  </view>
+
+  <!-- 2. 游戏区域 -->
+  <!-- 关键修复：使用 style 动态控制列数，且确保标签正确闭合 -->
+  <view class="grid-container" style="grid-template-columns: repeat({{gridSize}}, 1fr);">
+    <block wx:for="{{gridNumbers}}" wx:key="*this">
+      <view 
+        class="grid-cell {{item < nextNum ? 'clicked' : ''}} size-{{gridSize}}" 
+        bindtap="onCellTap" 
+        data-val="{{item}}"
+      >
+        {{item}}
+      </view>
+    </block>
+  </view>
+
+  <!-- 3. 底部操作 -->
+  <view class="controls">
+    <button class="btn restart" bindtap="restartGame">🔄 切换难度 / 重开</button>
+  </view>
+  
+  <view class="tips">按顺序点击 1-{{gridSize * gridSize}}，越快越好！</view>
+</view>

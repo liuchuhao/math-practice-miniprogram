@@ -1,354 +1,200 @@
 /* pages/index/index.wxss */
 
-/* 1. 容器：背景渐变 */
+/* 全局容器 */
 .container {
   padding: 30rpx;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  display: flex;
-  flex-direction: column;
+  background: #f4f7f6; /* 浅灰背景 */
   box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* 2. 头部文字 */
-.header {
-  text-align: center;
+/* [新增] 顶部背景装饰 - 解决顶部空的问题 */
+.top-bg-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 450rpx; /* 覆盖头部和用户卡片 */
+  background: linear-gradient(180deg, #e3f2fd 0%, #f4f7f6 100%);
+  z-index: 0;
+  border-bottom-left-radius: 60rpx;
+  border-bottom-right-radius: 60rpx;
+}
+
+/* 1. 头部区域 */
+.page-header {
+  position: relative;
+  z-index: 1; /* 确保在背景之上 */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-top: 10rpx;
   margin-bottom: 30rpx;
+  padding: 0 10rpx;
 }
 
-.title {
-  font-size: 44rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  display: block;
-  margin-bottom: 10rpx;
-  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
-}
+.header-left { display: flex; flex-direction: column; }
+.app-greeting { font-size: 28rpx; color: #7f8c8d; margin-bottom: 6rpx; }
+.app-name { font-size: 40rpx; font-weight: 800; color: #2c3e50; }
 
-.subtitle {
-  font-size: 28rpx;
-  color: #7f8c8d;
-}
-
-/* 3. Logo区：旋转动画 */
-.logo-area {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40rpx;
-}
-
-.logo {
-  width: 220rpx;
-  height: 220rpx;
-  background: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10rpx 30rpx rgba(52, 152, 219, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.logo::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(transparent, #3498db, transparent);
-  animation: rotate 4s linear infinite;
-}
-
-@keyframes rotate {
-  100% { transform: rotate(360deg); }
-}
-
-.logo-text {
-  font-size: 100rpx;
+.wechat-badge {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
   color: #3498db;
   font-weight: bold;
-  font-family: 'Times New Roman', Times, serif;
-  position: relative;
-  z-index: 10;
-  background: white;
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 200rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
 }
+
+/* 2. 用户名片卡 */
+.user-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 30rpx;
+  margin-bottom: 50rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0,0,0,0.06); /* 稍微加重阴影，突出立体感 */
+}
+
+.user-card-inner {
+  display: flex;
+  align-items: center;
+  padding: 40rpx;
+  gap: 30rpx;
+}
+
+/* 头像与信息栏样式保持不变，复用之前的代码即可 */
+.avatar-wrap { position: relative; width: 130rpx; height: 130rpx; flex-shrink: 0; }
+.avatar-btn { padding: 0 !important; margin: 0 !important; background: none !important; width: 100% !important; height: 100% !important; border-radius: 50%; }
+.avatar-btn::after { border: none; }
+.avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 6rpx solid white; box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.1); background-color: #eee; }
+.frame-overlay { position: absolute; top: -16%; left: -16%; width: 132%; height: 132%; z-index: 10; pointer-events: none; }
+.info-box { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.nickname-row { display: flex; align-items: center; border-bottom: 1rpx dashed #eee; padding-bottom: 10rpx; margin-bottom: 12rpx; }
+.nickname-input { font-size: 34rpx; font-weight: bold; color: #2c3e50; width: 100%; }
+.edit-icon { font-size: 24rpx; color: #bdc3c7; margin-left: 10rpx; }
+.rank-badge-area { display: flex; flex-direction: column; }
+.rank-pill { background: linear-gradient(90deg, #2c3e50, #34495e); color: #fff; font-size: 22rpx; padding: 6rpx 16rpx; border-radius: 10rpx; display: inline-flex; align-items: center; margin-bottom: 8rpx; align-self: flex-start; }
+.rank-text { font-weight: bold; margin-left: 6rpx; }
+.integral-row { font-size: 24rpx; color: #7f8c8d; }
+.integral-val { color: #e67e22; font-weight: bold; font-size: 28rpx; margin: 0 6rpx; }
+
 
 /* ==========================================
-   4. 用户资料卡 (样式修复版)
+   3. 核心功能区 (去标题加大版)
    ========================================== */
-   .user-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 30rpx;
+   .main-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30rpx; 
     margin-bottom: 40rpx;
-    box-shadow: 0 10rpx 20rpx rgba(0,0,0,0.05);
-    padding: 0; 
-    overflow: visible; 
+    /* 因为去掉了标题，稍微加点上边距让它和用户名片卡分开一点 */
+    margin-top: 20rpx; 
   }
   
-  .user-card-inner {
+  .action-card {
+    height: 220rpx; 
+    border-radius: 35rpx;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15rpx 30rpx rgba(0,0,0,0.1); /* 阴影更重一点 */
+    transition: transform 0.1s;
+  }
+  
+  .action-card:active { transform: scale(0.96); }
+  
+  .card-inner {
+    height: 100%;
     display: flex;
-    align-items: center; /* 垂直居中 */
-    padding: 40rpx;      /* 增加内边距，让整体居中一点 */
-    gap: 40rpx;          /* 拉开头像和文字的距离 */
-  }
-  /* --- [新增] 头像包裹容器 --- */
-/* 这是定位的基准 */
-.avatar-wrap {
-  position: relative;
-  width: 130rpx;
-  height: 130rpx;
-  flex-shrink: 0;
-  /* 确保不裁剪 */
-  overflow: visible;
-}
-  /* --- 头像按钮核心样式 --- */
-  .avatar-btn {
-    padding: 0 !important;
-  margin: 0 !important;
-  background: none !important;
-  line-height: normal !important;
-  width: 100% !important; /* 填满包裹容器 */
-  height: 100% !important;
-  border-radius: 50%;
-  position: relative;
-  z-index: 1; /* 层级低 */
+    flex-direction: row; 
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20rpx;
   }
   
-  .avatar-btn::after { border: none; }
-  
-  /* 用户真实头像 */
-  .avatar-img {
-    width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 6rpx solid white;
-  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.15);
-  background-color: #eee;
-  display: block; 
+  .icon { 
+    font-size: 80rpx; 
+    margin-right: 15rpx;
+    text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
   }
   
-  /* --- 相框叠加层样式 --- */
-  .frame-overlay {
-    position: absolute;
-  /* 调整大小和位置，确保覆盖头像 */
-  top: -16%;  
-  left: -16%;
-  width: 132%; 
-  height: 132%;
-  z-index: 10; /* 层级高，盖住头像 */
-  pointer-events: none; /* 让点击穿透下去，可以点到下面的按钮换头像 */
+  .text { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start; 
   }
   
-  /* 📷小图标 (那个绿色的东西) */
-  .edit-badge {
-    display: none;
+  .title { 
+    font-size: 36rpx; 
+    font-weight: 900; 
+    color: #fff; 
+    letter-spacing: 2rpx;
+    margin-bottom: 6rpx;
   }
   
-  /* --- 右侧信息栏 --- */
-  .info-box {
-    flex: 1;
+  .desc { 
+    font-size: 24rpx; 
+    color: rgba(255,255,255,0.95); 
+    font-weight: 500;
+  }
+  
+  /* 颜色保持不变 */
+  .blue   { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+  .purple { background: linear-gradient(135deg, #b721ff 0%, #21d4fd 100%); }
+  .green  { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+  .orange { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+  
+  
+  /* ==========================================
+     4. 常用工具 (超大按钮版)
+     ========================================== */
+  .tools-section {
+    background: white;
+    border-radius: 35rpx;
+    /* 增加内边距 */
+    padding: 50rpx 20rpx; 
+    box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.06);
+    margin-bottom: 50rpx;
+  }
+  
+  .sub-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15rpx;
+  }
+  
+  .sub-btn {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    /* 增加点击区域高度，让它是个大方块 */
+    height: 160rpx; 
+    border-radius: 20rpx;
   }
-  /* ... 后面的 nickname-row 等保持不变 ... */
-
-/* 昵称行 */
-.nickname-row {
-  display: flex;
-  align-items: center;
-  border-bottom: 1rpx dashed #dcdcdc;
-  padding-bottom: 10rpx;
-  margin-bottom: 15rpx;
-}
-
-.nickname-input {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  width: 100%;
-}
-
-.edit-icon {
-  font-size: 24rpx;
-  color: #bdc3c7;
-  margin-left: 10rpx;
-}
-
-/* 积分军衔区 */
-.rank-badge-area {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.rank-pill {
-  background: linear-gradient(90deg, #2c3e50, #4ca1af);
-  color: #fff;
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
-  border-radius: 10rpx;
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 8rpx;
-  box-shadow: 0 4rpx 8rpx rgba(44, 62, 80, 0.2);
-}
-
-.rank-icon {
-  margin-right: 8rpx;
-  font-size: 24rpx;
-}
-
-.rank-text {
-  font-weight: bold;
-  letter-spacing: 1rpx;
-}
-
-.integral-row {
-  font-size: 24rpx;
-  color: #7f8c8d;
-  display: flex;
-  align-items: baseline;
-}
-
-.integral-val {
-  color: #e67e22;
-  font-weight: bold;
-  font-size: 28rpx;
-  margin: 0 6rpx;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.next-tips {
-  color: #bdc3c7;
-  font-size: 20rpx;
-  margin-left: 8rpx;
-}
-
-/* 5. 核心功能区 (大卡片) */
-.main-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 30rpx;
-  margin-bottom: 40rpx;
-}
-
-.action-card {
-  height: 160rpx;
-  border-radius: 30rpx;
-  display: flex;
-  align-items: center;
-  padding: 0 40rpx;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10rpx 20rpx rgba(0,0,0,0.15);
-  transition: transform 0.2s;
-}
-
-.action-card:active {
-  transform: scale(0.98);
-}
-
-.action-card.blue {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  box-shadow: 0 8rpx 20rpx rgba(52, 152, 219, 0.4);
-}
-
-.action-card.orange {
-  background: linear-gradient(135deg, #f39c12, #d35400);
-  box-shadow: 0 8rpx 20rpx rgba(243, 156, 18, 0.4);
-}
-
-/* 新增紫色卡片 */
-.action-card.purple {
-  background: linear-gradient(135deg, #9b59b6, #8e44ad);
-  box-shadow: 0 8rpx 20rpx rgba(155, 89, 182, 0.4);
-}
-
-.action-card::after {
-  content: '';
-  position: absolute;
-  right: -30rpx;
-  bottom: -50rpx;
-  width: 180rpx;
-  height: 180rpx;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-}
-
-.icon-box {
-  font-size: 60rpx;
-  margin-right: 30rpx;
-  width: 80rpx;
-  text-align: center;
-}
-
-.text-box {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-title {
-  font-size: 36rpx;
-  font-weight: bold;
-}
-
-.card-desc {
-  font-size: 24rpx;
-  opacity: 0.9;
-  margin-top: 5rpx;
-}
-
-/* 6. 更多功能区 (网格小按钮) */
-.sub-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4列布局 */
-  gap: 15rpx;
-  margin-bottom: 40rpx;
-}
-
-.sub-btn {
-  background: white;
-  border-radius: 20rpx;
-  height: 160rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 26rpx;
-  color: #555;
-  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
-  transition: all 0.2s;
-}
-
-.sub-btn:active {
-  background: #f8f9fa;
-  transform: translateY(2rpx);
-}
-
-.sub-icon {
-  font-size: 48rpx;
-  margin-bottom: 15rpx;
-}
+  /* 增加点击反馈背景 */
+  .sub-btn:active { 
+    background-color: #f9f9f9;
+    transform: scale(0.95); 
+  }
+  
+  .sub-icon { 
+    /* 图标特大 */
+    font-size: 72rpx; 
+    margin-bottom: 20rpx; 
+  }
+  
+  .sub-btn text:last-child { 
+    /* 字体加大加粗 */
+    font-size: 28rpx; 
+    color: #555; 
+    font-weight: 600;
+  }
 
 /* 底部 */
-.footer {
-  margin-top: auto;
-  opacity: 0.7;
-  padding-bottom: 20rpx;
-}
-
-.footer-text {
-  font-size: 24rpx;
-  color: #7f8c8d;
-  font-style: italic;
-}
+.footer { margin-top: auto; padding-bottom: 20rpx; text-align: center; }
+.footer-text { font-size: 22rpx; color: #bdc3c7; }

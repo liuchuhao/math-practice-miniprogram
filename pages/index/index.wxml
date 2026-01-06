@@ -1,107 +1,111 @@
 <!-- pages/index/index.wxml -->
 <view class="container">
-  <!-- 1. 顶部标语 -->
-  <view class="header">
-    <text class="title">小学数学计算练习</text>
-    <text class="subtitle">公众号：刘叔数学训练</text>
-  </view>
   
-  <!-- 2. Logo区 -->
-  <view class="logo-area">
-    <view class="logo">
-      <text class="logo-text">π</text>
+  <!-- 顶部背景装饰 -->
+  <view class="top-bg-shape"></view>
+
+  <!-- 1. 头部区域 -->
+  <view class="page-header">
+    <view class="header-left">
+      <text class="app-greeting">👋 Hi, 同学</text>
+      <text class="app-name">今天也要加油鸭！</text>
+    </view>
+    <view class="header-right">
+      <view class="wechat-badge">公众号：刘叔数学训练</view>
     </view>
   </view>
 
-  <!-- 3. 用户名片卡 (结构分离修复版) -->
+  <!-- 2. 用户名片卡 -->
   <view class="user-card">
     <view class="user-card-inner">
-      
-      <!-- [新增] 头像包裹层：将按钮和相框分开，互不干扰 -->
       <view class="avatar-wrap">
-        <!-- 底层：头像按钮 -->
         <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
           <image class="avatar-img" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
         </button>
-
-        <!-- 顶层：相框 (独立于按钮之外，不会被裁剪) -->
         <image wx:if="{{currentFrameImg}}" class="frame-overlay" src="{{currentFrameImg}}" mode="aspectFit"></image>
-        
-        <!-- 小图标 -->
-        <view class="edit-badge">📷</view>
       </view>
       
-      <!-- 右侧信息栏 -->
       <view class="info-box">
-        <!-- 昵称行 -->
         <view class="nickname-row">
           <input type="nickname" class="nickname-input" placeholder="点击设置昵称" value="{{userInfo.nickName}}" bindblur="onNicknameChange" bindinput="onNicknameInput" focus="{{nicknameFocus}}"/>
           <text class="edit-icon">✎</text>
         </view>
-
-        <!-- 积分军衔展示行 -->
         <view class="rank-badge-area" bindtap="showRankRules">
           <view class="rank-pill">
             <text class="rank-icon">🎖️</text>
             <text class="rank-text">{{userTitle}}</text>
           </view>
-          
           <view class="integral-row">
-            <text class="integral-label">积分:</text>
+            <text>积分 </text>
             <text class="integral-val">{{userIntegral}}</text>
-            <text class="next-tips" wx:if="{{nextLevelNeed > 0}}">(差{{nextLevelNeed}}升级)</text>
-            <text class="next-tips" wx:else>(已满级)</text>
           </view>
         </view>
       </view>
-
     </view>
   </view>
 
-  <!-- 4. 核心功能区 -->
+  <!-- 3. 核心功能区 (去掉了文字标题) -->
   <view class="main-actions">
     <view class="action-card blue" bindtap="startPractice">
-      <view class="icon-box">✏️</view>
-      <view class="text-box">
-        <text class="card-title">开始练习</text>
-        <text class="card-desc">专项突破 巩固基础</text>
+      <view class="card-inner">
+        <text class="icon">✏️</text>
+        <view class="text">
+          <text class="title">基础练习</text>
+          <text class="desc">巩固基础</text>
+        </view>
       </view>
     </view>
-      <!-- [新增] 拓展练习入口 -->
+
     <view class="action-card purple" bindtap="startAdvancedPractice">
-      <view class="icon-box">🧠</view>
-      <view class="text-box">
-        <text class="card-title">拓展练习</text>
-        <text class="card-desc">逻辑思维 双倍积分</text>
+      <view class="card-inner">
+        <text class="icon">🧠</text>
+        <view class="text">
+          <text class="title">拓展挑战</text>
+          <text class="desc">双倍积分</text>
+        </view>
       </view>
     </view>
+
+    <view class="action-card green" bindtap="goToGames">
+      <view class="card-inner">
+        <text class="icon">🎮</text>
+        <view class="text">
+          <text class="title">数学游戏</text>
+          <text class="desc">趣味闯关</text>
+        </view>
+      </view>
+    </view>
+    
     <view class="action-card orange" bindtap="goToRank">
-      <view class="icon-box">🏆</view>
-      <view class="text-box">
-        <text class="card-title">计算英雄榜</text>
-        <text class="card-desc">挑战全网高手</text>
+      <view class="card-inner">
+        <text class="icon">🏆</text>
+        <view class="text">
+          <text class="title">英雄榜</text>
+          <text class="desc">全网PK</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 5. 更多功能区 -->
-  <view class="sub-actions">
-    <view class="sub-btn" bindtap="goToStore">
-      <text class="sub-icon">🎁</text>
-      <text>积分商店</text>
-    </view>
-    
-    <view class="sub-btn" bindtap="goToGradeTestPaper">
-      <text class="sub-icon">📝</text>
-      <text>生成计算试卷</text>
-    </view>
-    <view class="sub-btn" bindtap="viewHistory">
-      <text class="sub-icon">📊</text>
-      <text>练习记录\n错题练习</text>
-    </view>
-    <view class="sub-btn" bindtap="about">
-      <text class="sub-icon">ℹ️</text>
-      <text>关于我们</text>
+  <!-- 4. 常用工具 (去掉了标题，按钮加大) -->
+  <view class="tools-section">
+    <view class="sub-actions">
+      <view class="sub-btn" bindtap="goToStore">
+        <text class="sub-icon">🎁</text>
+        <text>积分商店</text>
+      </view>
+      <view class="sub-btn" bindtap="goToGradeTestPaper">
+        <text class="sub-icon">📝</text>
+        <text>生成试卷</text>
+      </view>
+      <view class="sub-btn" bindtap="viewHistory">
+        <text class="sub-icon">📊</text>
+        <text>错题本</text>
+      </view>
+      <view class="sub-btn" bindtap="about">
+        <text class="sub-icon">ℹ️</text>
+        <text>关于我们</text>
+      </view>
     </view>
   </view>
  

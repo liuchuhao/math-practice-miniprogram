@@ -1,0 +1,35 @@
+<view class="container">
+  <!-- 1. 顶部数据 -->
+  <view class="header">
+    <view class="stat-box">
+      <text class="label">步数</text>
+      <text class="val">{{moves}}</text>
+    </view>
+    <view class="stat-box">
+      <text class="label">时间</text>
+      <text class="val">{{timeStr}}</text>
+    </view>
+  </view>
+
+  <!-- 2. 游戏棋盘 -->
+  <view class="board-wrap">
+    <view class="grid-board" style="grid-template-columns: repeat({{size}}, 1fr);">
+      <block wx:for="{{board}}" wx:key="*this">
+        <view 
+          class="block size-{{size}} {{item === 0 ? 'empty' : ''}} {{isGameover ? 'win' : ''}}"
+          bindtap="onBlockTap"
+          data-index="{{index}}"
+        >
+          <text wx:if="{{item !== 0}}">{{item}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 3. 控制区 -->
+  <view class="controls">
+    <button class="btn restart" bindtap="restartGame">🔄 重新开始 / 换难度</button>
+  </view>
+  
+  <view class="tips">点击数字滑向空格，将数字按顺序排列。</view>
+</view>

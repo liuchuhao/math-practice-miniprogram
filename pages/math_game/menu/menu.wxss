@@ -1,0 +1,177 @@
+/* pages/math_game/menu/menu.wxss */
+
+/* 1. 容器：背景保持清爽的渐变 */
+.container {
+  min-height: 100vh;
+  padding: 40rpx;
+  background: linear-gradient(180deg, #f0f4f8 0%, #d9e2ec 100%); /* 更干净的冷灰渐变 */
+  box-sizing: border-box;
+}
+
+/* 2. 头部：增加一点留白和层次 */
+.header {
+  margin-bottom: 50rpx;
+  padding-left: 10rpx;
+}
+
+.title {
+  font-size: 56rpx; /* 标题加大 */
+  font-weight: 800;
+  color: #102a43;
+  display: block;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #627d98;
+  font-weight: 500;
+}
+
+/* 3. 游戏列表 */
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx; /* 卡片间距 */
+}
+
+/* --- 通用卡片样式 --- */
+.game-card {
+  background: white;
+  border-radius: 36rpx; /* 更圆润 */
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06); /* 柔和阴影 */
+  transition: all 0.2s ease;
+  border: 1rpx solid rgba(255,255,255,0.6);
+}
+
+/* 点击反馈：缩小并加深阴影 */
+.game-card:active {
+  transform: scale(0.97);
+  background-color: #f9f9f9;
+}
+
+/* 左侧图标容器 */
+.card-icon {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 30rpx; /* 方圆形图标背景 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56rpx;
+  margin-right: 30rpx;
+  flex-shrink: 0;
+}
+
+/* 中间文字信息 */
+.card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #243b53;
+  margin-bottom: 6rpx;
+}
+
+.desc {
+  font-size: 24rpx;
+  color: #829ab1;
+}
+
+/* 右侧按钮 */
+.play-btn {
+  padding: 14rpx 34rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+  white-space: nowrap;
+}
+
+/* === 针对不同游戏的配色方案 (需要在WXML里加类名) === */
+
+/* 1. 舒尔特方格 (默认蓝色系 .schulte) */
+.game-card.schulte .card-icon {
+  background: #e3f2fd;
+  color: #2196f3;
+}
+.game-card.schulte .play-btn {
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
+  box-shadow: 0 6rpx 16rpx rgba(33, 150, 243, 0.3);
+}
+/* 华容道 (橙色系 .klotski) */
+.game-card.klotski .card-icon { background: #fff3e0; color: #ef6c00; }
+.game-card.klotski .play-btn {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  box-shadow: 0 6rpx 16rpx rgba(239, 108, 0, 0.3);
+}
+/* 24点 (紫色系 .twentyfour) */
+.game-card.twentyfour .card-icon { background: #f3e5f5; color: #8e24aa; }
+.game-card.twentyfour .play-btn {
+  background: linear-gradient(135deg, #ba68c8, #7b1fa2);
+  box-shadow: 0 6rpx 16rpx rgba(123, 31, 162, 0.3);
+}
+
+/* 2. 扫雷 (红色系 .minesweeper) */
+.game-card.minesweeper .card-icon {
+  background: #ffebee;
+  color: #e53935;
+}
+.game-card.minesweeper .play-btn {
+  background: linear-gradient(135deg, #ef5350, #d32f2f);
+  box-shadow: 0 6rpx 16rpx rgba(229, 57, 53, 0.3);
+}
+
+/* 3. 数独 (紫色系 .sudoku - 预留) */
+.game-card.sudoku .card-icon {
+  background: #f3e5f5;
+  color: #8e24aa;
+}
+.game-card.sudoku .play-btn {
+  background: linear-gradient(135deg, #ab47bc, #7b1fa2);
+  box-shadow: 0 6rpx 16rpx rgba(156, 39, 176, 0.3);
+}
+/* 待开发按钮样式 */
+.play-btn.disabled {
+  background: #cfd8dc;
+  color: #90a4ae;
+  box-shadow: none;
+}
+
+/* === 排行榜入口 (金色横幅风格) === */
+.rank-entry {
+  margin-top: 60rpx;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  padding: 30rpx 40rpx;
+  border-radius: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #e65100;
+  font-weight: 800;
+  font-size: 30rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 167, 38, 0.15);
+  border: 2rpx solid #ffe0b2;
+}
+
+.rank-entry:active {
+  transform: scale(0.98);
+  background: #ffe0b2;
+}
+
+.arrow {
+  font-size: 36rpx;
+  opacity: 0.6;
+}

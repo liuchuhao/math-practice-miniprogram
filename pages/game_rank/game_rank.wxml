@@ -1,0 +1,130 @@
+<view class="container">
+  
+  <!-- 1. 个人荣誉总览 -->
+  <view class="profile-card">
+    <view class="avatar-box">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
+      <view class="rank-badge">{{userTitle}}</view>
+    </view>
+    <view class="stats-box">
+      <view class="stat-item">
+        <text class="val">{{totalScore}}</text>
+        <text class="label">总积分</text>
+      </view>
+      <view class="stat-item">
+        <text class="val">{{totalGamesPlayed}}</text>
+        <text class="label">游戏场次</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 2. 趣味游戏·最佳战绩 (共5个) -->
+  <view class="section-title">🏆 游戏殿堂 (本地最佳)</view>
+  <view class="game-stats-grid">
+    
+    <!-- 1. 舒尔特方格 -->
+    <view class="stat-card blue">
+      <view class="card-header">
+        <text class="icon">🔢</text>
+        <text class="name">舒尔特方格</text>
+      </view>
+      <view class="card-body">
+        <view class="record-row">
+          <text>3x3 最佳</text>
+          <text class="score">{{schulte3 ? schulte3 + 's' : '--'}}</text>
+        </view>
+        <view class="record-row">
+          <text>4x4 最佳</text>
+          <text class="score">{{schulte4 ? schulte4 + 's' : '--'}}</text>
+        </view>
+        <view class="record-row">
+          <text>5x5 最佳</text>
+          <text class="score">{{schulte5 ? schulte5 + 's' : '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 2. 扫雷 -->
+    <view class="stat-card red">
+      <view class="card-header">
+        <text class="icon">💣</text>
+        <text class="name">扫雷专家</text>
+      </view>
+      <view class="card-body">
+        <view class="record-row">
+          <text>最快通关</text>
+          <text class="score">{{minesweeperBest ? minesweeperBest : '--'}}</text>
+        </view>
+        <view class="record-row">
+          <text>通关次数</text>
+          <text class="score">{{minesweeperWins || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 3. 数字华容道 -->
+    <view class="stat-card orange">
+      <view class="card-header">
+        <text class="icon">🏗️</text>
+        <text class="name">数字华容道</text>
+      </view>
+      <view class="card-body">
+        <view class="record-row">
+          <text>3x3 记录</text>
+          <text class="score">{{klotski3 || '--'}}</text>
+        </view>
+        <view class="record-row">
+          <text>4x4 记录</text>
+          <text class="score">{{klotski4 || '--'}}</text>
+        </view>
+        <view class="record-row">
+          <text>5x5 记录</text>
+          <text class="score">{{klotski5 || '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 4. 24点 -->
+    <view class="stat-card purple">
+      <view class="card-header">
+        <text class="icon">🎴</text>
+        <text class="name">巧算24点</text>
+      </view>
+      <view class="card-body">
+        <view class="record-row">
+          <text>累计通关</text>
+          <text class="score">{{twentyfourWins || 0}} 关</text>
+        </view>
+        <view class="record-row">
+          <text>最高连胜</text>
+          <text class="score">{{twentyfourStreak || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 5. 数独 (新增) -->
+    <view class="stat-card green">
+      <view class="card-header">
+        <text class="icon">🧩</text>
+        <text class="name">数独挑战</text>
+      </view>
+      <view class="card-body">
+        <view class="record-row">
+          <text>简单通关</text>
+          <text class="score">{{sudokuEasy || 0}}</text>
+        </view>
+        <view class="record-row">
+          <text>中等通关</text>
+          <text class="score">{{sudokuMedium || 0}}</text>
+        </view>
+        <view class="record-row">
+          <text>困难通关</text>
+          <text class="score">{{sudokuHard || 0}}</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+  
+  <view class="footer-tips">数据仅保存在本地，卸载小程序后会丢失</view>
+</view>

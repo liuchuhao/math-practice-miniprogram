@@ -14,7 +14,14 @@
     "pages/testChoose/testChoose",
     "pages/math_rank/math_rank",
     "pages/store/store",
-    "pages/practice_advanced/practice_advanced"
+    "pages/practice_advanced/practice_advanced",
+    "pages/math_game/menu/menu",
+    "pages/math_game/schulte/schulte",
+    "pages/math_game/sudoku/sudoku",
+    "pages/math_game/minesweeper/minesweeper",
+    "pages/math_game/klotski/klotski",
+    "pages/math_game/twentyfour/twentyfour",
+    "pages/game_rank/game_rank"
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

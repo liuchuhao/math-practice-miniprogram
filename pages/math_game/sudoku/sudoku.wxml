@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 1. 顶部状态栏 -->
+  <view class="header">
+    <view class="info-item">
+      <text class="label">难度</text>
+      <text class="val">{{difficulty}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">错误</text>
+      <text class="val {{mistakes >= 3 ? 'danger' : ''}}">{{mistakes}}/3</text>
+    </view>
+    <view class="info-item">
+      <text class="label">时间</text>
+      <text class="val">{{timeStr}}</text>
+    </view>
+  </view>
+
+  <!-- 2. 数独棋盘 -->
+  <view class="board-wrap">
+    <view class="sudoku-board">
+      <block wx:for="{{board}}" wx:for-item="row" wx:for-index="r" wx:key="r">
+        <block wx:for="{{row}}" wx:for-item="cell" wx:for-index="c" wx:key="c">
+          <view 
+            class="cell r{{r}} c{{c}} {{selected.r === r && selected.c === c ? 'selected' : ''}} {{cell.isRelated ? 'related' : ''}} {{cell.fixed ? 'fixed' : ''}} {{cell.isError ? 'error' : ''}}"
+            bindtap="selectCell"
+            data-r="{{r}}"
+            data-c="{{c}}"
+          >
+            {{cell.val}}
+          </view>
+        </block>
+      </block>
+    </view>
+  </view>
+
+  <!-- 3. 数字键盘 -->
+  <view class="keypad">
+    <view class="num-row">
+      <block wx:for="{{[1,2,3,4,5,6,7,8,9]}}" wx:key="*this">
+        <button class="num-btn" bindtap="onNumTap" data-num="{{item}}">{{item}}</button>
+      </block>
+    </view>
+    <view class="tool-row">
+      <button class="tool-btn restart" bindtap="onRestart">新游戏</button>
+      <button class="tool-btn delete" bindtap="onDelete">擦除</button>
+    </view>
+  </view>
+</view>

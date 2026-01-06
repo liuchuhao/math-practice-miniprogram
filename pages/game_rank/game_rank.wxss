@@ -1,0 +1,159 @@
+.container {
+  min-height: 100vh;
+  padding: 30rpx;
+  background: #f4f6f9;
+  box-sizing: border-box;
+}
+
+/* 1. 个人荣誉卡片 */
+.profile-card {
+  background: white;
+  border-radius: 30rpx;
+  padding: 40rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 50rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.05);
+}
+
+.avatar-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 50rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid #fff;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.1);
+  background: #eee;
+}
+
+.rank-badge {
+  margin-top: -20rpx;
+  background: linear-gradient(90deg, #f1c40f, #f39c12);
+  color: white;
+  font-size: 20rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.stats-box {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item .val { font-size: 44rpx; font-weight: 800; color: #2c3e50; }
+.stat-item .label { font-size: 24rpx; color: #95a5a6; margin-top: 6rpx; }
+
+
+/* 2. 游戏战绩网格 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #34495e;
+  margin-bottom: 25rpx;
+  padding-left: 10rpx;
+}
+
+.game-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25rpx;
+  margin-bottom: 50rpx;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 25rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部色条装饰 */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 8rpx; height: 100%;
+}
+.stat-card.blue::before { background: #3498db; }
+.stat-card.red::before { background: #e74c3c; }
+.stat-card.orange::before { background: #f39c12; }
+.stat-card.purple::before { background: #9b59b6; }
+.stat-card.green::before { background: #2ecc71; }
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx dashed #eee;
+}
+.card-header .icon { font-size: 36rpx; margin-right: 12rpx; }
+.card-header .name { font-size: 28rpx; font-weight: bold; color: #2c3e50; }
+
+.record-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 10rpx;
+}
+.record-row .score { color: #2c3e50; font-weight: bold; }
+
+
+/* 3. 练习统计 */
+.practice-stats {
+  display: flex;
+  gap: 25rpx;
+}
+
+.p-card {
+  flex: 1;
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.03);
+}
+
+.p-header {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #34495e;
+  margin-bottom: 20rpx;
+  border-left: 6rpx solid #2c3e50;
+  padding-left: 12rpx;
+}
+
+.p-data {
+  display: flex;
+  justify-content: space-between;
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+}
+.data-item .num { font-size: 32rpx; font-weight: bold; color: #2c3e50; }
+.data-item .txt { font-size: 20rpx; color: #95a5a6; margin-top: 4rpx; }
+
+.footer-tips {
+  margin-top: 60rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #bdc3c7;
+  padding-bottom: 30rpx;
+}

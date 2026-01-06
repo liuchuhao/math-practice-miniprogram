@@ -42,7 +42,7 @@ class AdvancedGenerator {
     }
 
     return {
-      question: `${a} ⃝ ${b} = ${c}`, // 用统一的圈圈比较美观
+      question: `${a}  □  ${b} = ${c}`, // 用统一的圈圈比较美观
       answer: op,
       inputType: 'symbol',
       options: ops
@@ -91,7 +91,7 @@ class AdvancedGenerator {
     else ans = '=';
 
     return {
-      question: `${leftExpr} ⃝ ${rightExpr}`,
+      question: `${leftExpr}  □  ${rightExpr}`,
       answer: ans,
       inputType: 'compare',
       options: ['>', '<', '=']

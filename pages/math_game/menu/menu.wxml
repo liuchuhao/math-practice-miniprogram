@@ -1,0 +1,68 @@
+<view class="container">
+  <view class="header">
+    <text class="title">🎮 数学思维游戏</text>
+    <text class="subtitle">锻炼专注力与逻辑思维</text>
+  </view>
+
+  <view class="game-list">
+    <!-- 舒尔特方格 -->
+    <view class="game-card schulte" bindtap="goSchulte">
+      <view class="card-icon">🔢</view>
+      <view class="card-info">
+        <text class="name">舒尔特方格</text>
+        <text class="desc">专注力特训 | 极速反应力</text>
+      </view>
+      <view class="play-btn">开始</view>
+    </view>
+
+    <!-- 数独 -->
+    <view class="game-card sudoku" bindtap="goSudoku">
+      <view class="card-icon">🧩</view>
+      <view class="card-info">
+        <text class="name">数独挑战</text>
+        <text class="desc">逻辑推理 | 最强大脑</text>
+      </view>
+      <view class="play-btn">开始</view>
+    </view>
+
+    <!-- 数字华容道 -->
+    <view class="game-card klotski" bindtap="goKlotski">
+      <view class="card-icon">🏗️</view> 
+      <!-- 换了个更像移动积木的图标 -->
+      <view class="card-info">
+        <text class="name">数字华容道</text>
+        <text class="desc">经典益智 | 还原数字顺序</text>
+      </view>
+      <view class="play-btn">挑战</view>
+    </view>
+
+    <!-- 24点 -->
+    <view class="game-card twentyfour" bindtap="goTwentyFour">
+      <view class="card-icon">🎴</view>
+      <view class="card-info">
+        <text class="name">巧算24点</text>
+        <text class="desc">四则运算 | 头脑风暴</text>
+      </view>
+      <view class="play-btn">挑战</view>
+    </view>
+
+    <!-- 扫雷 -->
+    <view class="game-card minesweeper" bindtap="goMinesweeper">
+      <view class="card-icon">💣</view>
+      <view class="card-info">
+        <text class="name">扫雷专家</text>
+        <text class="desc">逻辑推理 | 步步惊心</text>
+      </view>
+      <view class="play-btn">挑战</view>
+    </view>
+
+    <!-- 战绩榜入口 (金色横幅) -->
+    <view class="rank-entry" bindtap="goRank">
+      <view class="rank-left">
+        <text class="rank-icon">🏆</text>
+        <text>我的游戏战绩</text>
+      </view>
+      <text class="arrow">查看 ></text>
+    </view>
+  </view>
+</view>

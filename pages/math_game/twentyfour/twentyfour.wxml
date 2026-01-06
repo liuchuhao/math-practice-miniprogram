@@ -1,0 +1,62 @@
+<view class="container">
+  <!-- 1. 顶部栏 -->
+  <view class="header">
+    <view class="score-box">
+      <text class="label">胜场</text>
+      <text class="val">{{score}}</text>
+    </view>
+    <view class="timer-box">
+      <text class="val">{{timeStr}}</text>
+    </view>
+    <view class="btn-box" bindtap="nextLevel">
+      <text>跳过</text>
+    </view>
+  </view>
+
+  <!-- 2. 牌桌区域 -->
+  <view class="table-area">
+    <view class="card-list">
+      <block wx:for="{{cards}}" wx:key="id">
+        <!-- 动态类名：选中 selected, 参与计算 shrinking -->
+        <view 
+          class="poker-card {{selectedIdx === index ? 'selected' : ''}}" 
+          bindtap="onCardTap" 
+          data-index="{{index}}"
+        >
+          <!-- 花色装饰 -->
+          <view class="suit top">♠</view>
+          
+          <!-- 中间数字/表达式 -->
+          <view class="card-val {{item.expr.length > 2 ? 'small' : ''}}">
+            {{item.val}}
+          </view>
+          
+          <!-- 表达式提示 (算出来的牌显示过程) -->
+          <view class="card-expr" wx:if="{{item.expr.length > 2}}">{{item.expr}}</view>
+
+          <view class="suit bottom">♣</view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 目标提示 -->
+    <view class="target-tips" wx:if="{{cards.length > 1}}">目标：24</view>
+  </view>
+
+  <!-- 3. 操作区 -->
+  <view class="control-panel">
+    <!-- 运算符 -->
+    <view class="ops-row">
+      <button class="op-btn {{operator==='+'?'active':''}}" bindtap="onOpTap" data-op="+">＋</button>
+      <button class="op-btn {{operator==='-'?'active':''}}" bindtap="onOpTap" data-op="-">－</button>
+      <button class="op-btn {{operator==='×'?'active':''}}" bindtap="onOpTap" data-op="×">×</button>
+      <button class="op-btn {{operator==='÷'?'active':''}}" bindtap="onOpTap" data-op="÷">÷</button>
+    </view>
+    
+    <!-- 功能键 -->
+    <view class="func-row">
+      <button class="func-btn undo" bindtap="undo" disabled="{{history.length === 0}}">↩ 撤销</button>
+      <button class="func-btn reset" bindtap="startGame">🔄 重开</button>
+    </view>
+  </view>
+</view>
