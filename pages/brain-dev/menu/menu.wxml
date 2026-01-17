@@ -1,0 +1,49 @@
+<!-- pages/brain-dev/menu/menu.wxml -->
+<view class="container">
+  
+  <!-- 顶部装饰背景 -->
+  <view class="top-bg-shape"></view>
+
+    <!-- 头部介绍 -->
+    <view class="page-header">
+    <view class="header-text">
+      <text class="title">🧠 大脑开发</text>
+      <text class="subtitle">六维能力专项特训，挑战你的极限！</text>
+    </view>
+    <!-- 修改处：把 image 换成了 text -->
+    <text class="header-icon-emoji">🧠</text> 
+  </view>
+
+  <!-- 游戏菜单列表 -->
+  <view class="game-grid">
+    <block wx:for="{{gameList}}" wx:key="id">
+      <view class="game-card {{item.colorClass}}" bindtap="navigateToGame" data-game-id="{{item.id}}" data-target-url="{{item.targetUrl}}">
+        <!-- 卡片背景装饰圆圈 -->
+        <view class="bg-circle c1"></view>
+        <view class="bg-circle c2"></view>
+        
+        <view class="card-content">
+          <text class="game-icon">{{item.icon}}</text>
+          <view class="game-info">
+            <text class="game-name">{{item.name}}</text>
+            <text class="game-desc">{{item.desc}}</text>
+            <!-- 难度星级展示 -->
+            <view class="star-rating">
+              <text class="label">难度</text>
+              <text class="stars">{{item.stars}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 开始按钮图标 -->
+        <view class="play-btn">
+          <text>▶</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="footer-tip">
+    <text>保持每日训练，激活大脑潜能</text>
+  </view>
+</view>

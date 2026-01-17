@@ -1,0 +1,148 @@
+@import '../common/common.wxss';
+
+/* 记忆/答题屏幕 */
+.memory-screen,
+.answer-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx;
+}
+
+/* 阶段提示 */
+.phase-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin-bottom: 30rpx;
+}
+
+.hint-icon {
+  font-size: 36rpx;
+}
+
+.hint-text {
+  font-size: 30rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 头像网格 */
+.avatar-grid {
+  display: grid;
+  gap: 16rpx;
+  padding: 24rpx;
+  background: rgba(255,255,255,0.15);
+  border-radius: 24rpx;
+  margin-bottom: 30rpx;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 头像卡片 */
+.avatar-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  background: rgba(255,255,255,0.9);
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+}
+
+.avatar-card.small {
+  padding: 16rpx 12rpx;
+}
+
+.avatar-emoji {
+  font-size: 52rpx;
+  margin-bottom: 8rpx;
+}
+
+.avatar-card.small .avatar-emoji {
+  font-size: 44rpx;
+  margin-bottom: 0;
+}
+
+.avatar-name {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 记忆进度条 */
+.memory-bar {
+  width: 80%;
+  height: 10rpx;
+  background: rgba(255,255,255,0.3);
+  border-radius: 5rpx;
+  overflow: hidden;
+  align-self: center;
+  margin-top: 20rpx;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #fff;
+  transition: width 0.05s linear;
+}
+
+/* 选项区域 */
+.options-area {
+  margin-top: auto;
+  background: rgba(255,255,255,0.95);
+  padding: 24rpx;
+  border-radius: 24rpx;
+}
+
+.options-label {
+  display: block;
+  text-align: center;
+  font-size: 26rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.avatar-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.avatar-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 16rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  transition: all 0.2s;
+}
+
+.avatar-opt:active {
+  transform: scale(0.96);
+}
+
+.avatar-opt.correct {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.avatar-opt.wrong {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+}
+
+.opt-emoji {
+  font-size: 44rpx;
+  margin-bottom: 6rpx;
+}
+
+.opt-name {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.9);
+}

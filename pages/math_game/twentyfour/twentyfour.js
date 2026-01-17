@@ -1,16 +1,18 @@
 // pages/math_game/twentyfour/twentyfour.js
 Page({
   data: {
-    cards: [],        // 当前桌面上剩余的数字对象 {val: 3, id: 0, expr: '3'}
-    history: [],      // 历史记录，用于撤销
-    
-    selectedIdx: -1,  // 选中的第一张牌下标
-    operator: '',     // 选中的运算符
-    
+    cards: [],
+    history: [],
+    selectedIdx: -1,
+    operator: '',
+
     score: 0,
     startTime: 0,
     timer: null,
-    timeStr: '00:00'
+    timeStr: '00:00',
+
+    currentAnswer: '',
+    hasUsedHint: false // [修复] 新增标记：本局是否看过答案
   },
 
   onLoad() {
@@ -21,86 +23,84 @@ Page({
     this.stopTimer();
   },
 
-  // 1. 开始新的一局
   startGame() {
     this.stopTimer();
-    const cards = this.generateSolvableCards();
-    
+    const gameData = this.generateGameData();
+
     this.setData({
-      cards: cards.map((val, idx) => ({ val: val, id: idx, expr: val.toString() })),
+      cards: gameData.nums.map((val, idx) => ({ val: val, id: idx, expr: val.toString() })),
+      currentAnswer: gameData.answer,
       history: [],
       selectedIdx: -1,
       operator: '',
-      timeStr: '00:00'
+      timeStr: '00:00',
+      hasUsedHint: false // [修复] 新的一局，重置为未看答案
     });
-    
+
     this.startTimer();
   },
 
-  // --- 核心算法：生成有解的4个数字 ---
-  generateSolvableCards() {
+  // ... generateGameData, getSolution, solveRecursive 保持不变 ...
+  // ... (省略中间算法代码，与上一次回答一致) ...
+  
+  // --- 核心算法部分请保留原样 ---
+  generateGameData() {
     while (true) {
-      // 随机生成 4 个 1-13 的数字 (A-K)，这里简化为 1-10 适合小学生
       let nums = [];
       for (let i = 0; i < 4; i++) nums.push(Math.floor(Math.random() * 10) + 1);
-      
-      // 验证是否有解 (DFS暴力搜索)
-      if (this.solve24(nums)) {
-        return nums;
-      }
+      let numObjs = nums.map(n => ({ val: n, expr: n.toString() }));
+      let answer = this.getSolution(numObjs);
+      if (answer) return { nums, answer };
     }
   },
+  
+  getSolution(list) { return this.solveRecursive(list); },
 
-  // 验证是否有解的递归函数
-  solve24(nums) {
-    if (nums.length === 1) return Math.abs(nums[0] - 24) < 0.0001;
-    
-    for (let i = 0; i < nums.length; i++) {
-      for (let j = 0; j < nums.length; j++) {
+  solveRecursive(list) {
+    if (list.length === 1) {
+      if (Math.abs(list[0].val - 24) < 0.0001) return list[0].expr;
+      return null;
+    }
+    for (let i = 0; i < list.length; i++) {
+      for (let j = 0; j < list.length; j++) {
         if (i === j) continue;
-        
-        let newNums = [];
-        for (let k = 0; k < nums.length; k++) {
-          if (k !== i && k !== j) newNums.push(nums[k]);
+        let newList = [];
+        for (let k = 0; k < list.length; k++) {
+          if (k !== i && k !== j) newList.push(list[k]);
         }
-        
-        const a = nums[i], b = nums[j];
-        // 加减乘除尝试
-        if (this.solve24([...newNums, a + b])) return true;
-        if (this.solve24([...newNums, a - b])) return true;
-        if (this.solve24([...newNums, a * b])) return true;
-        if (b !== 0 && this.solve24([...newNums, a / b])) return true;
+        const a = list[i], b = list[j];
+        let res = this.solveRecursive([...newList, { val: a.val + b.val, expr: `(${a.expr}+${b.expr})` }]);
+        if (res) return res;
+        res = this.solveRecursive([...newList, { val: a.val - b.val, expr: `(${a.expr}-${b.expr})` }]);
+        if (res) return res;
+        res = this.solveRecursive([...newList, { val: a.val * b.val, expr: `(${a.expr}×${b.expr})` }]);
+        if (res) return res;
+        if (b.val !== 0) {
+          res = this.solveRecursive([...newList, { val: a.val / b.val, expr: `(${a.expr}÷${b.expr})` }]);
+          if (res) return res;
+        }
       }
     }
-    return false;
+    return null;
   },
-
-  // --- 交互逻辑 ---
+  // -------------------------
 
   // 点击卡片
   onCardTap(e) {
     const idx = e.currentTarget.dataset.index;
-    const { selectedIdx, operator, cards } = this.data;
-
-    // 1. 如果还没选第一张牌 -> 选中它
+    const { selectedIdx, operator } = this.data;
     if (selectedIdx === -1) {
       this.setData({ selectedIdx: idx });
       return;
     }
-
-    // 2. 如果点了同一张牌 -> 取消选中
     if (selectedIdx === idx) {
       this.setData({ selectedIdx: -1, operator: '' });
       return;
     }
-
-    // 3. 如果已经选了第一张牌，但没选符号 -> 切换选中为当前这张
     if (operator === '') {
       this.setData({ selectedIdx: idx });
       return;
     }
-
-    // 4. 选了第一张 + 选了符号 + 点了第二张 -> 执行计算
     this.calculate(selectedIdx, idx, operator);
   },
 
@@ -114,7 +114,7 @@ Page({
     this.setData({ operator: op });
   },
 
-  // 执行计算
+  // 计算逻辑
   calculate(idx1, idx2, op) {
     let cards = [...this.data.cards];
     const c1 = cards[idx1];
@@ -123,7 +123,6 @@ Page({
     let resultVal = 0;
     let resultExpr = '';
 
-    // 计算逻辑
     if (op === '+') {
       resultVal = c1.val + c2.val;
       resultExpr = `(${c1.expr}+${c2.expr})`;
@@ -135,17 +134,13 @@ Page({
       resultExpr = `(${c1.expr}×${c2.expr})`;
     } else if (op === '÷') {
       if (c2.val === 0) { wx.showToast({ title: '除数不能为0', icon: 'none' }); return; }
-      if (c1.val % c2.val !== 0) { wx.showToast({ title: '不能整除', icon: 'none' }); return; } // 小学生版本建议限制整除
       resultVal = c1.val / c2.val;
       resultExpr = `(${c1.expr}÷${c2.expr})`;
     }
 
-    // 存入历史记录以便撤销
     const historyItem = JSON.parse(JSON.stringify(cards));
     let history = [...this.data.history, historyItem];
 
-    // 移除这两张牌，加入新结果牌
-    // 为了方便，过滤掉这两张，再 push 新的
     let newCards = cards.filter((_, i) => i !== idx1 && i !== idx2);
     newCards.push({ val: resultVal, id: Date.now(), expr: resultExpr });
 
@@ -156,13 +151,11 @@ Page({
       operator: ''
     });
 
-    // 检查是否只剩一张牌且等于24
-    if (newCards.length === 1 && newCards[0].val === 24) {
+    if (newCards.length === 1 && Math.abs(newCards[0].val - 24) < 0.0001) {
       this.gameWin();
     }
   },
 
-  // 撤销
   undo() {
     if (this.data.history.length === 0) return;
     const history = [...this.data.history];
@@ -175,61 +168,99 @@ Page({
     });
   },
 
-    // 下一题 / 放弃
-    nextLevel() {
-      wx.showModal({
-        title: '跳过',
-        content: '跳过本题会中断连胜哦，确定吗？',
-        success: (res) => {
-          if(res.confirm) {
-            // 跳过则重置连胜分数为 0
-            this.setData({ score: 0 }); 
-            this.startGame();
-          }
-        }
-      });
-    },
-
-  gameWin() {
-    this.stopTimer();
-    wx.vibrateShort({ type: 'heavy' });
-    
-    // 1. 更新当前连胜分数
-    const currentScore = this.data.score + 1;
-    this.setData({ score: currentScore });
-    
-    // =========== [新增：保存数据] ===========
-    // A. 保存通关总数
-    const countKey = 'twentyfour_win_count';
-    wx.setStorageSync(countKey, (wx.getStorageSync(countKey) || 0) + 1);
-
-    // B. 保存总游戏场次
-    const totalKey = 'total_game_count';
-    wx.setStorageSync(totalKey, (wx.getStorageSync(totalKey) || 0) + 1);
-
-    // C. [补全] 保存最高连胜记录
-    // 逻辑：如果当前得分(连胜)超过了历史最高，就更新
-    const streakKey = 'twentyfour_max_streak';
-    const maxStreak = wx.getStorageSync(streakKey) || 0;
-    if (currentScore > maxStreak) {
-      wx.setStorageSync(streakKey, currentScore);
+  // [修复] 查看答案
+  showAnswer() {
+    let ans = this.data.currentAnswer;
+    if(ans.startsWith('(') && ans.endsWith(')')) {
+        ans = ans.substring(1, ans.length - 1);
     }
-    // =======================================
-    
+
+    // 只要点击查看答案，就标记为已作弊
+    this.setData({ hasUsedHint: true }); 
+
     wx.showModal({
-      title: '算对啦！',
-      content: '24点达成！\n用时：' + this.data.timeStr,
-      confirmText: '下一题',
-      cancelText: '上传战绩', // 或者改为“休息一下”
+      title: '参考答案',
+      content: ans + ' = 24\n\n查看答案后，本局连胜将中断。',
+      showCancel: false,
+      confirmText: '知道了'
+    });
+  },
+
+  nextLevel() {
+    wx.showModal({
+      title: '跳过',
+      content: '跳过本题会中断连胜哦，确定吗？',
       success: (res) => {
-        if (res.confirm) {
+        if(res.confirm) {
+          this.setData({ score: 0 }); 
           this.startGame();
-        } else if (res.cancel) {
-          // 这里可以跳转回菜单或者上传
-          this.uploadScore();
         }
       }
     });
+  },
+
+  // [修复] 游戏胜利逻辑
+  gameWin() {
+    this.stopTimer();
+    wx.vibrateShort({ type: 'heavy' });
+
+    // 检查是否使用了提示
+    if (this.data.hasUsedHint) {
+      // 1. 如果使用了提示：连胜清零（或保持不变，看你想怎么设计，通常是清零）
+      this.setData({ score: 0 }); 
+
+      wx.showModal({
+        title: '计算正确', // 标题不给“太棒了”
+        content: '使用了提示，本次不计入连胜哦~\n用时：' + this.data.timeStr,
+        confirmText: '下一题',
+        showCancel: false,
+        success: () => {
+          this.startGame();
+        }
+      });
+
+    } else {
+      // 2. 正常通关：加分
+      const currentScore = this.data.score + 1;
+      this.setData({ score: currentScore });
+
+      // 保存记录
+      const countKey = 'twentyfour_win_count';
+      wx.setStorageSync(countKey, (wx.getStorageSync(countKey) || 0) + 1);
+      
+      const streakKey = 'twentyfour_max_streak';
+      const maxStreak = wx.getStorageSync(streakKey) || 0;
+      if (currentScore > maxStreak) {
+        wx.setStorageSync(streakKey, currentScore);
+      }
+      // =========== [新增：计算和保存积分] ===========
+      // 基础分 10 分 + 连胜奖励 (连胜几局就多加几分，上限+10)
+      const streakBonus = Math.min(currentScore, 10);
+      const earnedPoints = 10 + streakBonus;
+
+      // 累加积分
+      let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+      totalIntegral += earnedPoints;
+      wx.setStorageSync('totalIntegral', totalIntegral);
+      
+      console.log(`[24点] 胜利！获得 ${earnedPoints} 分 (含连胜 ${streakBonus})，总积分: ${totalIntegral}`);
+      // ===========================================
+
+      wx.showModal({
+        title: '🎉 算对啦！',
+        content: `24点达成！\n用时：${this.data.timeStr}\n\n🎉 获得积分 +${earnedPoints}`,
+        confirmText: '下一题',
+        cancelText: '上传战绩',
+        showCancel: true,      // 确保显示取消按钮
+        success: (res) => {
+          if (res.confirm) {
+            this.startGame();
+          } else if (res.cancel) {
+            this.uploadScore();
+          }
+        }
+      });
+    }
   },
 
   startTimer() {
@@ -241,6 +272,7 @@ Page({
       this.setData({ timeStr: `${m}:${s}` });
     }, 1000);
   },
+  
   stopTimer() {
     if (this.data.timer) clearInterval(this.data.timer);
   },

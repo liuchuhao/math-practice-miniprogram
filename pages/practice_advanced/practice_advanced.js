@@ -165,8 +165,8 @@ Page({
     this.stopTimer();
     const { score, grade, correctCount, wrongCount, formattedTime } = this.data;
     
-    // 拓展题双倍积分规则：年级 * 20
-    const earnedPoints = score > 0 ? (grade * 20) : 0;
+    // 拓展题双倍积分规则：年级 * 40
+    const earnedPoints = score > 0 ? (grade * 40) : 0;
     
     // 1. 更新本地总积分
     if (earnedPoints > 0) {

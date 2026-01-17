@@ -1,0 +1,135 @@
+<view class="game-container" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+  
+  <!-- 顶部状态栏 -->
+  <view class="game-header" wx:if="{{gameState === 'playing'}}">
+    <view class="header-item">
+      <text class="header-label">等级</text>
+      <text class="header-value">{{level}}/10</text>
+    </view>
+    <view class="header-item">
+      <text class="header-label">得分</text>
+      <text class="header-value large">{{score}}</text>
+    </view>
+    <view class="header-item">
+      <text class="header-label">对/错</text>
+      <text class="header-value">{{correctCount}}/{{wrongCount}}</text>
+    </view>
+    <view class="timer-box {{timeWarning ? 'warning' : ''}}">
+      <text class="header-value">{{totalTime}}s</text>
+    </view>
+  </view>
+
+  <!-- 开始界面 -->
+  <view class="start-screen" wx:if="{{gameState === 'ready'}}">
+    <text class="game-icon">🦁</text>
+    <text class="game-title">动物派对</text>
+    <text class="game-desc">快速找出派对中数量最多的动物</text>
+    <text class="game-tip">答对加分升级，答错扣分降级！</text>
+    
+    <view class="preview-animals">
+      <text class="preview-item">🐶</text>
+      <text class="preview-item">🐱</text>
+      <text class="preview-item">🐰</text>
+      <text class="preview-item">🦊</text>
+    </view>
+    
+    <view class="diff-section">
+      <text class="diff-title">选择难度</text>
+      <view class="diff-options">
+        <view class="diff-btn {{difficulty === 'easy' ? 'active' : ''}}" bindtap="onDiffChange" data-diff="easy">
+          <text class="icon">🌟</text>
+          <text class="name">简单</text>
+        </view>
+        <view class="diff-btn {{difficulty === 'medium' ? 'active' : ''}}" bindtap="onDiffChange" data-diff="medium">
+          <text class="icon">⭐</text>
+          <text class="name">中等</text>
+        </view>
+        <view class="diff-btn {{difficulty === 'hard' ? 'active' : ''}}" bindtap="onDiffChange" data-diff="hard">
+          <text class="icon">💫</text>
+          <text class="name">困难</text>
+        </view>
+      </view>
+    </view>
+    
+    <button class="start-btn" bindtap="onStart">开始派对</button>
+  </view>
+
+  <!-- 游戏区域 -->
+  <view class="game-body" wx:if="{{gameState === 'playing'}}">
+    <view class="game-field party-field">
+      <view class="field-grass"></view>
+      <view 
+        wx:for="{{animals}}" 
+        wx:key="id"
+        class="animal-item"
+        style="{{item.styleStr}}">
+        <text>{{item.emoji}}</text>
+      </view>
+    </view>
+    
+    <view class="options-panel">
+      <text class="options-title">谁是派对之王？（数量最多）</text>
+      <view class="animal-options">
+        <view 
+          wx:for="{{options}}" 
+          wx:key="emoji"
+          class="animal-opt {{selectedIndex === index ? (isCorrect ? 'correct' : 'wrong') : ''}}"
+          bindtap="onSelect" 
+          data-index="{{index}}">
+          <text class="opt-emoji">{{item.emoji}}</text>
+          <text class="opt-count" wx:if="{{showCounts}}">×{{item.count}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 反馈提示 -->
+  <view class="feedback-toast {{showFeedback ? 'show' : ''}} {{isCorrect ? 'correct' : 'wrong'}}" wx:if="{{showFeedback}}">
+    <text class="toast-icon">{{isCorrect ? '✓' : '✗'}}</text>
+    <text class="toast-text">{{isCorrect ? '答对啦！' : '看错了，是' + correctAnimal}}</text>
+  </view>
+
+  <!-- 结束界面 -->
+  <view class="end-screen" wx:if="{{gameState === 'ended'}}">
+    <view class="end-card">
+      <text class="end-icon">🏆</text>
+      <text class="end-title">时间到！</text>
+      
+      <view class="score-section">
+        <view class="score-row">
+          <text class="score-label">游戏得分</text>
+          <text class="score-value">{{score}}</text>
+        </view>
+        <view class="reward-row">
+          <text class="reward-label">🎁 奖励积分</text>
+          <text class="reward-value">+{{reward}}</text>
+        </view>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-box">
+          <text class="stat-num">{{level}}</text>
+          <text class="stat-label">达到等级</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-num">{{correctCount}}/{{questionCount}}</text>
+          <text class="stat-label">正确/总题</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-num">{{accuracy}}%</text>
+          <text class="stat-label">正确率</text>
+        </view>
+      </view>
+      
+      <view class="rank-box">
+        <text class="rank-emoji">{{rankEmoji}}</text>
+        <text class="rank-text">{{rankText}}</text>
+      </view>
+      
+      <view class="btn-group">
+        <button class="btn-retry" bindtap="onRetry">再玩一次</button>
+        <button class="btn-back" bindtap="onBack">返回</button>
+      </view>
+    </view>
+  </view>
+</view>

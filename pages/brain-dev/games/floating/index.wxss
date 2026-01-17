@@ -1,0 +1,17 @@
+/* 漂浮乐园样式 */
+@import '../common/common.wxss';
+
+/* 星星区域 */
+.star-field {
+  background: radial-gradient(ellipse at center, rgba(30, 30, 60, 0.8) 0%, transparent 70%);
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+/* 星星样式 */
+.star-item {
+  position: absolute;
+  text-shadow: 0 0 20rpx rgba(255, 255, 200, 0.8);
+  z-index: 1;
+  will-change: left, top;
+}

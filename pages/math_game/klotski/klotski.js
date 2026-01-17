@@ -160,6 +160,21 @@ Page({
     // 胜利
     this.stopTimer();
     this.setData({ isGameover: true });
+    // =========== [新增：计算和保存积分] ===========
+    // 1. 根据难度计算基础分 
+    const baseScore = (this.data.size - 2) * 20;
+    
+    // 2. 读取旧的总积分
+    let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+    
+    // 3. 累加新积分
+    totalIntegral += baseScore;
+    
+    // 4. 保存回本地缓存
+    wx.setStorageSync('totalIntegral', totalIntegral);
+    
+    console.log(`[数字华容道] 胜利！获得 ${baseScore} 分，当前总积分: ${totalIntegral}`);
+ 
      // =========== [新增：保存本地最佳成绩] ===========
     // 1. 获取当前难度的存储Key (如: klotski_best_moves_3)
     const storageKey = `klotski_best_moves_${this.data.size}`;
@@ -180,10 +195,15 @@ Page({
     
     wx.showModal({
       title: '还原成功！',
-      content: `${this.data.size}x${this.data.size} 模式\n步数：${this.data.moves}\n用时：${this.data.timeStr}`,
-      confirmText: '上传战绩',
+      // 在弹窗内容里也显示获得的积分
+      content: `${this.data.size}x${this.data.size} 模式\n步数：${this.data.moves}\n用时：${this.data.timeStr}\n\n🎉 获得积分 +${baseScore}`,
+      confirmText: '再来一局', // 这里建议改成再来一局，或者保持上传
       success: (res) => {
-        if (res.confirm) this.uploadScore();
+        if (res.confirm) {
+           // 如果你原来的逻辑是上传，可以保留；或者直接重开
+           // this.uploadScore(); 
+           this.restartGame(); 
+        }
       }
     });
   },

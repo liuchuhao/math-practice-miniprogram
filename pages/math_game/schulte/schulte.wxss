@@ -82,10 +82,18 @@
   justify-content: center;
   font-weight: bold;
   color: #2c3e50;
-  transition: background-color 0.1s; /* [关键修复3] 只过渡颜色，不过渡大小 */
   box-shadow: 0 4rpx 0 #dbeafe;
+  /* [新增] 禁止长按选中文字，禁止弹出系统菜单 */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
-
+.grid-cell.clicked {
+  background: #f1f2f6;
+  color: #e0e0e0;
+  box-shadow: none;
+  pointer-events: none; /* 确保点过的不再响应 */
+}
 /* 针对不同难度的字体大小优化 */
 .grid-cell.size-3 { font-size: 60rpx; } /* 3x3 字大一点 */
 .grid-cell.size-4 { font-size: 50rpx; }
@@ -94,16 +102,17 @@
 /* 按下效果 */
 .grid-cell:active { 
   background: #dbeafe; 
-  /* transform: scale(0.95);  <-- [关键修复4] 删掉这一行，不要缩放 */
-  opacity: 0.8; /* 改为稍微变透明一点，作为点击反馈 */
+  opacity: 1; /* 保持不透明，反应更快 */
+  box-shadow: none; /* 按下时去掉阴影，模拟真实按键感 */
+  transform: translateY(4rpx); /* 物理下沉感，这个不影响速度 */
 }
 /* 点击过的数字 */
 .grid-cell.clicked {
-  background: #f1f2f6; /* 颜色变灰 */
-  color: #dfe4ea;     /* 文字变淡 */
-  box-shadow: none;   /* 去掉立体阴影 */
-  /* transform: scale(0.95);  <-- [关键修复5] 删掉这一行 */
-  border: 2rpx solid #f1f2f6; /* 边框融入背景 */
+  background: #f1f2f6;
+  color: #e0e0e0; /* 颜色变得更淡，减少视觉干扰 */
+  box-shadow: none;
+  transform: none; /* 复位 */
+  pointer-events: none; /* 【关键修改】点过的格子禁止再次触发点击，防止误触 */
 }
 
 .controls { margin-top: 60rpx; width: 60%; }

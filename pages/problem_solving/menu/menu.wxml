@@ -1,0 +1,52 @@
+<view class="container">
+  <!-- 1. 顶部 Hero Banner -->
+  <view class="hero-banner">
+    <view class="hero-content">
+      <text class="hero-title">应用题挑战</text>
+      <text class="hero-subtitle">读懂题目，逻辑制胜</text>
+      <view class="hero-tag">共 600+ 道精选题目</view>
+    </view>
+    <view class="hero-decoration">📚</view>
+  </view>
+
+  <!-- 2. 年级选择区 -->
+  <view class="section-title">请选择年级</view>
+  <view class="grade-grid">
+    <block wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">
+      <view 
+        class="grade-card grade-{{item}} {{selectedGrade === item ? 'active' : ''}}" 
+        bindtap="selectGrade" 
+        data-grade="{{item}}"
+      >
+        <text class="grade-num">{{item}}</text>
+        <text class="grade-text">年级</text>
+        
+        <!-- [修改] 去掉 wx:if，用 class 控制透明度，防止布局抖动 -->
+        <view class="check-mark {{selectedGrade === item ? 'visible' : ''}}">✔</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 3. 模式选择区 -->
+  <!-- [核心修复] 绝对不要在这里写 wx:if，否则必定闪烁！ -->
+  <view class="mode-panel {{selectedGrade ? 'show' : ''}}">
+    <view class="mode-title">选择挑战模式</view>
+    <view class="mode-list">
+      <view class="mode-btn normal" bindtap="startGame" data-mode="normal">
+        <view class="mode-icon">📝</view>
+        <view class="mode-info">
+          <text class="m-name">每日练习</text>
+          <text class="m-desc">随机 5 题</text>
+        </view>
+      </view>
+      <view class="mode-btn endless" bindtap="startGame" data-mode="endless">
+        <view class="mode-icon">🔥</view>
+        <view class="mode-info">
+          <text class="m-name">无尽挑战</text>
+          <text class="m-desc">一战到底</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

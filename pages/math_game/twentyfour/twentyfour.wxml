@@ -2,7 +2,7 @@
   <!-- 1. 顶部栏 -->
   <view class="header">
     <view class="score-box">
-      <text class="label">胜场</text>
+      <text class="label">连胜</text>
       <text class="val">{{score}}</text>
     </view>
     <view class="timer-box">
@@ -17,21 +17,17 @@
   <view class="table-area">
     <view class="card-list">
       <block wx:for="{{cards}}" wx:key="id">
-        <!-- 动态类名：选中 selected, 参与计算 shrinking -->
         <view 
           class="poker-card {{selectedIdx === index ? 'selected' : ''}}" 
           bindtap="onCardTap" 
           data-index="{{index}}"
         >
-          <!-- 花色装饰 -->
           <view class="suit top">♠</view>
           
-          <!-- 中间数字/表达式 -->
           <view class="card-val {{item.expr.length > 2 ? 'small' : ''}}">
             {{item.val}}
           </view>
           
-          <!-- 表达式提示 (算出来的牌显示过程) -->
           <view class="card-expr" wx:if="{{item.expr.length > 2}}">{{item.expr}}</view>
 
           <view class="suit bottom">♣</view>
@@ -39,7 +35,6 @@
       </block>
     </view>
     
-    <!-- 目标提示 -->
     <view class="target-tips" wx:if="{{cards.length > 1}}">目标：24</view>
   </view>
 
@@ -53,9 +48,11 @@
       <button class="op-btn {{operator==='÷'?'active':''}}" bindtap="onOpTap" data-op="÷">÷</button>
     </view>
     
-    <!-- 功能键 -->
+    <!-- 功能键 (已优化) -->
     <view class="func-row">
       <button class="func-btn undo" bindtap="undo" disabled="{{history.length === 0}}">↩ 撤销</button>
+      <!-- 新增提示按钮 -->
+      <button class="func-btn hint" bindtap="showAnswer">💡 提示</button>
       <button class="func-btn reset" bindtap="startGame">🔄 重开</button>
     </view>
   </view>

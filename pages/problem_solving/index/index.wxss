@@ -1,0 +1,124 @@
+.container {
+  min-height: 100vh;
+  padding: 30rpx;
+  background: #fce4ec; /* 浅粉色背景 */
+  display: flex;
+  flex-direction: column;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.badge {
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: white;
+  font-weight: bold;
+}
+.badge.normal { background: #4caf50; }
+.badge.endless { background: #ff5722; }
+
+.score-info {
+  font-size: 28rpx;
+  color: #555;
+  font-weight: bold;
+}
+.divider { margin: 0 15rpx; color: #ddd; }
+.score { color: #e91e63; }
+
+/* 题目卡片 */
+.question-card {
+  background: white;
+  border-radius: 30rpx;
+  padding: 50rpx;
+  box-shadow: 0 10rpx 30rpx rgba(233, 30, 99, 0.1);
+  margin-bottom: 60rpx;
+}
+
+.q-tag {
+  background: #f8bbd0;
+  color: #c2185b;
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 10rpx;
+  display: inline-block;
+  margin-bottom: 30rpx;
+}
+
+.q-text {
+  font-size: 36rpx;
+  color: #333;
+  line-height: 1.6;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 50rpx;
+}
+
+.input-area {
+  display: flex;
+  align-items: center;
+  border-bottom: 2rpx solid #f8bbd0;
+  padding-bottom: 10rpx;
+}
+
+.label {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #c2185b;
+  margin-right: 20rpx;
+}
+
+.ans-input {
+  flex: 1;
+  font-size: 40rpx;
+  color: #333;
+  height: 60rpx;
+}
+
+/* 按钮 */
+.submit-btn {
+  background: linear-gradient(135deg, #ec407a, #d81b60);
+  color: white;
+  border-radius: 50rpx;
+  font-size: 34rpx;
+  box-shadow: 0 8rpx 20rpx rgba(233, 30, 99, 0.3);
+}
+
+.submit-btn:active { opacity: 0.9; }
+
+/* 结算页 */
+.finish-card {
+  background: white;
+  border-radius: 30rpx;
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.05);
+}
+.finish-icon { font-size: 80rpx; margin-bottom: 20rpx; }
+.finish-title { font-size: 36rpx; font-weight: bold; margin-bottom: 40rpx; }
+
+.result-grid {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin-bottom: 60rpx;
+}
+.res-item { display: flex; flex-direction: column; align-items: center; }
+.res-item .num { font-size: 48rpx; font-weight: 800; color: #333; }
+.res-item .num.plus { color: #ff9800; }
+.res-item .lbl { font-size: 24rpx; color: #999; margin-top: 10rpx; }
+
+.restart-btn {
+  width: 80%;
+  background: #3498db;
+  color: white;
+  border-radius: 50rpx;
+}

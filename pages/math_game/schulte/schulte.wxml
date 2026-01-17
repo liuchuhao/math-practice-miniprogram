@@ -16,12 +16,13 @@
   </view>
 
   <!-- 2. 游戏区域 -->
-  <!-- 关键修复：使用 style 动态控制列数，且确保标签正确闭合 -->
   <view class="grid-container" style="grid-template-columns: repeat({{gridSize}}, 1fr);">
     <block wx:for="{{gridNumbers}}" wx:key="*this">
       <view 
         class="grid-cell {{item < nextNum ? 'clicked' : ''}} size-{{gridSize}}" 
-        bindtap="onCellTap" 
+        
+        catchtouchstart="onCellTouch" 
+        
         data-val="{{item}}"
       >
         {{item}}

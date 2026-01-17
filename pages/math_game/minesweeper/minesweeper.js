@@ -12,6 +12,7 @@ Page({
     startTime: 0,
     
     isGameover: false,
+    isWin:false,
     gameState: 'ready' // ready, playing, win, lose
   },
 
@@ -62,6 +63,7 @@ Page({
       mineCount: totalMines,
       timeStr: '00:00',
       isGameover: false,
+      isWin:false,
       gameState: 'ready'
     });
   },
@@ -182,7 +184,9 @@ Page({
   // 游戏结束
   gameOver(isWin, boomR, boomC) {
     this.stopTimer();
-    this.setData({ isGameover: true });
+    this.setData({ isGameover: true ,
+    isWin: isWin
+    });
 
     // 显示所有雷
     let grid = this.data.grid;
@@ -220,14 +224,33 @@ Page({
       const totalKey = 'total_game_count';
       const totalGames = wx.getStorageSync(totalKey) || 0;
       wx.setStorageSync(totalKey, totalGames + 1);
+      // 基础分 50 分 (扫雷比较难，给多点)
+      const baseScore = 100;
       
+      // 1. 读取旧的总积分
+      let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+      
+      // 2. 累加新积分
+      totalIntegral += baseScore;
+      
+      // 3. 保存回本地缓存
+      wx.setStorageSync('totalIntegral', totalIntegral);
+      
+      console.log(`[扫雷] 胜利！获得 ${baseScore} 分，当前总积分: ${totalIntegral}`);
       // =========== [核心修复结束] ===========
       wx.showModal({
-        title: '扫雷成功',
-        content: `用时: ${this.data.timeStr}`,
+        title: '🎉 扫雷成功！',
+        content: `用时: ${this.data.timeStr}\n\n🎉 获得积分 +${baseScore}`,
         confirmText: '上传战绩',
+        confirmColor: '#3498db',
+        showCancel: true,
+        cancelText: '再来一局', // [新增]
+        cancelColor: '#2c3e50',
         success: (res) => {
-          if (res.confirm) this.uploadScore();
+          if (res.confirm) {this.uploadScore();}
+          else if(res.cancel){this.restartGame();
+        } 
+
         }
       });
     } else {

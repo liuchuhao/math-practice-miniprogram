@@ -1,0 +1,96 @@
+@import '../common/common.wxss';
+
+/* 动物预览 */
+.preview-animals {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  margin-bottom: 40rpx;
+}
+
+.preview-item {
+  font-size: 48rpx;
+  animation: animalBounce 1s ease-in-out infinite;
+}
+
+.preview-item:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.preview-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.preview-item:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+@keyframes animalBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12rpx); }
+}
+
+/* 派对场地 */
+.party-field {
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(139,195,74,0.3) 100%);
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+.field-grass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, transparent 0%, rgba(76,175,80,0.3) 100%);
+  border-radius: 0 0 24rpx 24rpx;
+}
+
+/* 动物 */
+.animal-item {
+  position: absolute;
+  font-size: 48rpx;
+  z-index: 1;
+}
+
+/* 选项 */
+.animal-options {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+.animal-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 28rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  min-width: 120rpx;
+  transition: all 0.2s;
+}
+
+.animal-opt:active {
+  transform: scale(0.95);
+}
+
+.animal-opt.correct {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.animal-opt.wrong {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+}
+
+.opt-emoji {
+  font-size: 44rpx;
+}
+
+.opt-count {
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.9);
+  margin-top: 6rpx;
+}

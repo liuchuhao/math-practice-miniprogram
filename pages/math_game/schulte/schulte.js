@@ -86,23 +86,28 @@ Page({
     }
   },
 
-  onCellTap(e) {
-    if (!this.data.isPlaying) return;
-    const val = e.currentTarget.dataset.val;
-    
-    if (val === this.data.nextNum) {
+    // [修改] 改用 Touch 事件，手指碰到屏幕瞬间触发，无视滑动和长按
+    onCellTouch(e) {
+      if (!this.data.isPlaying) return;
+      
+      // 逻辑和之前完全一样
+      const val = parseInt(e.currentTarget.dataset.val);
+      
+      // 只有点对的时候才执行逻辑
+      if (val === this.data.nextNum) {
+        
+        // 这里的震动如果觉得太频密影响手感，可以注释掉
+        // wx.vibrateShort({ type: 'light' });
   
-
-      // 结束条件动态判断
-      const maxNum = this.data.gridSize * this.data.gridSize;
-
-      if (val === maxNum) {
-        this.gameFinish();
-      } else {
-        this.setData({ nextNum: val + 1 });
+        const maxNum = this.data.gridSize * this.data.gridSize;
+  
+        if (val === maxNum) {
+          this.gameFinish();
+        } else {
+          this.setData({ nextNum: val + 1 });
+        }
       }
-    }
-  },
+    },
 
   gameFinish() {
     this.stopTimer();
@@ -130,17 +135,38 @@ Page({
       // 更新界面显示的 best (如果界面只显示当前难度的 best)
       this.setData({ bestScore: score }); 
     }
+    // =========== [新增：计算和保存积分] ===========
+    // 基础分：3x3=10分, 4x4=20分, 5x5=30分
+    let earnedPoints = (this.data.gridSize - 2) * 5;
+    
+    // 额外奖励：打破纪录额外加 10 分
+    if (isNewRecord && oldBest !== 0) {
+      earnedPoints += 10;
+    }
 
-    let modalContent = `${this.data.gridSize}x${this.data.gridSize} 模式\n你的成绩：${score} 秒`;
+    // 保存积分到本地
+    let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+    totalIntegral += earnedPoints;
+    wx.setStorageSync('totalIntegral', totalIntegral);
+    
+    console.log(`[舒尔特方格] 完成！获得 ${earnedPoints} 分，总积分: ${totalIntegral}`);
+    // ===========================================
+
+    let modalContent = `${this.data.gridSize}x${this.data.gridSize} 模式\n你的成绩：${score} 秒\n\n🎉 获得积分 +${earnedPoints}`;
+    if (isNewRecord) modalContent = "🏆 打破纪录！\n" + modalContent;
     
     wx.showModal({
       title: isNewRecord ? '🎉 新纪录！' : '挑战完成',
       content: modalContent,
-      showCancel: false, // 简化流程，暂不上传，或者你可以保留上传按钮
+      showCancel: true, 
+      cancelText: '返回菜单',
       confirmText: '再来一局',
       success: (res) => {
         if (res.confirm) {
-          this.startGame(); // 直接重开当前难度，或者 restartGame() 重新选难度
+          // 直接重开当前难度
+          this.startGame(); 
+        } else if (res.cancel) {
+          wx.navigateBack();
         }
       }
     });

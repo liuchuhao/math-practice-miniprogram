@@ -1,0 +1,173 @@
+/* pages/brain-dev/menu/menu.wxss */
+
+/* 沿用主页的容器和背景设置 */
+.container {
+  padding: 30rpx;
+  min-height: 100vh;
+  background: #f4f7f6;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 顶部背景 */
+.top-bg-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 380rpx; /* 加高一点，包住头部内容 */
+  /* 使用更明显的渐变，增加层次感 */
+  background: linear-gradient(180deg, #d4fc79 0%, #96e6a1 100%); 
+  /* 或者用这个清爽的蓝色系，选一个你喜欢的： */
+  /* background: linear-gradient(180deg, #e0c3fc 0%, #8ec5fc 100%); */
+  background: linear-gradient(180deg, #e0f7fa 0%, #f4f7f6 90%, #f4f7f6 100%);
+  z-index: 0;
+  border-bottom-left-radius: 60rpx;
+  border-bottom-right-radius: 60rpx;
+}
+
+/* 头部 */
+.page-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 50rpx;
+  padding: 20rpx 30rpx; /* 增加内边距 */
+}
+
+.header-text { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.title { 
+  font-size: 48rpx; /* 字体加大 */
+  font-weight: 900; 
+  color: #1a2a3a; /*以此深色代替纯黑，更有质感 */
+  margin-bottom: 12rpx; 
+  letter-spacing: 2rpx;
+  text-shadow: 0 4rpx 8rpx rgba(0,0,0,0.05); /* 轻微浮起感 */
+}
+
+.subtitle { 
+  font-size: 26rpx; 
+  color: #546e7a; /* 加深副标题颜色，看清文字 */
+  font-weight: 500;
+}
+
+/* 优化 Emoji 动画 */
+.header-icon-emoji {
+  font-size: 110rpx; 
+  line-height: 1;
+  filter: drop-shadow(0 10rpx 15rpx rgba(0,0,0,0.15)); /* 给Emoji加阴影，更立体 */
+  animation: floatEmoji 3s ease-in-out infinite;
+}
+
+@keyframes floatEmoji {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15rpx) rotate(5deg); } /* 漂浮时微微旋转 */
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* 游戏网格布局 */
+.game-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 双列 */
+  gap: 30rpx;
+  padding-bottom: 40rpx;
+}
+
+/* 游戏卡片基础样式 */
+.game-card {
+  height: 320rpx; /* 比较高的卡片 */
+  border-radius: 35rpx;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15rpx 30rpx rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.1s;
+}
+
+.game-card:active { transform: scale(0.96); }
+
+/* 卡片内容布局 */
+.card-content {
+  padding: 30rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+}
+
+.game-icon { font-size: 80rpx; margin-bottom: 20rpx; text-shadow: 0 5rpx 10rpx rgba(0,0,0,0.15); }
+
+.game-info { display: flex; flex-direction: column; width: 100%; }
+.game-name { font-size: 32rpx; font-weight: 800; color: #fff; margin-bottom: 8rpx; letter-spacing: 2rpx;}
+.game-desc { font-size: 22rpx; color: rgba(255,255,255,0.9); margin-bottom: 15rpx; min-height: 60rpx; /* 保证两行高度对齐 */ line-height: 1.4;}
+
+/* 星级 */
+.star-rating {
+  background: rgba(0,0,0,0.15);
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+.label { font-size: 20rpx; color: rgba(255,255,255,0.8); margin-right: 6rpx; }
+.stars { font-size: 20rpx; color: #ffd700; letter-spacing: 2rpx; }
+
+/* 装饰性背景圆圈 */
+.bg-circle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.1); z-index: 1; }
+.c1 { width: 200rpx; height: 200rpx; top: -50rpx; right: -50rpx; }
+.c2 { width: 100rpx; height: 100rpx; bottom: 20rpx; left: -20rpx; }
+
+/* 播放按钮小图标 */
+.play-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255,255,255,0.2);
+  width: 70rpx;
+  height: 60rpx;
+  border-top-left-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.play-btn text { font-size: 24rpx; color: #fff; }
+
+/* 底部提示 */
+.footer-tip { text-align: center; margin-top: 20rpx; font-size: 22rpx; color: #bdc3c7; }
+
+
+/* ====== 配色方案 (针对6个不同游戏) ====== */
+
+/* 1. 漂浮乐园 (星空紫) - 观察 */
+.card-floating { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+/* 2. 速算高手 (逻辑蓝) - 运算 */
+.card-math { background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%); } /* 绿色系代表冷静运算 */
+
+/* 3. 数字密码 (黑客绿/暗) - 记忆 */
+.card-code { background: linear-gradient(135deg, #434343 0%, #000000 100%); } /* 或者深灰色突出密码感 */
+/* 为了保持活泼，也许可以用深青色 */
+.card-code-alt { background: linear-gradient(135deg, #009efd 0%, #2af598 100%); } 
+
+/* 4. Q趣头像 (活力橙) - 图像记忆 */
+.card-avatar { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); } /* 粉色/橙色 */
+
+/* 5. 汉字魔方 (文化红) - 找茬 */
+.card-hanzi { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
+
+/* 6. 动物派对 (森林青) - 统计 */
+.card-animal { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }

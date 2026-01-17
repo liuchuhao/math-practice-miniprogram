@@ -6,7 +6,7 @@
       <text class="val">{{mineCount}}</text>
     </view>
     <view class="face-btn" bindtap="restartGame">
-      {{isGameover ? '😵' : '🙂'}}
+      {{isGameover ? (isWin ? '😎' : '😵') : '🙂'}}
     </view>
     <view class="timer-box">
       <text class="icon">⏱️</text>

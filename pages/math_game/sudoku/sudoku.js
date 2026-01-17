@@ -271,11 +271,24 @@ Page({
       // 2. 增加总场次 (逻辑正确)
       const total = wx.getStorageSync('total_game_count') || 0;
       wx.setStorageSync('total_game_count', total + 1);
+      // =========== [新增：计算和保存积分] ===========
+      // 简单=200分, 中等=400分, 困难=600分
+      let baseScore = 200;
+      if (this.data.difficulty === 'medium') baseScore = 400;
+      if (this.data.difficulty === 'hard') baseScore = 600;
+
+      // 累加积分
+      let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
+      totalIntegral += baseScore;
+      wx.setStorageSync('totalIntegral', totalIntegral);
+      
+      console.log(`[数独] 胜利！获得 ${baseScore} 分，当前总积分: ${totalIntegral}`);
+      // ===========================================
 
       // 3. 弹窗反馈 (优化交互)
       wx.showModal({
         title: '挑战成功!',
-        content: `难度: ${this.data.difficulty}\n耗时: ${this.data.timeStr}`,
+        content: `难度: ${this.data.difficulty}\n耗时: ${this.data.timeStr}\n\n🎉 获得积分 +${baseScore}`,
         confirmText: '上传战绩', // 右边按钮
         confirmColor: '#3498db',
         showCancel: true,

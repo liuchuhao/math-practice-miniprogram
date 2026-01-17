@@ -7,7 +7,7 @@
     "pages/history/history",
     "pages/generatePaperGrade1/generatePaperGrade1",
     "pages/generatePaperGrade2/generatePaperGrade2",
-    "pages/generatePaperGrade3/generatePaperGrade3", 
+    "pages/generatePaperGrade3/generatePaperGrade3",
     "pages/generatePaperGrade4/generatePaperGrade4",
     "pages/generatePaperGrade5/generatePaperGrade5",
     "pages/generatePaperGrade6/generatePaperGrade6",
@@ -21,7 +21,17 @@
     "pages/math_game/minesweeper/minesweeper",
     "pages/math_game/klotski/klotski",
     "pages/math_game/twentyfour/twentyfour",
-    "pages/game_rank/game_rank"
+    "pages/game_rank/game_rank",
+    "pages/problem_solving/index/index",
+    "pages/problem_solving/menu/menu",
+    "pages/brain-dev/menu/menu",
+    "pages/brain-dev/games/floating/index",
+    "pages/brain-dev/games/speed-math/index",
+    "pages/brain-dev/games/digit-code/index",
+    "pages/brain-dev/games/q-avatar/index",
+    "pages/brain-dev/games/hanzi-cube/index",
+    "pages/brain-dev/games/animal-party/index"
+   
   ],
   "window": {
     "navigationBarTitleText": "小学数学计算练习",

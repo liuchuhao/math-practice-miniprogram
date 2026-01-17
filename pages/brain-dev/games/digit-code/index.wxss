@@ -1,0 +1,148 @@
+@import '../common/common.wxss';
+
+/* 倒计时/记忆/答题屏幕 */
+.countdown-screen,
+.memory-screen,
+.answer-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+/* 倒计时 */
+.countdown-circle {
+  width: 180rpx;
+  height: 180rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: countPulse 1s infinite;
+}
+
+@keyframes countPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.countdown-num {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.countdown-hint {
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.7);
+  margin-top: 30rpx;
+}
+
+/* 阶段提示 */
+.phase-hint {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 50rpx;
+}
+
+.hint-icon {
+  font-size: 36rpx;
+}
+
+.hint-text {
+  font-size: 30rpx;
+  color: #fff;
+}
+
+/* 数字显示 */
+.code-display {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 60rpx;
+}
+
+.code-digit {
+  width: 80rpx;
+  height: 100rpx;
+  background: linear-gradient(180deg, #3a3a6a 0%, #2a2a4a 100%);
+  border: 2rpx solid #00d9ff;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #00ffcc;
+  box-shadow: 0 0 20rpx rgba(0,217,255,0.3);
+}
+
+/* 记忆进度条 */
+.memory-bar {
+  width: 80%;
+  height: 10rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d9ff 0%, #00ffcc 100%);
+  transition: width 0.05s linear;
+}
+
+/* 选项列表 */
+.code-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.code-option {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx;
+  background: rgba(255,255,255,0.1);
+  border-radius: 16rpx;
+  border: 2rpx solid rgba(255,255,255,0.2);
+}
+
+.code-option.correct {
+  background: rgba(0,255,100,0.3);
+  border-color: #00ff64;
+}
+
+.code-option.wrong {
+  background: rgba(255,100,100,0.3);
+  border-color: #ff6464;
+}
+
+.opt-label {
+  width: 50rpx;
+  height: 50rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.opt-digits {
+  display: flex;
+  gap: 12rpx;
+}
+
+.opt-digits text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}

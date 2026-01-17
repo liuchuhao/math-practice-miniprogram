@@ -58,7 +58,7 @@
 
     <view class="action-card purple" bindtap="startAdvancedPractice">
       <view class="card-inner">
-        <text class="icon">🧠</text>
+        <text class="icon">🧩</text>
         <view class="text">
           <text class="title">拓展挑战</text>
           <text class="desc">双倍积分</text>
@@ -82,6 +82,25 @@
         <view class="text">
           <text class="title">英雄榜</text>
           <text class="desc">全网PK</text>
+        </view>
+      </view>
+    </view>
+    <!-- [新增] 问题解决 (粉色) -->
+    <view class="action-card pink" bindtap="goToProblemSolving">
+      <view class="card-inner">
+        <text class="icon">🤔</text>
+        <view class="text">
+          <text class="title">问题解决</text>
+          <text class="desc">应用题专项</text>
+        </view>
+      </view>
+    </view>
+    <view class="action-card cyan" bindtap="goToBrainDev">
+      <view class="card-inner">
+        <text class="icon">🧠</text>
+        <view class="text">
+          <text class="title">大脑开发</text>
+          <text class="desc">思维训练</text>
         </view>
       </view>
     </view>

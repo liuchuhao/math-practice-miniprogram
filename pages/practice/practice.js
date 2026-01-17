@@ -290,8 +290,8 @@ Page({
     let earnedPoints = 0;
     // 只有分数大于0才计算积分，防止完全挂机
     if (this.data.score > 0) {
-      // 规则：1年级=10分 ... 6年级=60分
-      earnedPoints = this.data.grade * 10;
+      // 规则：1年级=20分 ... 6年级=120分
+      earnedPoints = this.data.grade * 20;
       
       // 读取旧总分 -> 累加 -> 保存
       let totalIntegral = wx.getStorageSync('totalIntegral') || 0;

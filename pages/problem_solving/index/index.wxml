@@ -1,0 +1,60 @@
+<view class="container">
+  
+  <!-- 1. 顶部状态 -->
+  <view class="status-header">
+    <view class="badge {{mode}}">
+      {{mode === 'normal' ? '每日练习' : '无尽挑战'}}
+    </view>
+    <view class="score-info">
+      <text>第 {{currentIndex + 1}} 题</text>
+      <text class="divider">|</text>
+      <text class="score">得分: {{correctCount * scorePerQ}}</text>
+    </view>
+  </view>
+
+  <!-- 2. 答题卡片 (逻辑不变) -->
+  <block wx:if="{{!isFinished}}">
+    <view class="question-card">
+      <view class="q-tag">{{grade}}年级</view>
+      <text class="q-text">{{currentProblem.content}}</text>
+      
+      <view class="input-area">
+        <text class="label">答：</text>
+        <input 
+          class="ans-input" 
+          type="digit" 
+          placeholder="请输入数字" 
+          value="{{userAnswer}}"
+          bindinput="onInput"
+          confirm-type="done"
+          bindconfirm="submitAnswer"
+          focus="{{true}}"
+        />
+      </view>
+    </view>
+
+    <button class="submit-btn" bindtap="submitAnswer">提交答案</button>
+  </block>
+
+  <!-- 3. 结算卡片 -->
+  <block wx:else>
+    <view class="finish-card">
+      <view class="finish-icon">{{correctCount > 0 ? '🎉' : '💪'}}</view>
+      <text class="finish-title">本次战绩</text>
+      
+      <view class="result-grid">
+        <view class="res-item">
+          <text class="num">{{correctCount}}</text>
+          <text class="lbl">答对题数</text>
+        </view>
+        <view class="res-item">
+          <text class="num plus">+{{correctCount * scorePerQ}}</text>
+          <text class="lbl">获得积分</text>
+        </view>
+      </view>
+
+      <button class="restart-btn" bindtap="restart">返回菜单</button>
+    </view>
+  </block>
+
+</view>
