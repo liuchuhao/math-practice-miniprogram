@@ -1,0 +1,38 @@
+<view class="page">
+  
+  <!-- 主Tab切换 -->
+  <view class="main-tabs">
+    <view 
+      wx:for="{{mainTabs}}" 
+      wx:key="id"
+      class="main-tab {{mainTab === item.id ? 'active' : ''}}"
+      bindtap="switchMainTab"
+      data-id="{{item.id}}">
+      <text class="tab-icon">{{item.icon}}</text>
+      <text class="tab-name">{{item.name}}</text>
+      <view class="tab-line" wx:if="{{mainTab === item.id}}"></view>
+    </view>
+  </view>
+  
+  <!-- 加载占位 -->
+  <view class="loading-page" wx:if="{{!pageReady}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+  
+  <!-- 内容区 -->
+  <view class="content" wx:if="{{pageReady}}">
+    <!-- 在线排行 -->
+    <online-rank wx:if="{{mainTab === 0}}" 
+      id="onlineRank" 
+      initial-params="{{initialParams}}"></online-rank>
+    
+    <!-- 本地战绩 -->
+    <local-rank 
+      wx:if="{{mainTab === 1}}" 
+      id="localRank" 
+      initial-params="{{localParams}}"
+    ></local-rank>
+  </view>
+  
+</view>

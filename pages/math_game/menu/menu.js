@@ -29,7 +29,7 @@ Page({
   goRank() {
     wx.navigateTo({
       // 指向新建的本地战绩页面
-      url: '/pages/game_rank/game_rank',
+      url: '/pages/rank/index?tab=1&sub=1',
       fail: (err) => {
         console.error('跳转失败', err);
         wx.showToast({ title: '页面不存在', icon: 'none' });

@@ -1,7 +1,12 @@
+// pages/math_game/schulte/schulte.js
+
+// 1. ✨ 引入游戏服务 (请确认路径层级)
+const gameService = require('../../brain-dev/games/common/game-service.js');
+
 Page({
   data: {
     gridNumbers: [],
-    gridSize: 3,     // [新增] 默认3x3，可选 3,4,5
+    gridSize: 3,     // 默认3x3，可选 3,4,5
     nextNum: 1,
     startTime: 0,
     timeStr: '0.00',
@@ -20,7 +25,7 @@ Page({
     this.stopTimer();
   },
 
-  // [新增] 难度选择弹窗
+  // 难度选择弹窗
   showDifficultySelect() {
     wx.showActionSheet({
       itemList: ['简单 (3x3)', '中等 (4x4)', '困难 (5x5)'],
@@ -30,10 +35,10 @@ Page({
         if (res.tapIndex === 2) size = 5;
         
         this.setData({ gridSize: size });
-        this.startGame(); // 选完难度开始游戏
+        this.startGame(); 
       },
       fail: () => {
-        // 如果用户点取消，默认给个简单的，或者退出
+        // 默认简单
         this.setData({ gridSize: 3 });
         this.startGame();
       }
@@ -41,9 +46,9 @@ Page({
   },
 
   initBestScore() {
-    // 最佳成绩应该分难度存储，这里简单起见暂存一个通用的，建议按 key 区分
-    // const key = `schulte_best_${this.data.gridSize}`; 
-    const best = wx.getStorageSync('schulte_best') || 0;
+    // 简单起见，这里只读一个通用缓存，或者你可以读当前难度的
+    const key = `schulte_best_${this.data.gridSize}`;
+    const best = wx.getStorageSync(key) || 0;
     this.setData({ bestScore: best });
   },
 
@@ -51,7 +56,7 @@ Page({
     this.stopTimer();
     
     const size = this.data.gridSize;
-    const total = size * size; // 9, 16, or 25
+    const total = size * size;
 
     // 1. 生成 1-total 的数组并打乱
     let arr = [];
@@ -86,28 +91,22 @@ Page({
     }
   },
 
-    // [修改] 改用 Touch 事件，手指碰到屏幕瞬间触发，无视滑动和长按
-    onCellTouch(e) {
-      if (!this.data.isPlaying) return;
-      
-      // 逻辑和之前完全一样
-      const val = parseInt(e.currentTarget.dataset.val);
-      
-      // 只有点对的时候才执行逻辑
-      if (val === this.data.nextNum) {
-        
-        // 这里的震动如果觉得太频密影响手感，可以注释掉
-        // wx.vibrateShort({ type: 'light' });
-  
-        const maxNum = this.data.gridSize * this.data.gridSize;
-  
-        if (val === maxNum) {
-          this.gameFinish();
-        } else {
-          this.setData({ nextNum: val + 1 });
-        }
+  // 点击格子
+  onCellTouch(e) {
+    if (!this.data.isPlaying) return;
+    
+    const val = parseInt(e.currentTarget.dataset.val);
+    
+    if (val === this.data.nextNum) {
+      const maxNum = this.data.gridSize * this.data.gridSize;
+
+      if (val === maxNum) {
+        this.gameFinish();
+      } else {
+        this.setData({ nextNum: val + 1 });
       }
-    },
+    }
+  },
 
   gameFinish() {
     this.stopTimer();
@@ -116,41 +115,66 @@ Page({
     this.checkHighScore(finalTime);
   },
 
-  // 点击“重新开始”按钮时，也弹出难度选择
   restartGame() {
     this.showDifficultySelect();
   },
 
-  // ... checkHighScore 和 uploadScore 逻辑保持不变 ...
-  // 注意：上传成绩时建议把 gridSize 也传给后端，或者在前端区分存储 key
+  // 结算与上传
   checkHighScore(score) {
-    // 简单演示，实际建议区分难度存储 key
+    // 1. 本地记录最佳成绩
     const storageKey = `schulte_best_${this.data.gridSize}`;
     const oldBest = wx.getStorageSync(storageKey) || 0;
     
     let isNewRecord = false;
+    // score 是用时，越小越好。oldBest=0 代表没记录
     if (oldBest === 0 || score < oldBest) {
       isNewRecord = true;
       wx.setStorageSync(storageKey, score);
-      // 更新界面显示的 best (如果界面只显示当前难度的 best)
       this.setData({ bestScore: score }); 
     }
-    // =========== [新增：计算和保存积分] ===========
-    // 基础分：3x3=10分, 4x4=20分, 5x5=30分
-    let earnedPoints = (this.data.gridSize - 2) * 5;
-    
-    // 额外奖励：打破纪录额外加 10 分
-    if (isNewRecord && oldBest !== 0) {
-      earnedPoints += 10;
-    }
 
-    // 保存积分到本地
+        // 2. 计算积分 (高精度 0.01秒)
+        let benchmark = 0;
+    
+        // 设定高难度基准时间
+        if (this.data.gridSize === 3) {
+          benchmark = 5;  // 3x3 目标 5.00s
+        } else if (this.data.gridSize === 4) {
+          benchmark = 12; // 4x4 目标 12.00s
+        } else { 
+          benchmark = 24; // 5x5 目标 24.00s
+        }
+    
+        // 核心公式：保底分 + (基准 - 用时) * 100
+        // 例如 3x3：
+        // - 用时 3.00s: 10 + (5 - 3.00) * 100 = 210分
+        // - 用时 2.99s: 10 + (5 - 2.99) * 100 = 211分 (微小进步也能破纪录)
+        // - 用时 6.00s: 10 + 0 = 10分 (超时保底)
+        let timeBonus = Math.max(0, (benchmark - score) * 100);
+        
+        // 基础分 (3阶10分, 4阶20分, 5阶30分)
+        let baseScore = (this.data.gridSize - 2) * 10;
+        
+        let earnedPoints = Math.floor(baseScore + timeBonus);
+        
+
+
+    // 3. 积分累加
     let totalIntegral = wx.getStorageSync('totalIntegral') || 0;
     totalIntegral += earnedPoints;
     wx.setStorageSync('totalIntegral', totalIntegral);
     
-    console.log(`[舒尔特方格] 完成！获得 ${earnedPoints} 分，总积分: ${totalIntegral}`);
-    // ===========================================
+    // 4. 增加总场次
+    const totalKey = 'total_game_count';
+    wx.setStorageSync(totalKey, (wx.getStorageSync(totalKey) || 0) + 1);
+
+    // 5. 准备上传数据
+    const uploadData = {
+      gameId: 'schulte',
+      level: this.data.gridSize + 'x' + this.data.gridSize,
+      score: earnedPoints, // 积分
+      avgTime: score       // 用时 (秒)
+    };
 
     let modalContent = `${this.data.gridSize}x${this.data.gridSize} 模式\n你的成绩：${score} 秒\n\n🎉 获得积分 +${earnedPoints}`;
     if (isNewRecord) modalContent = "🏆 打破纪录！\n" + modalContent;
@@ -158,17 +182,32 @@ Page({
     wx.showModal({
       title: isNewRecord ? '🎉 新纪录！' : '挑战完成',
       content: modalContent,
-      showCancel: true, 
-      cancelText: '返回菜单',
-      confirmText: '再来一局',
+      showCancel: true,
+      confirmText: '上传战绩', // 改为上传
+      cancelText: '再来一局',
       success: (res) => {
         if (res.confirm) {
-          // 直接重开当前难度
-          this.startGame(); 
+          this.uploadScore(uploadData);
         } else if (res.cancel) {
-          wx.navigateBack();
+          this.startGame(); // 直接重开当前难度
         }
       }
     });
   },
+
+  // ✨ 上传函数
+  uploadScore(data) {
+    wx.showLoading({ title: '上传中...' });
+    gameService.uploadRecord(data).then(res => {
+      wx.hideLoading();
+      if (res.success && res.uploaded !== false) {
+        wx.showToast({ title: '上传成功', icon: 'success' });
+      } else if (res.uploaded === false) {
+        wx.showToast({ title: '已保存本地', icon: 'none' });
+      } else {
+        wx.showToast({ title: '上传失败', icon: 'none' });
+      }
+      setTimeout(() => { this.startGame(); }, 1500);
+    });
+  }
 });

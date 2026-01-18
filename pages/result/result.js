@@ -124,8 +124,11 @@ Page({
 
   // 1. 查看榜单 (使用 redirectTo 防止层级过深)
   goToRank: function() {
+    // 假设 this.data.grade 是数字 (如 1, 2, 3)
+    // 假设 this.data.resultType 是 'basic' 或 'advanced'
+    // 这里的 url 参数带过去
     wx.redirectTo({
-      url: `/pages/math_rank/math_rank?grade=${this.data.grade}&type=${this.data.resultType}`
+      url: `/pages/rank/index?tab=0&grade=${this.data.grade}&type=${this.data.resultType}`
     });
   },
 

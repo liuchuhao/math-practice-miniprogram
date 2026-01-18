@@ -58,6 +58,13 @@ Page({
       }
     ]
   },
+  goRank() {
+    wx.navigateTo({
+      // tab=1: 本地战绩
+      // sub=2: 大脑开发 (根据你的 local-rank 组件里的 tabs 顺序，大脑开发是 id:2)
+      url: '/pages/rank/index?tab=1&sub=2'
+    });
+  },
 
   onLoad(options) {
     // 可以在这里加载用户之前的最高分记录等

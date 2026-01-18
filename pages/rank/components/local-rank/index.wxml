@@ -1,0 +1,232 @@
+<view class="local-rank">
+  
+  <!-- 二级Tab -->
+  <view class="sub-tabs">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="id"
+      class="sub-tab {{curTab === item.id ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-id="{{item.id}}">
+      <text class="sub-icon">{{item.icon}}</text>
+      <text class="sub-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-box" wx:if="{{loading}}">
+    <view class="spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 滚动区域 -->
+  <scroll-view 
+    wx:else
+    class="local-scroll" 
+    scroll-y="{{true}}" 
+    enhanced="{{true}}"
+    show-scrollbar="{{false}}"
+    bounces="{{true}}">
+    
+    <!-- ===== 总览 ===== -->
+    <view class="panel" wx:if="{{curTab === 0}}">
+      
+      <view class="profile-card">
+        <view class="profile-left">
+          <image class="avatar" src="{{userInfo.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"></image>
+          <view class="badge">{{userTitle}}</view>
+        </view>
+        <view class="profile-right">
+          <view class="nickname">{{userInfo.nickName || '游客玩家'}}</view>
+          <view class="stats">
+            <view class="stat">
+              <text class="num">{{totalScore}}</text>
+              <text class="txt">总积分</text>
+            </view>
+            <view class="stat">
+              <text class="num">{{totalGamesPlayed}}</text>
+              <text class="txt">场次</text>
+            </view>
+            <view class="stat">
+              <text class="num">{{brainTotalReward}}</text>
+              <text class="txt">脑力分</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="section">
+        <view class="section-title">🏅 成就徽章</view>
+        <view class="badges">
+          <view class="badge-item {{totalScore >= 100 ? '' : 'locked'}}">
+            <text class="b-icon">🌟</text>
+            <text class="b-name">初露锋芒</text>
+          </view>
+          <view class="badge-item {{totalScore >= 500 ? '' : 'locked'}}">
+            <text class="b-icon">⭐</text>
+            <text class="b-name">小有成就</text>
+          </view>
+          <view class="badge-item {{totalScore >= 1000 ? '' : 'locked'}}">
+            <text class="b-icon">🏆</text>
+            <text class="b-name">实力玩家</text>
+          </view>
+          <view class="badge-item {{totalScore >= 5000 ? '' : 'locked'}}">
+            <text class="b-icon">👑</text>
+            <text class="b-name">王者之巅</text>
+          </view>
+        </view>
+      </view>
+      
+    </view>
+
+    <!-- ===== 数学游戏 ===== -->
+    <view class="panel" wx:if="{{curTab === 1}}">
+      <view class="game-list">
+        
+        <view class="game-item">
+          <view class="game-head blue">
+            <text class="g-icon">🔢</text>
+            <text class="g-name">舒尔特方格</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>3×3</text><text class="val">{{schulte3 ? schulte3 + 's' : '--'}}</text></view>
+            <view class="rec"><text>4×4</text><text class="val">{{schulte4 ? schulte4 + 's' : '--'}}</text></view>
+            <view class="rec"><text>5×5</text><text class="val">{{schulte5 ? schulte5 + 's' : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head red">
+            <text class="g-icon">💣</text>
+            <text class="g-name">扫雷专家</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最快</text><text class="val">{{minesweeperBest || '--'}}</text></view>
+            <view class="rec"><text>通关</text><text class="val">{{minesweeperWins}}次</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head orange">
+            <text class="g-icon">🏗️</text>
+            <text class="g-name">数字华容道</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>3×3</text><text class="val">{{klotski3 || '--'}}</text></view>
+            <view class="rec"><text>4×4</text><text class="val">{{klotski4 || '--'}}</text></view>
+            <view class="rec"><text>5×5</text><text class="val">{{klotski5 || '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head purple">
+            <text class="g-icon">🎴</text>
+            <text class="g-name">巧算24点</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>通关</text><text class="val">{{twentyfourWins}}关</text></view>
+            <view class="rec"><text>连胜</text><text class="val">{{twentyfourStreak}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head green">
+            <text class="g-icon">🧩</text>
+            <text class="g-name">数独挑战</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>简单</text><text class="val">{{sudokuEasy}}次</text></view>
+            <view class="rec"><text>中等</text><text class="val">{{sudokuMedium}}次</text></view>
+            <view class="rec"><text>困难</text><text class="val">{{sudokuHard}}次</text></view>
+          </view>
+        </view>
+        
+      </view>
+    </view>
+
+    <!-- ===== 大脑开发 ===== -->
+    <view class="panel" wx:if="{{curTab === 2}}">
+      
+      <view class="brain-header">
+        <text class="bh-icon">🧠</text>
+        <view class="bh-info">
+          <text class="bh-title">大脑开发</text>
+          <text class="bh-desc">累计积分：{{brainTotalReward}}</text>
+        </view>
+      </view>
+      
+      <view class="game-list">
+        
+        <view class="game-item">
+          <view class="game-head cyan">
+            <text class="g-icon">✨</text>
+            <text class="g-name">漂浮乐园</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{floatingBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{floatingLevel ? 'Lv.' + floatingLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head green">
+            <text class="g-icon">🧮</text>
+            <text class="g-name">速算高手</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{speedMathBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{speedMathLevel ? 'Lv.' + speedMathLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head indigo">
+            <text class="g-icon">🔢</text>
+            <text class="g-name">数字密码</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{digitCodeBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{digitCodeLevel ? 'Lv.' + digitCodeLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head pink">
+            <text class="g-icon">🤠</text>
+            <text class="g-name">Q趣头像</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{qAvatarBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{qAvatarLevel ? 'Lv.' + qAvatarLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head red">
+            <text class="g-icon">🀄</text>
+            <text class="g-name">汉字魔方</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{hanziCubeBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{hanziCubeLevel ? 'Lv.' + hanziCubeLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+        <view class="game-item">
+          <view class="game-head teal">
+            <text class="g-icon">🦁</text>
+            <text class="g-name">动物派对</text>
+          </view>
+          <view class="game-records">
+            <view class="rec"><text>最高分</text><text class="val">{{animalPartyBest || '--'}}</text></view>
+            <view class="rec"><text>等级</text><text class="val">{{animalPartyLevel ? 'Lv.' + animalPartyLevel : '--'}}</text></view>
+          </view>
+        </view>
+        
+      </view>
+    </view>
+    
+    <view class="footer-tip">数据仅保存在本地，卸载后会丢失</view>
+    
+  </scroll-view>
+</view>

@@ -5,11 +5,20 @@
   <view class="top-bg-shape"></view>
 
     <!-- 头部介绍 -->
-    <view class="page-header">
-    <view class="header-text">
-      <text class="title">🧠 大脑开发</text>
-      <text class="subtitle">六维能力专项特训，挑战你的极限！</text>
+  <view class="page-header">
+    <view class="header-left">
+      <view class="header-text">
+        <text class="title">大脑开发</text>
+        <text class="subtitle">六维能力专项特训，挑战你的极限！</text>
+      </view>
+      
+      <!-- ✨ 新增：查看榜单按钮 -->
+      <view class="rank-entry-btn" bindtap="goRank">
+        <text>🏆 查看战绩榜单</text>
+        <text class="arrow">></text>
+      </view>
     </view>
+    
     <!-- 修改处：把 image 换成了 text -->
     <text class="header-icon-emoji">🧠</text> 
   </view>

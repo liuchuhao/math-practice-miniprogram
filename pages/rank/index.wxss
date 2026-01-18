@@ -1,0 +1,102 @@
+/* pages/rank/index.wxss    */
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f6f8;
+}
+
+/* 主Tab */
+.main-tabs {
+  display: flex;
+  background: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.main-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 0 20rpx;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.tab-icon {
+  font-size: 36rpx;
+  margin-bottom: 8rpx;
+  transition: transform 0.3s;
+}
+
+.main-tab.active .tab-icon {
+  transform: scale(1.15);
+}
+
+.tab-name {
+  font-size: 28rpx;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.main-tab.active .tab-name {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.tab-line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 6rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3rpx;
+}
+
+/* 加载占位 */
+.loading-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #eee;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 内容区 - 关键：使用flex:1撑满剩余空间 */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0; /* 重要：允许flex子元素收缩 */
+}
+online-rank, local-rank {
+  flex: 1;        /* 占据剩余空间 */
+  height: 100%;   /* 强制高度 */
+  display: block; /* 确保表现为块级元素 */
+  overflow: hidden; /* 防止组件内部溢出 */
+}

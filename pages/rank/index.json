@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "local-rank": "./components/local-rank/index",
+    "online-rank": "./components/online-rank/index"
+  },
+  "navigationBarTitleText": "排行榜",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh": true
+}

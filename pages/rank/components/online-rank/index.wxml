@@ -1,0 +1,130 @@
+<view class="online-rank">
+  
+  <!-- 顶部筛选区 -->
+  <view class="filter-area">
+    <!-- 1. 类型切换 (修改为4字标题) -->
+    <view class="type-switch">
+      <view class="type-btn {{rankType === 'basic' ? 'active' : ''}}" bindtap="changeRankType" data-type="basic">基础训练</view>
+      <view class="type-btn {{rankType === 'advanced' ? 'active' : ''}}" bindtap="changeRankType" data-type="advanced">拓展训练</view>
+      <view class="type-btn {{rankType === 'math' ? 'active' : ''}}" bindtap="changeRankType" data-type="math">数学游戏</view>
+      <view class="type-btn {{rankType === 'brain' ? 'active' : ''}}" bindtap="changeRankType" data-type="brain">大脑开发</view>
+    </view>
+    
+    <!-- 2. 二级游戏切换 -->
+    <scroll-view 
+      wx:if="{{rankType === 'brain' || rankType === 'math'}}" 
+      scroll-x 
+      class="brain-tabs" 
+      enable-flex>
+      <view 
+        wx:for="{{rankType === 'brain' ? brainDevGames : mathGames}}" 
+        wx:key="id"
+        class="brain-tab {{curGameId === item.id ? 'active' : ''}}"
+        bindtap="changeGame"
+        data-id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+    <!-- ✨ 新增：数学游戏难度切换 (仅在当前游戏是舒尔特/华容道/数独时显示) -->
+    <view class="math-level-tabs" 
+          wx:if="{{rankType === 'math' && (curGameId === 'schulte' || curGameId === 'klotski' || curGameId === 'sudoku')}}">
+      <view 
+        wx:for="{{mathLevels}}" 
+        wx:key="id"
+        class="grade-btn {{curMathLevel === item.id ? 'active' : ''}}" 
+        bindtap="changeMathLevel" 
+        data-id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </view>
+    <!-- 3. 年级切换 -->
+    <block wx:if="{{rankType === 'basic' || rankType === 'advanced'}}">
+      <view class="mode-tabs">
+        <view class="mode-btn {{curTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">📜 实时榜</view>
+        <view class="mode-btn {{curTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">👑 高手榜</view>
+      </view>
+      <view class="grade-tabs">
+        <view wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this" class="grade-btn {{curGrade === item ? 'active' : ''}}" bindtap="changeGrade" data-grade="{{item}}">{{item}}年级</view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 提示条 -->
+  <view class="tips-bar" wx:if="{{curTab === 1 && !loading && !loadError && (rankType === 'basic' || rankType === 'advanced')}}">
+    💡 高手榜仅收录已设置昵称头像的记录，每人只显示最高分
+  </view>
+  
+  <!-- 表头 -->
+  <view class="list-header" wx:if="{{!loading && !loadError && rankList.length > 0}}">
+    <text class="col col-rank">排名</text>
+    <text class="col col-user">选手</text>
+    <text class="col col-score">{{curGameId === 'twentyfour' ? '连胜' : '得分'}}</text>
+    <text class="col col-time">
+      <block wx:if="{{rankType === 'brain'}}">难度</block>
+      <block wx:elif="{{curGameId === 'klotski'}}">步数</block>
+      <block wx:elif="{{rankType === 'math'}}">耗时</block>
+      <block wx:else>耗时</block>
+    </text>
+  </view>
+  
+  <!-- 列表区域 -->
+  <scroll-view class="rank-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}" bounces="{{true}}">
+    <view class="state-box" wx:if="{{loading}}">
+      <view class="spinner"></view><text class="state-text">正在加载排行榜...</text>
+    </view>
+    <view class="state-box error" wx:elif="{{loadError}}">
+      <text class="error-icon">😵</text><text class="error-text">{{errorMsg}}</text>
+      <view class="retry-btn" bindtap="retryLoad">点击重试</view>
+    </view>
+    <view class="state-box" wx:elif="{{rankList.length === 0}}">
+      <text class="empty-icon">🍃</text>
+      <text class="state-text">{{curTab === 1 ? '虚位以待，快来创造纪录！' : '暂时无人上榜'}}</text>
+    </view>
+    <view class="rank-list" wx:else>
+      <view wx:for="{{rankList}}" wx:key="uniqueKey" class="rank-item {{index < 3 ? 'top' : ''}}">
+        <view class="col col-rank">
+          <text wx:if="{{index === 0}}" class="medal">🥇</text>
+          <text wx:elif="{{index === 1}}" class="medal">🥈</text>
+          <text wx:elif="{{index === 2}}" class="medal">🥉</text>
+          <text wx:else class="rank-num">{{index + 1}}</text>
+        </view>
+        <view class="col col-user">
+          <image class="user-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <text class="user-name">{{item.nickname || '神秘高手'}}</text>
+        </view>
+        <view class="col col-score">
+          <text class="score-num">{{item.score}}</text>
+          <text class="score-unit">{{curGameId === 'twentyfour' ? '次' : '分'}}</text>
+        </view>
+        <view class="col col-time">
+          <!-- 1. 大脑开发: 显示等级/难度 -->
+          <block wx:if="{{rankType === 'brain'}}">
+            <text class="diff-tag {{item.rawLevel}}">{{item.displayDiff}}</text>
+          </block>
+          <!-- 2. 数学游戏: 华容道显示步数 -->
+          <block wx:elif="{{curGameId === 'klotski'}}">
+            {{item.time_used}}步
+          </block>
+          <!-- 3. 其他所有: 显示时间 -->
+          <block wx:else>
+            {{item.time_used}}s
+          </block>
+        </view>
+      </view>
+      <view class="list-footer"></view>
+    </view>
+  </scroll-view>
+  
+  <!-- 底部按钮 -->
+  <view class="footer-bar">
+    <button class="challenge-btn" bindtap="startChallenge">
+      <block wx:if="{{rankType === 'brain' || rankType === 'math'}}">
+        <!-- ✨ 使用 curGameName 变量 -->
+        ⚔️ 挑战 {{curGameName}}
+      </block>
+      <block wx:else>
+        ⚔️ 挑战 {{curGrade}} 年级
+      </block>
+    </button>
+  </view>
+</view>

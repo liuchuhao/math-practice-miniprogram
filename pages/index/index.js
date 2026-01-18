@@ -317,7 +317,7 @@ Page({
 
   viewHistory: function() { wx.navigateTo({ url: '/pages/history/history' }); },
   goToGradeTestPaper: function() { wx.navigateTo({ url: '/pages/testChoose/testChoose' }); },
-  goToRank: function() { wx.navigateTo({ url: '/pages/math_rank/math_rank' }); },
+  goToRank: function() { wx.navigateTo({ url: '/pages/rank/index' }); },
   about: function() {
     wx.showModal({
       title: '关于',
