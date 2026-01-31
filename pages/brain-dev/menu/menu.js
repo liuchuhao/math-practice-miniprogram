@@ -7,7 +7,7 @@ Page({
         name: '漂浮乐园',
         desc: '数数空中的星星，唯快不破',
         icon: '✨',
-        stars: '⭐⭐',
+        stars: '⭐⭐⭐⭐',
         colorClass: 'card-floating',
         targetUrl: '/pages/brain-dev/games/floating/index'
       },
@@ -25,7 +25,7 @@ Page({
         name: '数字密码',
         desc: '瞬间记忆，还原数字序列',
         icon: '🔢',
-        stars: '⭐⭐⭐⭐',
+        stars: '⭐⭐',
         colorClass: 'card-code-alt', // 使用亮一点的青色
         targetUrl: '/pages/brain-dev/games/digit-code/index'
       },
@@ -43,7 +43,7 @@ Page({
         name: '汉字魔方',
         desc: '火眼金睛，找不同部首',
         icon: '🀄',
-        stars: '⭐⭐⭐⭐⭐',
+        stars: '⭐⭐⭐',
         colorClass: 'card-hanzi',
         targetUrl: '/pages/brain-dev/games/hanzi-cube/index'
       },
@@ -52,7 +52,7 @@ Page({
         name: '动物派对',
         desc: '谁是这里出现最多的仔？',
         icon: '🦁',
-        stars: '⭐⭐',
+        stars: '⭐⭐⭐⭐⭐',
         colorClass: 'card-animal',
         targetUrl: '/pages/brain-dev/games/animal-party/index'
       }

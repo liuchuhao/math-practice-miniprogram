@@ -1,14 +1,30 @@
+<!-- pages/math_game/twentyfour/twentyfour.wxml -->
 <view class="container">
-  <!-- 1. 顶部栏 -->
+  
+  <!-- 1. 顶部栏：增加积分显示 -->
   <view class="header">
-    <view class="score-box">
-      <text class="label">连胜</text>
-      <text class="val">{{score}}</text>
+    <view class="stats-group">
+      <!-- 连胜显示 -->
+      <view class="score-box">
+        <text class="label">连胜</text>
+        <text class="val">{{score}}</text>
+      </view>
+      <!-- 分割线 -->
+      <view class="divider"></view>
+      <!-- 积分显示 -->
+      <view class="score-box">
+        <text class="label">累计积分</text>
+        <text class="val">{{points}}</text>
+      </view>
     </view>
+
+    <!-- 时间 -->
     <view class="timer-box">
-      <text class="val">{{timeStr}}</text>
+      <text class="time-text">{{timeStr}}</text>
     </view>
-    <view class="btn-box" bindtap="nextLevel">
+
+    <!-- 跳过按钮 -->
+    <view class="btn-box" bindtap="nextLevel" hover-class="btn-hover">
       <text>跳过</text>
     </view>
   </view>
@@ -22,36 +38,51 @@
           bindtap="onCardTap" 
           data-index="{{index}}"
         >
-          <view class="suit top">♠</view>
-          
-          <view class="card-val {{item.expr.length > 2 ? 'small' : ''}}">
-            {{item.val}}
+          <!-- 左上角标：数字+花色 -->
+          <view class="corner top-left">
+            <text>{{item.val}}</text>
+            <text class="suit-icon">♠</text>
           </view>
           
-          <view class="card-expr" wx:if="{{item.expr.length > 2}}">{{item.expr}}</view>
+          <!-- 中间大数字/算式 -->
+          <view class="card-center">
+            <view class="main-num {{item.val >= 100 ? 'small-font' : ''}}">
+              {{item.val}}
+            </view>
+            <!-- 只有当显示的数字是计算出来的（即expr和val不同）才显示算式 -->
+            <view class="sub-expr" wx:if="{{item.expr !== item.val + ''}}">
+              {{item.expr}}
+            </view>
+          </view>
 
-          <view class="suit bottom">♣</view>
+          <!-- 右下角标：数字+花色 (旋转) -->
+          <view class="corner bottom-right">
+            <text>{{item.val}}</text>
+            <text class="suit-icon">♣</text>
+          </view>
         </view>
       </block>
     </view>
     
-    <view class="target-tips" wx:if="{{cards.length > 1}}">目标：24</view>
+    <view class="target-tips" wx:if="{{cards.length > 0}}">
+      <text wx:if="{{operator}}">当前操作: {{operator}}</text>
+      <text wx:else>目标: 24</text>
+    </view>
   </view>
 
   <!-- 3. 操作区 -->
   <view class="control-panel">
     <!-- 运算符 -->
     <view class="ops-row">
-      <button class="op-btn {{operator==='+'?'active':''}}" bindtap="onOpTap" data-op="+">＋</button>
-      <button class="op-btn {{operator==='-'?'active':''}}" bindtap="onOpTap" data-op="-">－</button>
-      <button class="op-btn {{operator==='×'?'active':''}}" bindtap="onOpTap" data-op="×">×</button>
-      <button class="op-btn {{operator==='÷'?'active':''}}" bindtap="onOpTap" data-op="÷">÷</button>
+      <view class="op-btn {{operator==='+'?'active':''}}" bindtap="onOpTap" data-op="+">＋</view>
+      <view class="op-btn {{operator==='-'?'active':''}}" bindtap="onOpTap" data-op="-">－</view>
+      <view class="op-btn {{operator==='×'?'active':''}}" bindtap="onOpTap" data-op="×">×</view>
+      <view class="op-btn {{operator==='÷'?'active':''}}" bindtap="onOpTap" data-op="÷">÷</view>
     </view>
     
-    <!-- 功能键 (已优化) -->
+    <!-- 功能键 -->
     <view class="func-row">
       <button class="func-btn undo" bindtap="undo" disabled="{{history.length === 0}}">↩ 撤销</button>
-      <!-- 新增提示按钮 -->
       <button class="func-btn hint" bindtap="showAnswer">💡 提示</button>
       <button class="func-btn reset" bindtap="startGame">🔄 重开</button>
     </view>

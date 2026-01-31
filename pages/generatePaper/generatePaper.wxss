@@ -1,0 +1,50 @@
+page { background: #f6f7f9; color: #333; font-size: 28rpx; }
+.container { display: flex; flex-direction: column; height: 100vh; }
+
+/* 顶部栏 */
+.header-card { background: #fff; padding: 20rpx 30rpx 0; box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05); z-index: 10; }
+.picker-row { display: flex; align-items: center; margin-bottom: 20rpx; font-size: 32rpx; font-weight: bold; }
+.picker-val { color: #007aff; margin-left: 20rpx; }
+.tabs { display: flex; }
+.tab { flex: 1; text-align: center; padding: 20rpx 0; border-bottom: 4rpx solid transparent; color: #666; }
+.tab.active { color: #007aff; border-bottom-color: #007aff; font-weight: bold; }
+
+.main-scroll { flex: 1; padding: 20rpx; box-sizing: border-box; }
+
+/* 卡片通用 */
+.card { background: #fff; border-radius: 12rpx; padding: 20rpx; margin-bottom: 20rpx; }
+.card-title { font-weight: bold; font-size: 30rpx; margin-bottom: 20rpx; border-left: 8rpx solid #007aff; padding-left: 15rpx; }
+
+/* 配置列表 */
+.config-header { display: flex; color: #888; margin-bottom: 10rpx; font-size: 24rpx; }
+.config-row { display: flex; align-items: center; padding: 15rpx 0; border-bottom: 1px solid #f0f0f0; }
+.c-name { flex: 2; }
+.c-input { flex: 1; background: #f0f0f0; text-align: center; border-radius: 8rpx; height: 60rpx; }
+.c-score { flex: 1; text-align: center; color: #666; }
+.total-info { text-align: center; color: #888; margin-top: 20rpx; font-size: 24rpx; }
+
+.btn-generate { background: #007aff; color: #fff; border-radius: 40rpx; margin-top: 40rpx; font-weight: bold; }
+
+/* 试卷部分 */
+.paper-header { text-align: center; margin-bottom: 30rpx; }
+.p-title { font-size: 36rpx; font-weight: bold; }
+.p-score { font-size: 40rpx; color: #e64340; margin-top: 10rpx; }
+
+.q-card { background: #fff; border-radius: 12rpx; padding: 25rpx; margin-bottom: 20rpx; border: 2rpx solid transparent; }
+.q-card.correct-bg { background: #f0f9eb; border-color: #e1f3d8; }
+.q-card.wrong-bg { background: #fef0f0; border-color: #fde2e2; }
+
+.q-top { display: flex; margin-bottom: 15rpx; align-items: center; }
+.q-idx { font-weight: bold; margin-right: 10rpx; font-size: 32rpx; }
+.q-tag { font-size: 20rpx; background: #eef5ff; color: #007aff; padding: 4rpx 10rpx; border-radius: 8rpx; margin-right: 15rpx; }
+.q-point { font-size: 24rpx; color: #999; }
+
+.q-content { font-size: 30rpx; margin-bottom: 25rpx; line-height: 1.6; }
+
+.ans-box { display: flex; align-items: center; background: #fafafa; padding: 15rpx; border-radius: 8rpx; }
+.ans-input { flex: 1; font-size: 30rpx; color: #333; }
+.correct-ans { font-size: 24rpx; color: #e64340; margin-left: 20rpx; }
+
+.footer-btn-area { padding: 40rpx 0; }
+.btn-submit { background: #1aad19; color: #fff; border-radius: 40rpx; }
+.btn-retry { background: #f8f8f8; color: #333; border-radius: 40rpx; }

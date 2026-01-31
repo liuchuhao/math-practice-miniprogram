@@ -1,0 +1,89 @@
+<view class="container">
+  <!-- 顶部控制区 -->
+  <view class="header-card">
+    <view class="picker-row">
+      <text class="label">选择年级：</text>
+      <picker bindchange="onGradeChange" value="{{gradeIndex}}" range="{{gradeList}}">
+        <view class="picker-val">{{gradeList[gradeIndex]}} <text class="arrow">▼</text></view>
+      </picker>
+    </view>
+    <view class="tabs">
+      <view class="tab {{activeTab==='config'?'active':''}}" bindtap="switchTab" data-tab="config">设置</view>
+      <view class="tab {{activeTab==='preview'?'active':''}}" bindtap="switchTab" data-tab="preview">试卷</view>
+      <view class="tab {{activeTab==='answer'?'active':''}}" bindtap="switchTab" data-tab="answer">批改</view>
+    </view>
+  </view>
+
+  <!-- 1. 设置面板 -->
+  <scroll-view scroll-y class="main-scroll" wx:if="{{activeTab==='config'}}">
+    <view class="card">
+      <view class="card-title">试卷信息</view>
+      <view class="form-item">
+        <text>标题</text>
+        <input value="{{paperTitle}}" bindinput="onTitleInput" />
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">题型配置</view>
+      <view class="config-header">
+        <text style="flex:2">类型</text>
+        <text style="flex:1">数量</text>
+        <text style="flex:1">分值</text>
+      </view>
+      <block wx:for="{{currentConfig}}" wx:key="name">
+        <view class="config-row">
+          <text class="c-name">{{item.name}}</text>
+          <input class="c-input" type="number" value="{{item.count}}" bindinput="updateCount" data-index="{{index}}"/>
+          <text class="c-score">{{item.score}}</text>
+        </view>
+      </block>
+      <view class="total-info">
+        共 {{totalCount}} 题，总分 {{totalScore}} 分
+      </view>
+    </view>
+
+    <button class="btn-generate" bindtap="generatePaper">开始生成试卷</button>
+  </scroll-view>
+
+  <!-- 2. 试卷预览/结果面板 -->
+  <scroll-view scroll-y class="main-scroll" wx:if="{{activeTab!=='config'}}">
+    <view class="paper-header">
+      <view class="p-title">{{paperTitle}}</view>
+      <view class="p-score" wx:if="{{showScore}}">得分：<text class="score-val">{{score}}</text></view>
+    </view>
+
+    <block wx:for="{{questions}}" wx:key="id">
+      <view class="q-card {{showScore ? (item.isCorrect ? 'correct-bg' : 'wrong-bg') : ''}}">
+        <view class="q-top">
+          <text class="q-idx">{{index+1}}.</text>
+          <text class="q-tag">{{item.category}}</text>
+          <text class="q-point">({{item.score}}分)</text>
+        </view>
+        
+        <!-- 题目内容：支持文字换行 -->
+        <view class="q-content">{{item.question}}</view>
+
+        <!-- 答题区 -->
+        <view class="ans-box">
+          <input class="ans-input" placeholder="请输入答案" 
+            value="{{userAnswers[item.id]}}" 
+            bindinput="onInputAnswer" 
+            data-id="{{item.id}}"
+            disabled="{{showScore}}"
+          />
+          <!-- 判分图标 -->
+          <block wx:if="{{showScore}}">
+            <icon type="{{item.isCorrect?'success':'warn'}}" size="20"></icon>
+            <view class="correct-ans" wx:if="{{!item.isCorrect}}">答案: {{item.answer}}</view>
+          </block>
+        </view>
+      </view>
+    </block>
+
+    <view class="footer-btn-area">
+      <button wx:if="{{!showScore}}" class="btn-submit" bindtap="checkAnswers">提交判分</button>
+      <button wx:else class="btn-retry" bindtap="switchToConfig">再练一套</button>
+    </view>
+  </scroll-view>
+</view>

@@ -222,93 +222,112 @@ Page({
     wx.setStorageSync('userInfo', this.data.userInfo);
   },
 
-    // --- 1. 普通练习入口 ---
-    startPractice: function() {
-      // 调用通用检查函数，不传参代表默认模式
-      this.checkNicknameAndGo(); 
-    },
-  
-    // --- 2. 拓展练习入口 ---
-    startAdvancedPractice: function() {
-      // 调用通用检查函数，传入 'advanced' 标记
-      this.checkNicknameAndGo('advanced'); 
-    },
-  
-    // --- 3. [核心修复] 通用检查昵称与跳转逻辑 ---
-    // mode 参数用于区分要去哪个模式
-    checkNicknameAndGo: function(mode) {
-      if (!this.data.userInfo.nickName) {
-        wx.showModal({
-          title: '等等！你是神秘人吗？',
-          content: '设置一个响亮的昵称，上榜之后更帅气哦！',
-          cancelText: '匿名挑战',
-          confirmText: '去设置',
-          confirmColor: '#3498db',
-          success: (res) => {
-            if (res.confirm) {
-              // 用户想设置昵称
-              this.setData({ nicknameFocus: true });
-            } else {
-              // 用户选择匿名 -> 关键点：把 mode 传递下去
-              this.goGradeSelect(mode);
-            }
-          }
-        });
-      } else {
-        // 已有昵称 -> 直接带 mode 跳转
-        this.goGradeSelect(mode);
-      }
-    },
-  
-    // --- 4. [修改后] 跳转函数 ---
-    // 接收 mode 参数，决定是否拼接到 URL 中
-    goGradeSelect: function(mode) {
-      wx.showLoading({ title: '准备中...', mask: true });
-      
-      setTimeout(() => {
-        wx.hideLoading();
-        
-        // 默认 URL
-        let targetUrl = '/pages/gradeSelect/gradeSelect';
-        
-        // 如果是拓展模式，加上参数
-        if (mode === 'advanced') {
-          targetUrl += '?mode=advanced';
-        }
-  
+      // --- 1. 普通练习入口 ---
+  startPractice: function() {
+    // 传入 'normal' 标记，代表普通练习
+    this.checkNicknameAndGo('normal'); 
+  },
+
+  // --- 2. 拓展练习入口 ---
+  startAdvancedPractice: function() {
+    // 传入 'advanced' 标记，代表拓展练习
+    this.checkNicknameAndGo('advanced'); 
+  },
+
+  // --- 3. [核心修复] 通用检查昵称与跳转逻辑 ---
+  // type 参数用于区分要去哪个功能
+  checkNicknameAndGo: function(type) {
+    // 定义一个执行跳转的内部函数
+    const doNavigate = () => {
+      if (type === 'games') {
+        // -> 跳转游戏大厅
         wx.navigateTo({
-          url: targetUrl,
+          url: '/pages/math_game/menu/menu',
           fail: (err) => {
             console.error('跳转失败', err);
-            wx.showToast({ title: '页面不存在', icon: 'none' });
+            wx.showToast({ title: '功能开发中', icon: 'none' });
           }
         });
-      }, 200);
-    },
-      // [新增] 跳转到游戏大厅
+      } else if (type === 'brain') {
+        // -> 跳转大脑开发
+        wx.navigateTo({
+          url: '/pages/brain-dev/menu/menu'
+        });
+      } else {
+        // -> 默认为练习模式，跳转年级选择
+        // 如果是 advanced，传递给 goGradeSelect，否则传 undefined
+        this.goGradeSelect(type === 'advanced' ? 'advanced' : undefined);
+      }
+    };
+
+    // 检查是否有昵称
+    if (!this.data.userInfo.nickName) {
+      wx.showModal({
+        title: '等等！你是神秘人吗？',
+        content: '设置一个响亮的昵称，上榜之后更帅气哦！',
+        cancelText: '匿名挑战',
+        confirmText: '去设置',
+        confirmColor: '#3498db',
+        success: (res) => {
+          if (res.confirm) {
+            // 用户想设置昵称
+            this.setData({ nicknameFocus: true });
+          } else {
+            // 用户选择匿名 -> 执行跳转
+            doNavigate();
+          }
+        }
+      });
+    } else {
+      // 已有昵称 -> 直接执行跳转
+      doNavigate();
+    }
+  },
+
+  // --- 4. 跳转年级选择 (保持不变，但被上方调用) ---
+  goGradeSelect: function(mode) {
+    wx.showLoading({ title: '准备中...', mask: true });
+    
+    setTimeout(() => {
+      wx.hideLoading();
+      
+      // 默认 URL
+      let targetUrl = '/pages/gradeSelect/gradeSelect';
+      
+      // 如果是拓展模式，加上参数
+      if (mode === 'advanced') {
+        targetUrl += '?mode=advanced';
+      }
+  
+      wx.navigateTo({
+        url: targetUrl,
+        fail: (err) => {
+          console.error('跳转失败', err);
+          wx.showToast({ title: '页面不存在', icon: 'none' });
+        }
+      });
+    }, 200);
+  },
+
+  // [修改后] 跳转到游戏大厅 (现在会检查匿名了)
   goToGames: function() {
+    this.checkNicknameAndGo('games');
+  },
+
+  // 跳转到问题解决 (无需改动，如果你也想检查匿名，也可以改为调用 checkNicknameAndGo)
+  goToProblemSolving() {
     wx.navigateTo({
-      url: '/pages/math_game/menu/menu',
+      url: '/pages/problem_solving/menu/menu',
       fail: (err) => {
-        console.error('跳转失败', err);
         wx.showToast({ title: '功能开发中', icon: 'none' });
       }
     });
   },
-    // 跳转到问题解决
-    goToProblemSolving() {
-      wx.navigateTo({
-        url: '/pages/problem_solving/menu/menu',
-        fail: (err) => {
-          wx.showToast({ title: '功能开发中', icon: 'none' });
-        }
-      });
-    },
-    goToBrainDev() {
-      wx.navigateTo({
-        url: '/pages/brain-dev/menu/menu' 
-      })
-    },
+
+  // [修改后] 跳转到大脑开发 (现在会检查匿名了)
+  goToBrainDev() {
+    this.checkNicknameAndGo('brain');
+  },
  
 
   goToStore: function() {
@@ -316,7 +335,7 @@ Page({
   },
 
   viewHistory: function() { wx.navigateTo({ url: '/pages/history/history' }); },
-  goToGradeTestPaper: function() { wx.navigateTo({ url: '/pages/testChoose/testChoose' }); },
+  goToGradeTestPaper: function() { wx.navigateTo({ url: '/pages/generatePaper/generatePaper' }); },
   goToRank: function() { wx.navigateTo({ url: '/pages/rank/index' }); },
   about: function() {
     wx.showModal({
